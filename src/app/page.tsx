@@ -5,71 +5,64 @@ import { listCategories } from "@/lib/categories";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>;
-}) {
-  const { page: pageRaw } = await searchParams;
-  const page = Math.max(1, Number(pageRaw || 1));
+export default async function HomePage() {
   let posts: Awaited<ReturnType<typeof listPublishedPosts>>["posts"] = [];
-  let total = 0;
-  let perPage = 6;
   let categories: Awaited<ReturnType<typeof listCategories>> = [];
   try {
-    const result = await Promise.all([listPublishedPosts(page, 6), listCategories()]);
+    const result = await Promise.all([listPublishedPosts(1, 6), listCategories()]);
     posts = result[0].posts;
-    total = result[0].total;
-    perPage = result[0].perPage;
     categories = result[1];
   } catch (error) {
     console.error(error);
   }
-  const pages = Math.max(1, Math.ceil(total / perPage));
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[1fr_280px]">
+    <div className="space-y-14">
+      <section className="overflow-hidden rounded-[2rem] bg-ink px-6 py-14 text-paper sm:px-12">
+        <p className="text-xs uppercase tracking-[0.25em] text-accent">Global Career Hub</p>
+        <h1 className="mt-4 max-w-3xl font-serif text-4xl leading-tight sm:text-6xl">
+          Clear career writing for people who want the next step.
+        </h1>
+        <p className="mt-5 max-w-2xl text-base leading-7 text-paper/75">
+          Abdul Faheem publishes practical guides on work, skills, and study. Read freely. No account needed.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link href="/articles" className="btn !bg-accent">Read articles</Link>
+          <Link href="/about" className="btn-outline !border-white/20 !bg-transparent !text-paper">About the writer</Link>
+        </div>
+      </section>
       <section>
-        <div className="mb-8">
-          <p className="text-sm uppercase tracking-[0.2em] text-accent">Global Career Hub</p>
-          <h1 className="mt-2 font-serif text-4xl sm:text-5xl">Guides by Abdul Faheem.</h1>
-          <p className="mt-3 max-w-2xl text-slate-600">
-            Career advice, tutorials, and practical notes from Abdul Faheem.
-          </p>
+        <div className="mb-6 flex items-end justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-accent">Latest</p>
+            <h2 className="mt-1 font-serif text-3xl">Fresh from the desk</h2>
+          </div>
+          <Link href="/articles" className="text-sm text-accent">All articles</Link>
         </div>
         {posts.length === 0 ? (
           <div className="card p-8">
-            <h2 className="font-serif text-2xl">No posts yet</h2>
-            <p className="mt-2 text-slate-600">Import schema.sql, then publish from the dashboard.</p>
+            <h3 className="font-serif text-2xl">The first story is on its way</h3>
+            <p className="mt-2 text-slate-600">New articles will appear here when published.</p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2">
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
-        )}
-        {pages > 1 && (
-          <div className="mt-8 flex gap-3">
-            {page > 1 && <Link href={`/?page=${page - 1}`} className="btn-outline">Previous</Link>}
-            {page < pages && <Link href={`/?page=${page + 1}`} className="btn">Next</Link>}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post) => <PostCard key={post.id} post={post} />)}
           </div>
         )}
       </section>
-      <aside className="space-y-6">
-        <div className="card p-5">
-          <h2 className="font-serif text-xl">Categories</h2>
-          <ul className="mt-3 space-y-2 text-sm">
-            {categories.map((c) => (
-              <li key={c.id} className="flex justify-between">
-                <Link href={`/category/${c.slug}`} className="hover:text-accent">{c.name}</Link>
-                <span className="text-slate-400">{c.post_count ?? 0}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <Link href="/admin" className="btn">Open admin</Link>
-      </aside>
+      <section className="grid gap-6 md:grid-cols-3">
+        {(categories.length ? categories : [
+          { id: 1, name: "Careers", slug: "careers", description: "Work paths", post_count: 0 },
+          { id: 2, name: "Skills", slug: "skills", description: "Learn faster", post_count: 0 },
+          { id: 3, name: "Study", slug: "study", description: "Education routes", post_count: 0 },
+        ]).slice(0, 6).map((c) => (
+          <Link key={c.id} href={`/category/${c.slug}`} className="card p-6 hover:border-accent/40">
+            <p className="text-xs uppercase tracking-[0.2em] text-accent">Topic</p>
+            <h3 className="mt-2 font-serif text-2xl">{c.name}</h3>
+            <p className="mt-2 text-sm text-slate-600">{c.description || "Explore this theme"}</p>
+          </Link>
+        ))}
+      </section>
     </div>
   );
 }
