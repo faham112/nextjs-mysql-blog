@@ -77,23 +77,30 @@ type UserRow = {
 
 export async function findUserByEmail(email: string) {
   const rows = await query<UserRow>(
-    "SELECT id, name, email, password_hash, role FROM users WHERE email = :email LIMIT 1",
-    { email }
+    "SELECT id, name, email, password_hash, role FROM users WHERE email = ? LIMIT 1",
+    [email]
   );
   return rows[0] ?? null;
 }
 
 export async function ensureAdminUser() {
-  const email = process.env.ADMIN_EMAIL;
+  const email = process.env.ADMIN_EMAIL?.toLowerCase().trim();
   const password = process.env.ADMIN_PASSWORD;
-  if (!email || !password) return;
+  if (!email || !password) {
+    throw new Error("ADMIN_EMAIL or ADMIN_PASSWORD is missing in environment variables.");
+  }
 
   const existing = await findUserByEmail(email);
-  if (existing) return;
-
   const password_hash = await hashPassword(password);
-  await query(
-    "INSERT INTO users (name, email, password_hash, role) VALUES (:name, :email, :password_hash, 'admin')",
-    { name: "Admin", email, password_hash }
-  );
+
+  if (existing) {
+    await query("UPDATE users SET password_hash = ? WHERE id = ?", [password_hash, existing.id]);
+    return;
+  }
+
+  await query("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')", [
+    "Admin",
+    email,
+    password_hash,
+  ]);
 }

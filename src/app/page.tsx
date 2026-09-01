@@ -12,10 +12,19 @@ export default async function HomePage({
 }) {
   const { page: pageRaw } = await searchParams;
   const page = Math.max(1, Number(pageRaw || 1));
-  const [{ posts, total, perPage }, categories] = await Promise.all([
-    listPublishedPosts(page, 6),
-    listCategories(),
-  ]);
+  let posts: Awaited<ReturnType<typeof listPublishedPosts>>["posts"] = [];
+  let total = 0;
+  let perPage = 6;
+  let categories: Awaited<ReturnType<typeof listCategories>> = [];
+  try {
+    const result = await Promise.all([listPublishedPosts(page, 6), listCategories()]);
+    posts = result[0].posts;
+    total = result[0].total;
+    perPage = result[0].perPage;
+    categories = result[1];
+  } catch (error) {
+    console.error(error);
+  }
   const pages = Math.max(1, Math.ceil(total / perPage));
 
   return (
@@ -28,7 +37,9 @@ export default async function HomePage({
         {posts.length === 0 ? (
           <div className="card p-8">
             <h2 className="font-serif text-2xl">No posts yet</h2>
-            <p className="mt-2 text-slate-600">Import schema.sql, set env vars, then log in at /login.</p>
+            <p className="mt-2 text-slate-600">
+              Import schema.sql in phpMyAdmin, then publish from /login.
+            </p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2">
@@ -42,9 +53,7 @@ export default async function HomePage({
             {page > 1 && (
               <Link href={`/?page=${page - 1}`} className="btn-outline">Previous</Link>
             )}
-            {page < pages && (
-              <Link href={`/?page=${page + 1}`} className="btn">Next</Link>
-            )}
+            {page < pages && <Link href={`/?page=${page + 1}`} className="btn">Next</Link>}
           </div>
         )}
       </section>

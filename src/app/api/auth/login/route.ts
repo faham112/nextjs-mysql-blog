@@ -6,11 +6,11 @@ export async function POST(req: Request) {
     await ensureAdminUser();
     const { email, password } = await req.json();
     if (!email || !password) {
-      return NextResponse.json({ error: "Missing credentials" }, { status: 400 });
+      return NextResponse.json({ error: "Email and password required" }, { status: 400 });
     }
     const user = await findUserByEmail(String(email).toLowerCase().trim());
     if (!user || !(await verifyPassword(String(password), user.password_hash))) {
-      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
     }
     await createSession({
       id: user.id,
@@ -20,7 +20,16 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({ ok: true });
   } catch (error) {
+    const message = error instanceof Error ? error.message : "Login failed";
     console.error(error);
-    return NextResponse.json({ error: "Login failed" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error:
+          message.includes("ER_") || message.toLowerCase().includes("table")
+            ? "Database tables missing. Import schema.sql in phpMyAdmin."
+            : message,
+      },
+      { status: 500 }
+    );
   }
 }

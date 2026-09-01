@@ -20,7 +20,8 @@ export default function LoginPage() {
       }),
     });
     if (!res.ok) {
-      setError("Invalid email or password.");
+      const data = await res.json().catch(() => ({ error: "" }));
+      setError(data.error || "Invalid email or password.");
       return;
     }
     router.push("/admin");
@@ -30,6 +31,9 @@ export default function LoginPage() {
   return (
     <div className="mx-auto max-w-md">
       <h1 className="font-serif text-4xl">Admin login</h1>
+      <p className="mt-2 text-sm text-slate-600">
+        Use ADMIN_EMAIL and ADMIN_PASSWORD from Hostinger environment variables.
+      </p>
       <form onSubmit={onSubmit} className="card mt-6 space-y-3 p-6">
         <input name="email" type="email" required placeholder="Email" className="input" />
         <input name="password" type="password" required placeholder="Password" className="input" />
