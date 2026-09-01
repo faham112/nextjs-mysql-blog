@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 
 declare global {
+  // eslint-disable-next-line no-var
   var mysqlPool: mysql.Pool | undefined;
 }
 
@@ -25,7 +26,10 @@ export function getPool() {
   return global.mysqlPool;
 }
 
-export async function query(sql, params) {
+export async function query<T = any>(
+  sql: string,
+  params?: Record<string, unknown> | unknown[]
+): Promise<T[]> {
   const [rows] = await getPool().execute(sql, params);
-  return rows;
+  return rows as T[];
 }
