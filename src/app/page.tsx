@@ -31,15 +31,16 @@ export default async function HomePage({
     <div className="grid gap-10 lg:grid-cols-[1fr_280px]">
       <section>
         <div className="mb-8">
-          <p className="text-sm uppercase tracking-[0.2em] text-accent">Independent notes</p>
-          <h1 className="mt-2 font-serif text-4xl sm:text-5xl">Stories worth sitting with.</h1>
+          <p className="text-sm uppercase tracking-[0.2em] text-accent">Global Career Hub</p>
+          <h1 className="mt-2 font-serif text-4xl sm:text-5xl">Guides by Abdul Faheem.</h1>
+          <p className="mt-3 max-w-2xl text-slate-600">
+            Career advice, tutorials, and practical notes from Abdul Faheem.
+          </p>
         </div>
         {posts.length === 0 ? (
           <div className="card p-8">
             <h2 className="font-serif text-2xl">No posts yet</h2>
-            <p className="mt-2 text-slate-600">
-              Import schema.sql in phpMyAdmin, then publish from /login.
-            </p>
+            <p className="mt-2 text-slate-600">Import schema.sql, then publish from the dashboard.</p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2">
@@ -50,9 +51,7 @@ export default async function HomePage({
         )}
         {pages > 1 && (
           <div className="mt-8 flex gap-3">
-            {page > 1 && (
-              <Link href={`/?page=${page - 1}`} className="btn-outline">Previous</Link>
-            )}
+            {page > 1 && <Link href={`/?page=${page - 1}`} className="btn-outline">Previous</Link>}
             {page < pages && <Link href={`/?page=${page + 1}`} className="btn">Next</Link>}
           </div>
         )}

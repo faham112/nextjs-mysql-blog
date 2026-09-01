@@ -5,10 +5,10 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: {
-    default: "Ember Journal",
-    template: "%s \u00b7 Ember Journal",
+    default: "Global Career Hub",
+    template: "%s \u00b7 Global Career Hub",
   },
-  description: "A Next.js + MySQL blog ready for Hostinger Node.js hosting.",
+  description: "Career guides, jobs insight, and practical tutorials by Abdul Faheem.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org"),
 };
 

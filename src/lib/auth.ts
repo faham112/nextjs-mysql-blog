@@ -94,12 +94,16 @@ export async function ensureAdminUser() {
   const password_hash = await hashPassword(password);
 
   if (existing) {
-    await query("UPDATE users SET password_hash = ? WHERE id = ?", [password_hash, existing.id]);
+    await query("UPDATE users SET name = ?, password_hash = ? WHERE id = ?", [
+      "Abdul Faheem",
+      password_hash,
+      existing.id,
+    ]);
     return;
   }
 
   await query("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')", [
-    "Admin",
+    "Abdul Faheem",
     email,
     password_hash,
   ]);
