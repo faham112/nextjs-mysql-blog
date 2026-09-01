@@ -5,7 +5,11 @@ import { listCategories } from "@/lib/categories";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage({ searchParams }) {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { page: pageRaw } = await searchParams;
   const page = Math.max(1, Number(pageRaw || 1));
   const [{ posts, total, perPage }, categories] = await Promise.all([
@@ -20,7 +24,6 @@ export default async function HomePage({ searchParams }) {
         <div className="mb-8">
           <p className="text-sm uppercase tracking-[0.2em] text-accent">Independent notes</p>
           <h1 className="mt-2 font-serif text-4xl sm:text-5xl">Stories worth sitting with.</h1>
-          <p className="mt-3 max-w-2xl text-slate-600">A production-ready Next.js blog powered by MySQL.</p>
         </div>
         {posts.length === 0 ? (
           <div className="card p-8">
@@ -29,13 +32,19 @@ export default async function HomePage({ searchParams }) {
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2">
-            {posts.map((post) => <PostCard key={post.id} post={post} />)}
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
           </div>
         )}
         {pages > 1 && (
           <div className="mt-8 flex gap-3">
-            {page > 1 && <Link href={`/?page=${page - 1}`} className="btn-outline">Previous</Link>}
-            {page < pages && <Link href={`/?page=${page + 1}`} className="btn">Next</Link>}
+            {page > 1 && (
+              <Link href={`/?page=${page - 1}`} className="btn-outline">Previous</Link>
+            )}
+            {page < pages && (
+              <Link href={`/?page=${page + 1}`} className="btn">Next</Link>
+            )}
           </div>
         )}
       </section>
@@ -51,10 +60,7 @@ export default async function HomePage({ searchParams }) {
             ))}
           </ul>
         </div>
-        <div className="card bg-ink p-5 text-paper">
-          <h2 className="font-serif text-xl">Write here</h2>
-          <Link href="/admin" className="btn mt-4 !bg-accent">Open admin</Link>
-        </div>
+        <Link href="/admin" className="btn">Open admin</Link>
       </aside>
     </div>
   );

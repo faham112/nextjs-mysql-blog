@@ -5,11 +5,16 @@ import { listPublishedPosts } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
-export default async function CategoryPage({ params }) {
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
   if (!category) notFound();
   const { posts } = await listPublishedPosts(1, 24, slug);
+
   return (
     <div>
       <p className="text-sm uppercase tracking-widest text-accent">Category</p>
@@ -20,7 +25,9 @@ export default async function CategoryPage({ params }) {
           <PostCard key={post.id} post={post} />
         ))}
       </div>
-      {posts.length === 0 && <p className="mt-6 text-slate-500">No published posts in this category yet.</p>}
+      {posts.length === 0 && (
+        <p className="mt-6 text-slate-500">No published posts in this category yet.</p>
+      )}
     </div>
   );
 }

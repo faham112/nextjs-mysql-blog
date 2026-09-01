@@ -5,7 +5,11 @@ import { getPostById } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
-export default async function EditPostPage({ params }) {
+export default async function EditPostPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const [post, categories] = await Promise.all([getPostById(Number(id)), listCategories()]);
   if (!post) notFound();

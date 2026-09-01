@@ -4,12 +4,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: { default: "Ember Journal", template: "%s · Ember Journal" },
+  title: {
+    default: "Ember Journal",
+    template: "%s \u00b7 Ember Journal",
+  },
   description: "A Next.js + MySQL blog ready for Hostinger Node.js hosting.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className="min-h-screen font-sans">

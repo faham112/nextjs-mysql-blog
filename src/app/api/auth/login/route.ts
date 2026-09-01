@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSession, ensureAdminUser, findUserByEmail, verifyPassword } from "@/lib/auth";
 
-export async function POST(req) {
+export async function POST(req: Request) {
   try {
     await ensureAdminUser();
     const { email, password } = await req.json();
@@ -12,7 +12,12 @@ export async function POST(req) {
     if (!user || !(await verifyPassword(String(password), user.password_hash))) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
-    await createSession({ id: user.id, name: user.name, email: user.email, role: user.role });
+    await createSession({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error(error);

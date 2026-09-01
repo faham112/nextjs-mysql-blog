@@ -13,20 +13,28 @@ function secret() {
   return new TextEncoder().encode(value);
 }
 
-export async function hashPassword(plain) {
+export type SessionUser = {
+  id: number;
+  name: string;
+  email: string;
+  role: "admin" | "editor";
+};
+
+export async function hashPassword(plain: string) {
   return bcrypt.hash(plain, 12);
 }
 
-export async function verifyPassword(plain, hash) {
+export async function verifyPassword(plain: string, hash: string) {
   return bcrypt.compare(plain, hash);
 }
 
-export async function createSession(user) {
+export async function createSession(user: SessionUser) {
   const token = await new SignJWT({ ...user })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
     .sign(secret());
+
   const store = await cookies();
   store.set(COOKIE, token, {
     httpOnly: true,
@@ -42,7 +50,7 @@ export async function destroySession() {
   store.set(COOKIE, "", { httpOnly: true, path: "/", maxAge: 0 });
 }
 
-export async function getSession() {
+export async function getSession(): Promise<SessionUser | null> {
   const store = await cookies();
   const token = store.get(COOKIE)?.value;
   if (!token) return null;
@@ -59,8 +67,19 @@ export async function getSession() {
   }
 }
 
-export async function findUserByEmail(email) {
-  const rows = await query("SELECT id, name, email, password_hash, role FROM users WHERE email = :email LIMIT 1", { email });
+type UserRow = {
+  id: number;
+  name: string;
+  email: string;
+  password_hash: string;
+  role: "admin" | "editor";
+};
+
+export async function findUserByEmail(email: string) {
+  const rows = await query<UserRow>(
+    "SELECT id, name, email, password_hash, role FROM users WHERE email = :email LIMIT 1",
+    { email }
+  );
   return rows[0] ?? null;
 }
 
@@ -68,10 +87,13 @@ export async function ensureAdminUser() {
   const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;
   if (!email || !password) return;
+
   const existing = await findUserByEmail(email);
   if (existing) return;
+
   const password_hash = await hashPassword(password);
-  await query("INSERT INTO users (name, email, password_hash, role) VALUES (:name, :email, :password_hash, 'admin')", {
-    name: "Admin", email, password_hash,
-  });
+  await query(
+    "INSERT INTO users (name, email, password_hash, role) VALUES (:name, :email, :password_hash, 'admin')",
+    { name: "Admin", email, password_hash }
+  );
 }
