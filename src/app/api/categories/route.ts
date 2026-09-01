@@ -3,7 +3,7 @@ import { getSession } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { toSlug } from "@/lib/posts";
 
-export async function POST(req) {
+export async function POST(req: Request) {
   const user = await getSession();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json();
@@ -11,12 +11,14 @@ export async function POST(req) {
   if (!name) return NextResponse.json({ error: "Name required" }, { status: 400 });
   const slug = toSlug(name);
   await query("INSERT INTO categories (name, slug, description) VALUES (:name, :slug, :description)", {
-    name, slug, description: body.description || null,
+    name,
+    slug,
+    description: body.description || null,
   });
   return NextResponse.json({ ok: true });
 }
 
-export async function DELETE(req) {
+export async function DELETE(req: Request) {
   const user = await getSession();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const id = Number(new URL(req.url).searchParams.get("id"));
