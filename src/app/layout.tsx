@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     template: "%s \u00b7 Ember Journal",
   },
   description: "A Next.js + MySQL blog ready for Hostinger Node.js hosting.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
