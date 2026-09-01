@@ -12,24 +12,28 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const user = await getSession();
   if (!user) redirect("/login");
   return (
-    <div className="grid gap-8 lg:grid-cols-[250px_1fr]">
-      <aside className="card overflow-hidden">
-        <div className="bg-ink px-5 py-5 text-paper">
-          <p className="text-[11px] uppercase tracking-[0.2em] text-accent">Writer desk</p>
-          <p className="mt-2 font-serif text-2xl">{user.name}</p>
-          <p className="mt-1 text-xs text-paper/60">{user.email}</p>
+    <div className="mx-auto max-w-7xl px-4 py-10">
+      <div className="mb-6 flex flex-col justify-between gap-4 rounded-2xl border border-dark-800 bg-dark-900 p-6 text-white sm:flex-row sm:items-center">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Writer Control Panel</p>
+          <h1 className="mt-1 font-heading text-2xl font-extrabold">Welcome back, {user.name}</h1>
         </div>
-        <nav className="grid gap-1 p-3 text-sm">
+        <div className="flex gap-3">
+          <Link href="/admin/posts/new" className="btn">New Article</Link>
+          <Link href="/" className="rounded-xl border border-dark-700 bg-dark-800 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-300">Exit</Link>
+        </div>
+      </div>
+      <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
+        <nav className="card grid h-fit gap-1 p-3 text-sm font-semibold">
           {links.map((item) => (
-            <Link key={item.href} href={item.href} className="rounded-xl px-3 py-2 hover:bg-[#f6f1e8]">{item.label}</Link>
+            <Link key={item.href} href={item.href} className="rounded-xl px-3 py-2 hover:bg-slate-100 hover:text-brand-600">{item.label}</Link>
           ))}
-          <Link href="/" className="rounded-xl px-3 py-2 text-slate-500 hover:bg-[#f6f1e8]">View site</Link>
           <form action="/api/auth/logout" method="post">
-            <button className="w-full rounded-xl px-3 py-2 text-left text-slate-500 hover:bg-[#f6f1e8]" type="submit">Log out</button>
+            <button className="w-full rounded-xl px-3 py-2 text-left text-slate-500 hover:bg-slate-100" type="submit">Log out</button>
           </form>
         </nav>
-      </aside>
-      <div className="min-w-0">{children}</div>
+        <div className="min-w-0">{children}</div>
+      </div>
     </div>
   );
 }

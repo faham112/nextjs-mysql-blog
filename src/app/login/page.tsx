@@ -22,16 +22,25 @@ export default function LoginPage() {
     router.refresh();
   }
   return (
-    <div className="mx-auto max-w-md">
-      <p className="text-xs uppercase tracking-[0.2em] text-accent">Writer desk</p>
-      <h1 className="mt-2 font-serif text-4xl">Sign in to publish</h1>
-      <p className="mt-2 text-sm text-slate-600">This page is only for Abdul Faheem. Readers do not need an account.</p>
-      <form onSubmit={onSubmit} className="card mt-6 space-y-3 p-6">
-        <input name="email" type="email" required placeholder="Writer email" className="input" />
-        <input name="password" type="password" required placeholder="Password" className="input" />
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button className="btn w-full" type="submit">Enter dashboard</button>
-      </form>
+    <div className="flex min-h-[75vh] items-center justify-center px-4 py-12">
+      <div className="card w-full max-w-md space-y-6 p-8 sm:p-10">
+        <div className="text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-slate-800 bg-dark-900 text-2xl font-black text-brand-600">G.</div>
+          <h2 className="mt-3 font-heading text-2xl font-extrabold">Writer Desk Access</h2>
+        </div>
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div>
+            <label className="mb-2 block text-xs font-bold uppercase tracking-wider">Email Address</label>
+            <input name="email" type="email" required className="input" placeholder="admin@globalcareerhub.org" />
+          </div>
+          <div>
+            <label className="mb-2 block text-xs font-bold uppercase tracking-wider">Password</label>
+            <input name="password" type="password" required className="input" />
+          </div>
+          {error && <p className="text-sm text-brand-600">{error}</p>}
+          <button className="btn w-full" type="submit">Sign In to Portal</button>
+        </form>
+      </div>
     </div>
   );
 }
