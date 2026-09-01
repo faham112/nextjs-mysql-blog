@@ -1,49 +1,25 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
 export default function Footer() {
-  const pathname = usePathname();
-  const isHome = pathname === "/";
-  const isAdmin = pathname.startsWith("/admin") || pathname.startsWith("/login");
-
-  if (isHome) {
-    return (
-      <footer className="mt-16 border-t border-ink/10">
-        <p className="mx-auto max-w-6xl px-4 py-8 text-xs text-slate-500">
-          © {new Date().getFullYear()} Global Career Hub · Abdul Faheem
-        </p>
-      </footer>
-    );
-  }
-
   return (
-    <footer className="mt-20 border-t border-ink/10 bg-[#efe7d8]">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-2">
-        <div>
-          <p className="font-serif text-2xl">
-            Global<span className="text-accent">CareerHub</span>
-          </p>
-          <p className="mt-3 max-w-sm text-sm leading-6 text-slate-600">
-            Writing by Abdul Faheem. Readers browse freely. Publishing stays on the writer desk.
-          </p>
+    <footer className="mt-16 border-t border-dark-800 bg-dark-900 text-white">
+      <div className="mx-auto max-w-7xl space-y-8 px-4 py-12">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
+          <div>
+            <p className="font-heading text-xl font-extrabold">Global<span className="text-brand-500">CareerHub</span></p>
+            <p className="mt-2 max-w-sm text-xs text-slate-400">Clear writing on careers, skills, and study. Managed by Abdul Faheem.</p>
+          </div>
+          <nav className="flex flex-wrap gap-6 text-xs font-semibold text-slate-400">
+            <Link href="/" className="hover:text-white">Home</Link>
+            <Link href="/articles" className="hover:text-white">Latest Articles</Link>
+            <Link href="/about" className="hover:text-white">About Author</Link>
+            <Link href="/terms" className="hover:text-white">Terms</Link>
+            <Link href="/login" className="hover:text-brand-500">Writer Login</Link>
+          </nav>
         </div>
-        <nav className="grid gap-2 text-sm">
-          {!isAdmin && (
-            <>
-              <Link href="/articles" className="hover:text-accent">Articles</Link>
-              <Link href="/about" className="hover:text-accent">About</Link>
-              <Link href="/contact" className="hover:text-accent">Contact</Link>
-              <Link href="/privacy" className="hover:text-accent">Privacy</Link>
-            </>
-          )}
-          <Link href="/login" className="hover:text-accent">Writer login</Link>
-        </nav>
+        <div className="border-t border-dark-800 pt-6 text-xs text-slate-500">
+          © {new Date().getFullYear()} Global Career Hub. Built with Next.js and MySQL. Deployed on Hostinger Node.js hosting.
+        </div>
       </div>
-      <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-slate-500">
-        © {new Date().getFullYear()} Global Career Hub · Abdul Faheem · globalcareerhub.org
-      </p>
     </footer>
   );
 }
