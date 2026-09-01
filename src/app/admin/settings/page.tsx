@@ -2,26 +2,29 @@ import { getSession } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 export default async function SettingsPage() {
   const user = await getSession();
+  const rows = [
+    ["Writer name", user?.name || "Abdul Faheem"],
+    ["Login email", user?.email || "admin@globalcareerhub.org"],
+    ["Role", user?.role || "admin"],
+    ["Site name", "Global Career Hub"],
+    ["Public URL", "https://globalcareerhub.org"],
+    ["Founder", "Abdul Faheem"],
+  ];
   return (
-    <div className="max-w-2xl">
-      <p className="text-xs uppercase tracking-[0.2em] text-accent">Account</p>
-      <h1 className="mt-2 font-serif text-4xl">Settings</h1>
-      <p className="mt-2 text-slate-600">Identity is set. Change passwords later in Hostinger env vars.</p>
-      <div className="card mt-8 divide-y divide-ink/10">
-        <div className="flex justify-between gap-4 px-5 py-4 text-sm"><span className="text-slate-500">Writer name</span><span className="font-medium">{user?.name || "Abdul Faheem"}</span></div>
-        <div className="flex justify-between gap-4 px-5 py-4 text-sm"><span className="text-slate-500">Login email</span><span className="font-medium">{user?.email || "admin@globalcareerhub.org"}</span></div>
-        <div className="flex justify-between gap-4 px-5 py-4 text-sm"><span className="text-slate-500">Role</span><span className="font-medium">{user?.role || "admin"}</span></div>
-        <div className="flex justify-between gap-4 px-5 py-4 text-sm"><span className="text-slate-500">Site name</span><span className="font-medium">Global Career Hub</span></div>
-        <div className="flex justify-between gap-4 px-5 py-4 text-sm"><span className="text-slate-500">Public URL</span><span className="font-medium">https://globalcareerhub.org</span></div>
-        <div className="flex justify-between gap-4 px-5 py-4 text-sm"><span className="text-slate-500">Founder</span><span className="font-medium">Abdul Faheem</span></div>
+    <div className="space-y-5">
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-200">Account</p>
+        <h2 className="font-heading text-3xl font-extrabold">Settings</h2>
       </div>
-      <div className="card mt-6 p-5 text-sm leading-6 text-slate-600">
-        <p className="font-medium text-ink">Writer login is required to publish.</p>
-        <p className="mt-2">Readers never need an account. Only /login opens this desk.</p>
+      <div className="morph-card-red divide-y divide-white/15 p-0">
+        {rows.map(([label, value]) => (
+          <div key={label} className="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <span className="text-sm text-white/70">{label}</span>
+            <span className="font-semibold">{value}</span>
+          </div>
+        ))}
       </div>
-      <form action="/api/auth/logout" method="post" className="mt-6">
-        <button className="btn-outline" type="submit">Log out</button>
-      </form>
+      <div className="morph-card text-sm text-white/75">Writer login is required to publish. Readers never need an account.</div>
     </div>
   );
 }
