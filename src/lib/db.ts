@@ -26,10 +26,9 @@ export function getPool() {
   return global.mysqlPool;
 }
 
-export async function query<T = any>(
-  sql: string,
-  params?: Record<string, unknown> | unknown[]
-): Promise<T[]> {
-  const [rows] = await getPool().execute(sql, params);
+export async function query<T = any>(sql: string, params?: any): Promise<T[]> {
+  const [rows] = params
+    ? await getPool().execute(sql, params)
+    : await getPool().query(sql);
   return rows as T[];
 }
