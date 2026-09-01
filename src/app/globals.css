@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { @apply bg-paper text-ink antialiased; }
+.prose-blog h2 { @apply mt-10 mb-3 font-serif text-2xl font-semibold; }
+.prose-blog h3 { @apply mt-8 mb-2 font-serif text-xl font-semibold; }
+.prose-blog p { @apply mb-4 leading-8 text-[17px] text-slate-800; }
+.prose-blog a { @apply text-accent underline underline-offset-4; }
+.prose-blog ul, .prose-blog ol { @apply mb-4 ml-6 list-disc space-y-1; }
+.prose-blog img { @apply my-6 rounded-xl; }
+.prose-blog blockquote { @apply my-6 border-l-4 border-accent pl-4 italic text-slate-600; }
+.prose-blog pre { @apply my-6 overflow-x-auto rounded-xl bg-ink p-4 text-sm text-paper; }
+.btn { @apply inline-flex items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-white transition hover:bg-moss; }
+.btn-outline { @apply inline-flex items-center justify-center rounded-full border border-ink/20 bg-white px-5 py-2.5 text-sm font-medium text-ink transition hover:border-ink; }
+.input { @apply w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm outline-none ring-accent/30 focus:ring-2; }
+.card { @apply rounded-2xl border border-ink/10 bg-white shadow-sm; }
