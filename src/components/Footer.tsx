@@ -13,11 +13,11 @@ export default function Footer() {
             <Link href="/articles" className="hover:text-white">Latest Articles</Link>
             <Link href="/about" className="hover:text-white">About Author</Link>
             <Link href="/terms" className="hover:text-white">Terms</Link>
-            <Link href="/login" className="hover:text-brand-500">Writer Login</Link>
+            <Link href="/login" className="hover:text-brand-500">Sign in</Link>
           </nav>
         </div>
         <div className="border-t border-dark-800 pt-6 text-xs text-slate-500">
-          © {new Date().getFullYear()} Global Career Hub. Built with Next.js and MySQL. Deployed on Hostinger Node.js hosting.
+          © {new Date().getFullYear()} Global Career Hub · Abdul Faheem. All rights reserved.
         </div>
       </div>
     </footer>
