@@ -1,31 +1,35 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import AdminNav from "@/components/AdminNav";
 import AdminBottomNav from "@/components/AdminBottomNav";
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await getSession();
   if (!user) redirect("/login?next=/admin");
   if (user.role !== "admin") redirect("/dashboard");
+
   return (
-    <div className="min-h-screen bg-dark-900 pb-20 lg:pb-8">
+    <div className="min-h-screen bg-dark-900 pb-20">
       <div className="bg-[radial-gradient(circle_at_top,_rgba(225,29,72,0.18),_transparent_45%)] px-3 py-6 sm:px-6">
         <div className="mx-auto max-w-7xl">
           <div className="admin-shell">
             <div className="admin-shell-inner">
-              <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mb-6 flex items-start justify-between gap-4">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-brand-200">Admin desk</p>
                   <h1 className="mt-1 font-heading text-2xl font-extrabold sm:text-3xl">{user.name}</h1>
                   <p className="mt-1 text-xs text-white/60">{user.email}</p>
                 </div>
-                <div className="hidden flex-wrap gap-3 lg:flex">
-                  <Link href="/admin/posts/new" className="btn">New article</Link>
-                  <Link href="/" className="rounded-xl border border-white/20 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white/80">Site</Link>
-                </div>
+                <form action="/api/auth/logout" method="post">
+                  <button className="rounded-xl bg-brand-600 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-brand-600/30" type="submit">
+                    Logout
+                  </button>
+                </form>
               </div>
               <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
-                <aside className="morph-card hidden h-fit lg:block"><AdminNav /></aside>
+                <aside className="morph-card hidden h-fit lg:block">
+                  <AdminNav />
+                </aside>
                 <section className="min-w-0">{children}</section>
               </div>
             </div>
