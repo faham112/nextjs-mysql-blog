@@ -1,5 +1,6 @@
 "use client";
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const router = useRouter();
@@ -13,12 +14,9 @@ export default function LoginPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: form.get("email"), password: form.get("password") }),
     });
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({ error: "" }));
-      setError(data.error || "Invalid email or password.");
-      return;
-    }
-    router.push("/admin");
+    const data = await res.json().catch(() => ({ error: "" }));
+    if (!res.ok) { setError(data.error || "Invalid email or password."); return; }
+    router.push(data.role === "admin" ? "/admin" : "/dashboard");
     router.refresh();
   }
   return (
@@ -26,20 +24,16 @@ export default function LoginPage() {
       <div className="card w-full max-w-md space-y-6 p-8 sm:p-10">
         <div className="text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-slate-800 bg-dark-900 text-2xl font-black text-brand-600">G.</div>
-          <h2 className="mt-3 font-heading text-2xl font-extrabold">Writer Desk Access</h2>
+          <h2 className="mt-3 font-heading text-2xl font-extrabold">Sign in</h2>
+          <p className="mt-1 text-xs text-slate-500">Admin opens the control desk. Publishers open their workspace.</p>
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
-          <div>
-            <label className="mb-2 block text-xs font-bold uppercase tracking-wider">Email Address</label>
-            <input name="email" type="email" required className="input" placeholder="admin@globalcareerhub.org" />
-          </div>
-          <div>
-            <label className="mb-2 block text-xs font-bold uppercase tracking-wider">Password</label>
-            <input name="password" type="password" required className="input" />
-          </div>
+          <input name="email" type="email" required className="input" placeholder="Email" />
+          <input name="password" type="password" required className="input" placeholder="Password" />
           {error && <p className="text-sm text-brand-600">{error}</p>}
-          <button className="btn w-full" type="submit">Sign In to Portal</button>
+          <button className="btn w-full" type="submit">Sign in</button>
         </form>
+        <p className="text-center text-sm text-slate-500">Want to write with us? <Link href="/register" className="font-bold text-brand-600">Create a publisher account</Link></p>
       </div>
     </div>
   );
