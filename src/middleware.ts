@@ -20,6 +20,9 @@ async function sessionFrom(req: NextRequest) {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  if (pathname.endsWith(".map")) {
+    return new NextResponse("Not found", { status: 404 });
+  }
   const user = await sessionFrom(req);
 
   if (pathname.startsWith("/admin")) {
@@ -49,5 +52,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/dashboard", "/dashboard/:path*"],
+  matcher: ["/admin", "/admin/:path*", "/dashboard", "/dashboard/:path*", "/:path*.map"],
 };
