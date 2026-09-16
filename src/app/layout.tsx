@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Trackers from "@/components/Trackers";
 const sans = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap", variable: "--font-sans" });
 const heading = Space_Grotesk({ subsets: ["latin"], weight: ["500", "700"], display: "swap", variable: "--font-heading" });
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org";
@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <SiteChrome>{children}</SiteChrome>
         </ThemeProvider>
-        <Script src="https://analytics.globalcareerhub.org/tracker/femantic.js" data-site="338df5d40fcf5eef407f9391aa7d7a2d2b3164659e8350a91d9f7e87cbd1c0a2" strategy="lazyOnload" />
+        <Trackers />
       </body>
     </html>
   );
