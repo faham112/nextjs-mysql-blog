@@ -1,9 +1,12 @@
 import { getSession } from "@/lib/auth";
 import { envReport } from "@/lib/migrate";
+import { getScripts } from "@/lib/settings";
+import TrackingForm from "@/components/TrackingForm";
 export const dynamic = "force-dynamic";
 export default async function SettingsPage() {
   const user = await getSession();
   const env = envReport();
+  const scripts = await getScripts();
   const rows = [["Writer name", user?.name || "Faham"], ["Login email", user?.email || ""], ["Role", user?.role || "admin"]];
   return (
     <div className="space-y-5">
@@ -19,6 +22,8 @@ export default async function SettingsPage() {
           </div>
         ))}
       </div>
+      <h3 className="font-heading text-xl font-bold">Tracking codes</h3>
+      <div className="card p-5"><TrackingForm header={scripts.header} body={scripts.body} footer={scripts.footer} /></div>
       <h3 className="font-heading text-xl font-bold">Hostinger variables</h3>
       <div className="card divide-y p-0">
         {env.map((row) => (
@@ -28,7 +33,6 @@ export default async function SettingsPage() {
           </div>
         ))}
       </div>
-      <p className="text-xs" style={{ color: "var(--muted)" }}>Passwords change in Hostinger env. SQL tables on Tools.</p>
     </div>
   );
 }

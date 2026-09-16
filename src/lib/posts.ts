@@ -25,16 +25,16 @@ export async function listPublishedPosts(page = 1, perPage = 8, categorySlug?: s
 }
 export async function getPublishedPostBySlug(slug: string) {
   await publishDuePosts();
-  const rows = await query<PostRow[]>(`${SELECT} WHERE p.slug = :slug AND p.status = 'published' LIMIT 1`, { slug });
+  const rows = await query<PostRow>(`${SELECT} WHERE p.slug = :slug AND p.status = 'published' LIMIT 1`, { slug });
   return rows[0] ?? null;
 }
 export async function getPostById(id: number) {
-  const rows = await query<PostRow[]>(`${SELECT} WHERE p.id = :id LIMIT 1`, { id });
+  const rows = await query<PostRow>(`${SELECT} WHERE p.id = :id LIMIT 1`, { id });
   return rows[0] ?? null;
 }
 export async function listAllPosts() {
   await publishDuePosts();
-  return query<PostRow[]>(`${SELECT} ORDER BY p.updated_at DESC`);
+  return query<PostRow>(`${SELECT} ORDER BY p.updated_at DESC`);
 }
 export async function searchPosts(q: string) {
   await publishDuePosts();
