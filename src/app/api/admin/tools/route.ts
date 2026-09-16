@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { runSqlUpdates } from "@/lib/migrate";
 import { publishDuePosts } from "@/lib/posts";
-import { seedSeoPosts } from "@/lib/seedPosts";
+import { seedSeoPosts } from "@/lib/seed-posts";
 export const dynamic = "force-dynamic";
 export async function POST(req: Request) {
   const user = await getSession();
@@ -17,5 +17,6 @@ export async function POST(req: Request) {
     const log = await seedSeoPosts(user.id);
     return NextResponse.json({ ok: true, log });
   }
-  return NextResponse.json({ ok: true, log: await runSqlUpdates() });
+  const log = await runSqlUpdates();
+  return NextResponse.json({ ok: true, log });
 }

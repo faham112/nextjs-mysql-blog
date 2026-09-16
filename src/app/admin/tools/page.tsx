@@ -19,7 +19,7 @@ export default function AdminToolsPage() {
       <div className="grid gap-3 sm:grid-cols-2">
         <button className="btn" disabled={!!busy} onClick={() => run("migrate")}>{busy === "migrate" ? "Running..." : "Run SQL updates"}</button>
         <button className="btn-outline" disabled={!!busy} onClick={() => run("publish")}>{busy === "publish" ? "Publishing..." : "Publish due posts now"}</button>
-        <button className="btn-outline" disabled={!!busy} onClick={() => run("seed")}>{busy === "seed" ? "Seeding..." : "Add 12 SEO posts (peak hours)"}</button>
+        <button className="btn-outline sm:col-span-2" disabled={!!busy} onClick={() => run("seed")}>{busy === "seed" ? "Adding..." : "Add 12 SEO drafts (pending)"}</button>
       </div>
       {log.length > 0 && <pre className="card overflow-auto p-4 text-xs leading-6">{log.join("\n")}</pre>}
     </div>
