@@ -1,15 +1,10 @@
 import { getSession } from "@/lib/auth";
+import { envReport } from "@/lib/migrate";
 export const dynamic = "force-dynamic";
 export default async function SettingsPage() {
   const user = await getSession();
-  const rows = [
-    ["Writer name", user?.name || "Abdul Faheem"],
-    ["Login email", user?.email || "admin@globalcareerhub.org"],
-    ["Role", user?.role || "admin"],
-    ["Site name", "Global Career Hub"],
-    ["Public URL", "https://globalcareerhub.org"],
-    ["Founder", "Abdul Faheem"],
-  ];
+  const env = envReport();
+  const rows = [["Writer name", user?.name || "Faham"], ["Login email", user?.email || ""], ["Role", user?.role || "admin"]];
   return (
     <div className="space-y-5">
       <div>
@@ -24,7 +19,16 @@ export default async function SettingsPage() {
           </div>
         ))}
       </div>
-      <div className="morph-card text-sm text-white/75">Writer login is required to publish. Readers never need an account.</div>
+      <h3 className="font-heading text-xl font-bold">Hostinger variables</h3>
+      <div className="card divide-y p-0">
+        {env.map((row) => (
+          <div key={row.key} className="flex flex-col gap-1 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
+            <span className="font-mono text-xs">{row.key}</span>
+            <span className="text-sm">{row.set ? row.value : "missing"}</span>
+          </div>
+        ))}
+      </div>
+      <p className="text-xs" style={{ color: "var(--muted)" }}>Passwords change in Hostinger env. SQL tables on Tools.</p>
     </div>
   );
 }
