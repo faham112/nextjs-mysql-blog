@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, PenLine, Settings } from "lucide-react";
+import { LayoutDashboard, FileText, PenLine, Wrench } from "lucide-react";
 const tabs = [
   { href: "/admin", label: "Home", icon: LayoutDashboard, exact: true },
   { href: "/admin/posts", label: "Posts", icon: FileText },
   { href: "/admin/posts/new", label: "Write", icon: PenLine },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/tools", label: "Tools", icon: Wrench },
 ];
 export default function AdminBottomNav() {
   const pathname = usePathname();
