@@ -28,14 +28,9 @@ export default async function HomePage() {
           <Link href="/articles" className="text-sm font-bold text-brand-600">All articles</Link>
         </div>
         {posts.length === 0 ? (
-          <div className="card p-8">
-            <p className="font-heading text-xl font-bold">New guides are on the way</p>
-            <p className="mt-2 text-sm text-slate-600">Browse search topics or check back soon for new guides.</p>
-          </div>
+          <div className="card p-8"><p className="font-heading text-xl font-bold">New guides are on the way</p><p className="mt-2 text-sm text-slate-600">Browse search topics or check back soon for new guides.</p></div>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => <PostCard key={post.id} post={post} />)}
-          </div>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">{posts.map((post) => <PostCard key={post.id} post={post} />)}</div>
         )}
       </section>
       <section className="border-y border-dark-800 bg-dark-900 py-16 text-white">
@@ -43,7 +38,7 @@ export default async function HomePage() {
           <div className="max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-widest text-brand-500">About the Author</p>
             <h2 className="mt-3 font-heading text-3xl font-extrabold">Writing with clarity and conviction.</h2>
-            <p className="mt-3 text-sm text-slate-400">Author: Faham Baloch. Guides on careers, skills, and study routes.</p>
+            <p className="mt-3 text-sm text-slate-400">Guides on careers, skills, and study routes.</p>
           </div>
           <Link href="/about" className="btn flex-shrink-0">About the author</Link>
         </div>

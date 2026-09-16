@@ -32,7 +32,7 @@ export default function PostCard({ post }: { post: PostRow }) {
           <h3 className="mb-3 font-heading text-xl font-bold leading-snug text-dark-900 group-hover:text-brand-600">{post.title}</h3>
           <p className="mb-6 line-clamp-3 text-sm text-slate-600">{post.excerpt || "Read this guide on Global Career Hub."}</p>
           <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4 text-xs">
-            <span className="font-bold text-slate-800">By {post.author_name || "Abdul Faheem"}</span>
+            <span className="font-bold text-slate-800">{post.author_name ? `By ${post.author_name}` : "Read"}</span>
             <span className="font-bold text-brand-600">Read article →</span>
           </div>
         </div>
