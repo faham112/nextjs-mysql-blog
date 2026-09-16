@@ -10,8 +10,8 @@ export default function Footer() {
           </div>
           <nav className="flex flex-wrap gap-6 text-xs font-semibold text-slate-400">
             <Link href="/" className="hover:text-white">Home</Link>
-            <Link href="/articles" className="hover:text-white">Latest Articles</Link>
-            <Link href="/about" className="hover:text-white">About Author</Link>
+            <Link href="/articles" className="hover:text-white">Articles</Link>
+            <Link href="/about" className="hover:text-white">About</Link>
             <Link href="/terms" className="hover:text-white">Terms</Link>
             <Link href="/login" className="hover:text-brand-500">Sign in</Link>
           </nav>
