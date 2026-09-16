@@ -9,7 +9,6 @@ export default function Footer() {
               <img src="/logo.svg" alt="" className="h-10 w-10 rounded-lg" />
               <p className="font-heading text-xl font-extrabold">Global<span className="text-brand-500">CareerHub</span></p>
             </div>
-            <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Abdul Faheem</p>
             <p className="mt-2 max-w-sm text-xs text-slate-400">Free guides on careers, skills, and study.</p>
           </div>
           <nav className="grid grid-cols-2 gap-x-10 gap-y-2 text-xs font-semibold text-slate-400">
@@ -21,9 +20,7 @@ export default function Footer() {
             <Link href="/cookies" className="hover:text-white">Cookies</Link>
           </nav>
         </div>
-        <div className="border-t border-dark-800 pt-6 text-xs text-slate-500">
-          © {new Date().getFullYear()} Global Career Hub. All rights reserved.
-        </div>
+        <div className="border-t border-dark-800 pt-6 text-xs text-slate-500">© {new Date().getFullYear()} Global Career Hub. All rights reserved.</div>
       </div>
     </footer>
   );
