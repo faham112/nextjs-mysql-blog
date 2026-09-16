@@ -3,7 +3,6 @@ import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import Trackers from "@/components/Trackers";
 import ScriptSlots from "@/components/ScriptSlots";
 const sans = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap", variable: "--font-sans" });
 const heading = Space_Grotesk({ subsets: ["latin"], weight: ["500", "700"], display: "swap", variable: "--font-heading" });
@@ -28,7 +27,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${sans.className} min-h-screen`}>
         <ScriptSlots slot="body" />
         <ThemeProvider><SiteChrome>{children}</SiteChrome></ThemeProvider>
-        <Trackers />
         <ScriptSlots slot="footer" />
       </body>
     </html>
