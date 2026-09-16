@@ -1,30 +1,22 @@
 import type { Metadata } from "next";
-export const metadata: Metadata = { title: "About" };
+import Link from "next/link";
+export const metadata: Metadata = {
+  title: "About the author",
+  description: "Meet Abdul Faheem, who publishes Global Career Hub. Online he also writes as Faham Baloch.",
+  alternates: { canonical: "/about" },
+};
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-5xl space-y-12 px-4 py-16">
-      <div className="mx-auto max-w-2xl text-center">
-        <span className="rounded-md bg-brand-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-700">Creator Profile</span>
-        <h1 className="mt-4 font-heading text-4xl font-extrabold sm:text-5xl">About GlobalCareerHub</h1>
-      </div>
-      <div className="card space-y-8 p-8 sm:p-12">
-        <div className="flex flex-col items-center gap-8 border-b border-slate-200 pb-8 md:flex-row">
-          <div className="flex h-32 w-32 flex-shrink-0 items-center justify-center rounded-3xl border-4 border-slate-800 bg-dark-900 text-4xl font-black text-brand-600">AF.</div>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-brand-600">Founder & Primary Author</p>
-            <h2 className="mt-2 font-heading text-3xl font-extrabold">Abdul Faheem</h2>
-            <p className="mt-3 text-sm leading-relaxed text-slate-600">GlobalCareerHub publishes clear, free guides on careers, software, and study paths.</p>
-          </div>
-        </div>
-        <form action="mailto:admin@globalcareerhub.org" method="post" encType="text/plain" className="space-y-4">
-          <h3 className="font-heading text-xl font-bold">Send a Direct Message</h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <input name="name" required placeholder="Your Name" className="input" />
-            <input name="email" type="email" required placeholder="Your Email" className="input" />
-          </div>
-          <textarea name="message" rows={4} required placeholder="How can Abdul help you?" className="input" />
-          <button className="rounded-xl bg-dark-900 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white" type="submit">Submit Message</button>
-        </form>
+    <div className="mx-auto max-w-3xl px-4 py-16">
+      <p className="text-xs font-bold uppercase tracking-widest text-brand-600">About the author</p>
+      <h1 className="mt-2 font-heading text-4xl font-extrabold">Abdul Faheem</h1>
+      <p className="mt-2 text-sm text-slate-500">Internet name: Faham Baloch</p>
+      <div className="card mt-8 space-y-5 p-8">
+        <img src="/logo.svg" alt="Global Career Hub" className="h-16 w-16 rounded-2xl border border-slate-200 bg-dark-900 p-1" />
+        <p className="text-sm leading-7 text-slate-700">I run Global Career Hub as a small reading site, not a recruitment agency. The pages here are guides I would have wanted when I was filling forms at midnight: how to talk about a skill without padding a CV, how to keep a job search from taking over the house, how to write a statement that still sounds like a person.</p>
+        <p className="text-sm leading-7 text-slate-700">On the internet I publish as <strong>Faham Baloch</strong>. On this site the byline stays Abdul Faheem, which is my given name. Both refer to the same writer.</p>
+        <p className="text-sm leading-7 text-slate-700">Nothing here is a promise of a visa, a scholarship, or a job. Read the guide, check the official source, then decide. If a line is wrong, write to me and I will correct it.</p>
+        <p className="text-sm">Email: <a className="font-semibold text-brand-600" href="mailto:admin@globalcareerhub.org">admin@globalcareerhub.org</a> · <Link href="/contact" className="font-semibold text-brand-600">Contact page</Link></p>
       </div>
     </div>
   );
