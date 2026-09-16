@@ -7,14 +7,18 @@ export default async function PublisherHome() {
   const user = await getSession();
   if (!user) redirect("/login?next=/dashboard");
   if (user.role === "admin") redirect("/admin");
-  const posts = await query<{ id: number; title: string; status: string; slug: string }>("SELECT id, title, status, slug FROM posts WHERE author_id = ? ORDER BY updated_at DESC", [user.id]).catch(() => []);
+  const posts = await query<{ id: number; title: string; status: string; slug: string }>(
+    "SELECT id, title, status, slug FROM posts WHERE author_id = ? ORDER BY updated_at DESC",
+    [user.id]
+  ).catch(() => []);
   return (
     <div className="min-h-screen bg-slate-100 px-4 py-8 pb-24">
       <div className="mx-auto max-w-3xl space-y-6">
         <div className="rounded-3xl bg-white p-6 shadow-sm">
+          <img src="/logo.svg" alt="" className="mb-3 h-10 w-10 rounded-xl" />
           <p className="text-xs font-bold uppercase tracking-widest text-brand-600">Publisher desk</p>
           <h1 className="mt-2 font-heading text-3xl font-extrabold">Hello, {user.name}</h1>
-          <p className="mt-2 text-sm text-slate-600">Write drafts for Global Career Hub. This is not the admin panel.</p>
+          <p className="mt-2 text-sm text-slate-600">You can write drafts for Global Career Hub. An admin reviews the site.</p>
         </div>
         <div className="flex gap-3">
           <Link href="/dashboard/new" className="btn">New draft</Link>
@@ -22,11 +26,17 @@ export default async function PublisherHome() {
         </div>
         <div className="rounded-3xl bg-white p-2 shadow-sm">
           {posts.length === 0 ? <p className="p-6 text-sm text-slate-500">No drafts yet.</p> : (
-            <ul>{posts.map((p) => (
-              <li key={p.id} className="flex items-center justify-between border-b border-slate-100 px-4 py-3 last:border-0">
-                <div><p className="font-semibold">{p.title}</p><p className="text-xs capitalize text-slate-500">{p.status}</p></div>
-              </li>
-            ))}</ul>
+            <ul>
+              {posts.map((p) => (
+                <li key={p.id} className="flex items-center justify-between border-b border-slate-100 px-4 py-3 last:border-0">
+                  <div>
+                    <p className="font-semibold">{p.title}</p>
+                    <p className="text-xs capitalize text-slate-500">{p.status}</p>
+                  </div>
+                  <Link href={`/dashboard/edit/${p.id}`} className="text-sm font-bold text-brand-600">Edit</Link>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </div>
