@@ -6,14 +6,14 @@ export type PostRow = {
   created_at: Date | string; updated_at: Date | string;
   category_name?: string | null; category_slug?: string | null; author_name?: string | null; comment_count?: number;
 };
-const SELECT = `
-  SELECT p.*, c.name AS category_name, c.slug AS category_slug, u.name AS author_name,
+const SELECT = `SELECT p.*, c.name AS category_name, c.slug AS category_slug, u.name AS author_name,
     (SELECT COUNT(*) FROM comments cm WHERE cm.post_id = p.id AND cm.approved = 1) AS comment_count
-  FROM posts p
-  LEFT JOIN categories c ON c.id = p.category_id
-  LEFT JOIN users u ON u.id = p.author_id
-`;
+  FROM posts p LEFT JOIN categories c ON c.id = p.category_id LEFT JOIN users u ON u.id = p.author_id`;
+export async function publishDuePosts() {
+  await query(`UPDATE posts SET status = 'published' WHERE status = 'draft' AND published_at IS NOT NULL AND published_at <= NOW()`).catch(() => {});
+}
 export async function listPublishedPosts(page = 1, perPage = 8, categorySlug?: string) {
+  await publishDuePosts();
   const offset = (page - 1) * perPage;
   const safeLimit = Math.max(1, Number(perPage) || 8);
   const safeOffset = Math.max(0, Number(offset) || 0);
@@ -24,17 +24,20 @@ export async function listPublishedPosts(page = 1, perPage = 8, categorySlug?: s
   return { posts: rows, total: countRows[0]?.total ?? 0, page, perPage };
 }
 export async function getPublishedPostBySlug(slug: string) {
-  const rows = await query<PostRow>(`${SELECT} WHERE p.slug = ? AND p.status = 'published' LIMIT 1`, [slug]);
+  await publishDuePosts();
+  const rows = await query<PostRow[]>(`${SELECT} WHERE p.slug = :slug AND p.status = 'published' LIMIT 1`, { slug });
   return rows[0] ?? null;
 }
 export async function getPostById(id: number) {
-  const rows = await query<PostRow>(`${SELECT} WHERE p.id = ? LIMIT 1`, [id]);
+  const rows = await query<PostRow[]>(`${SELECT} WHERE p.id = :id LIMIT 1`, { id });
   return rows[0] ?? null;
 }
 export async function listAllPosts() {
-  return query<PostRow>(`${SELECT} ORDER BY p.updated_at DESC`);
+  await publishDuePosts();
+  return query<PostRow[]>(`${SELECT} ORDER BY p.updated_at DESC`);
 }
 export async function searchPosts(q: string) {
+  await publishDuePosts();
   const like = `%${q}%`;
   return query<PostRow>(`${SELECT} WHERE p.status = 'published' AND (p.title LIKE ? OR p.excerpt LIKE ? OR p.content LIKE ?) ORDER BY p.published_at DESC LIMIT 24`, [like, like, like]);
 }
