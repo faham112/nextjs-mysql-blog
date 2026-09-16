@@ -15,48 +15,43 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   useEffect(() => { setOpen(false); }, [pathname]);
   useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
   return (
     <>
-      <header className="site-header sticky top-0 z-[80] backdrop-blur">
+      <header className="sticky top-0 z-[80]" style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0", color: "#0f172a" }}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <Link href="/" className="flex min-w-0 items-center gap-3">
-            <img src="/logo.svg" alt="Global Career Hub" className="h-10 w-10 shrink-0 rounded-xl" />
-            <p className="truncate font-heading text-xl font-extrabold leading-none tracking-tight">Global<span className="text-brand-600">CareerHub</span></p>
+          <Link href="/" className="flex min-w-0 items-center gap-2">
+            <img src="/logo.svg" alt="Global Career Hub" width={40} height={40} className="h-10 w-10 shrink-0 rounded-xl" />
+            <span className="truncate font-heading text-lg font-extrabold">Global<span style={{ color: "#e11d48" }}>CareerHub</span></span>
           </Link>
           <nav className="hidden items-center gap-1 text-sm font-semibold md:flex">
             {links.map((l) => (
-              <Link key={l.href} href={l.href} className={`rounded-lg px-4 py-2 hover:text-brand-600 ${pathname === l.href || (l.href !== "/" && pathname.startsWith(l.href)) ? "text-brand-600" : ""}`}>{l.label}</Link>
+              <Link key={l.href} href={l.href} className="rounded-lg px-4 py-2">{l.label}</Link>
             ))}
             <ThemeToggle />
           </nav>
           <div className="flex shrink-0 items-center gap-1 md:hidden">
             <ThemeToggle />
-            <button className="rounded-lg p-2" onClick={() => setOpen(true)} type="button" aria-label="Open menu"><Menu size={22} /></button>
+            <button type="button" aria-label="Open menu" className="p-2" onClick={() => setOpen(true)}><Menu size={22} /></button>
           </div>
         </div>
       </header>
       {open ? (
-        <div className="fixed inset-0 z-[200] md:hidden">
-          <button className="absolute inset-0 bg-black/60" type="button" aria-label="Close menu" onClick={() => setOpen(false)} />
-          <aside className="absolute inset-y-0 right-0 flex w-[78vw] max-w-[300px] flex-col bg-white text-slate-900 shadow-2xl dark:bg-zinc-950 dark:text-white">
-            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 dark:border-zinc-800">
-              <span className="font-heading text-sm font-extrabold">Menu</span>
-              <button className="rounded-lg p-2" type="button" aria-label="Close" onClick={() => setOpen(false)}><X size={20} /></button>
-            </div>
-            <nav className="flex flex-col gap-1 p-3 text-sm font-semibold">
-              {links.map((l) => {
-                const active = pathname === l.href || (l.href !== "/" && pathname.startsWith(l.href));
-                return (
-                  <Link key={l.href} href={l.href} className={`rounded-xl px-4 py-3 ${active ? "bg-brand-600 text-white" : "hover:bg-slate-100 dark:hover:bg-zinc-800"}`} onClick={() => setOpen(false)}>{l.label}</Link>
-                );
-              })}
-            </nav>
-          </aside>
+        <div role="dialog" aria-modal="true" className="md:hidden" style={{ position: "fixed", inset: 0, zIndex: 99999, background: "#ffffff", color: "#0f172a" }}>
+          <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid #e2e8f0" }}>
+            <span className="font-heading text-base font-extrabold">Menu</span>
+            <button type="button" aria-label="Close menu" className="p-2" onClick={() => setOpen(false)}><X size={22} /></button>
+          </div>
+          <nav className="flex flex-col p-4 text-base font-semibold">
+            {links.map((l) => {
+              const active = pathname === l.href || (l.href !== "/" && pathname.startsWith(l.href));
+              return (
+                <Link key={l.href} href={l.href} onClick={() => setOpen(false)} style={{ display: "block", padding: "14px 16px", borderRadius: 12, marginBottom: 8, background: active ? "#e11d48" : "#f1f5f9", color: active ? "#ffffff" : "#0f172a" }}>{l.label}</Link>
+              );
+            })}
+          </nav>
         </div>
       ) : null}
     </>
