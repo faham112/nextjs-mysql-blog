@@ -3,27 +3,51 @@
 @tailwind utilities;
 
 html { scroll-behavior: smooth; }
-body { @apply bg-slate-50 text-slate-900 antialiased; }
-html.light .admin-root { @apply bg-slate-100 text-slate-900; }
-html.light .admin-root .text-white { color: #0f172a; }
-html.light .admin-root .text-white\/80 { color: rgb(15 23 42 / 0.8); }
-html.light .admin-root .text-white\/60,
-html.light .admin-root .text-white\/45 { color: rgb(15 23 42 / 0.5); }
-html.dark .admin-root { @apply bg-dark-900 text-white; }
-.prose-blog h2 { @apply mt-10 mb-3 font-heading text-2xl font-bold; }
-.prose-blog h3 { @apply mt-8 mb-2 font-heading text-xl font-bold; }
-.prose-blog p { @apply mb-4 leading-8 text-[17px] text-slate-800; }
+html.light {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --bg2: #ffffff;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --nav: rgba(255, 255, 255, 0.92);
+}
+html.dark {
+  color-scheme: dark;
+  --bg: #09090b;
+  --bg2: #18181b;
+  --fg: #f8fafc;
+  --muted: #94a3b8;
+  --border: #27272a;
+  --nav: rgba(9, 9, 11, 0.92);
+}
+body { background: var(--bg); color: var(--fg); @apply antialiased; }
+.prose-blog h2 { @apply mt-10 mb-3 font-heading text-2xl font-bold; color: var(--fg); }
+.prose-blog h3 { @apply mt-8 mb-2 font-heading text-xl font-bold; color: var(--fg); }
+.prose-blog p { @apply mb-4 leading-8 text-[17px]; color: var(--fg); }
 .prose-blog a { @apply text-brand-600 underline underline-offset-4; }
-.prose-blog ul, .prose-blog ol { @apply mb-4 ml-6 list-disc space-y-1; }
+.prose-blog ul, .prose-blog ol { @apply mb-4 ml-6 list-disc space-y-1; color: var(--fg); }
 .prose-blog img { @apply my-6 rounded-xl; }
-.prose-blog blockquote { @apply my-6 border-l-4 border-brand-600 pl-4 italic text-slate-600; }
+.prose-blog blockquote { @apply my-6 border-l-4 border-brand-600 pl-4 italic; color: var(--muted); }
 .btn { @apply inline-flex items-center justify-center rounded-xl bg-brand-600 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-brand-600/30 transition hover:bg-brand-700; }
-.btn-outline { @apply inline-flex items-center justify-center rounded-xl border-2 border-dark-800 bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-dark-900 transition hover:bg-dark-900 hover:text-white; }
-.input { @apply w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm outline-none focus:border-brand-600; }
-.card { @apply rounded-2xl border border-slate-200 bg-white shadow-sm; }
+.btn-outline { @apply inline-flex items-center justify-center rounded-xl border-2 px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition; border-color: var(--fg); color: var(--fg); background: transparent; }
+.btn-outline:hover { background: var(--fg); color: var(--bg); }
+.input { @apply w-full rounded-xl border px-4 py-2.5 text-sm outline-none focus:border-brand-600; background: var(--bg2); border-color: var(--border); color: var(--fg); }
+.card { @apply rounded-2xl border shadow-sm; background: var(--bg2); border-color: var(--border); color: var(--fg); }
+.site-header { background: var(--nav); border-bottom: 1px solid var(--border); color: var(--fg); }
+.site-footer { background: var(--bg2); border-top: 1px solid var(--border); color: var(--fg); }
+html.light .admin-root { background: #f1f5f9; color: #0f172a; }
+html.light .admin-root .text-white { color: #0f172a !important; }
+html.light .admin-root .text-white\/80 { color: rgb(15 23 42 / 0.8) !important; }
+html.light .admin-root .text-white\/60,
+html.light .admin-root .text-white\/45,
+html.light .admin-root .text-white\/50 { color: rgb(15 23 42 / 0.5) !important; }
+html.light .admin-root header { background: #ffffff !important; border-color: #e2e8f0 !important; }
+html.dark .admin-root { background: #09090b; color: #fff; }
 .admin-shell { @apply relative overflow-hidden rounded-[28px] border border-brand-600/30 bg-gradient-to-br from-brand-600 via-brand-700 to-dark-900 p-[1px] shadow-[0_20px_60px_rgba(225,29,72,0.28)]; }
-.admin-shell-inner { @apply rounded-[27px] bg-dark-900/80 p-4 text-white backdrop-blur-xl sm:p-6; }
-.morph-card { @apply rounded-3xl border border-white/15 bg-white/10 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur-xl; }
+.admin-shell-inner { @apply rounded-[27px] p-4 backdrop-blur-xl sm:p-6; background: var(--bg2); color: var(--fg); }
+.morph-card { @apply rounded-3xl border p-5; border-color: var(--border); background: var(--bg2); }
 .morph-card-red { @apply rounded-3xl border border-brand-200/40 bg-gradient-to-br from-brand-600 to-brand-700 p-5 text-white shadow-[0_12px_40px_rgba(225,29,72,0.35)]; }
-.admin-link { @apply rounded-2xl px-3 py-2.5 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white; }
+.admin-link { @apply rounded-2xl px-3 py-2.5 text-sm font-semibold transition; color: var(--muted); }
+.admin-link:hover { color: var(--fg); background: color-mix(in srgb, var(--fg) 8%, transparent); }
 .admin-link-active { @apply bg-brand-600 text-white shadow-lg shadow-brand-600/30; }
