@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { destroySession } from "@/lib/auth";
 
-export async function POST(req: Request) {
+export async function POST() {
   await destroySession();
-  return NextResponse.redirect(new URL("/", req.url), { status: 302 });
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org";
+  return NextResponse.redirect(new URL("/", base), { status: 302 });
 }
