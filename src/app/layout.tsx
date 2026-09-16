@@ -1,7 +1,22 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
+
+const sans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-sans",
+});
+
+const heading = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "700"],
+  display: "swap",
+  variable: "--font-heading",
+});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org";
 
@@ -42,16 +57,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     },
   };
   return (
-    <html lang="en">
+    <html lang="en" className={`${sans.variable} ${heading.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body className="min-h-screen font-sans">
+      <body className={`${sans.className} min-h-screen`}>
         <SiteChrome>{children}</SiteChrome>
-        <Script src="https://analytics.globalcareerhub.org/tracker/femantic.js" data-site="338df5d40fcf5eef407f9391aa7d7a2d2b3164659e8350a91d9f7e87cbd1c0a2" strategy="afterInteractive" />
+        <Script
+          src="https://analytics.globalcareerhub.org/tracker/femantic.js"
+          data-site="338df5d40fcf5eef407f9391aa7d7a2d2b3164659e8350a91d9f7e87cbd1c0a2"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

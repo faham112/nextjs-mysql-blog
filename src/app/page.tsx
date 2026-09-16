@@ -1,7 +1,7 @@
 import Link from "next/link";
 import PostCard from "@/components/PostCard";
 import { listPublishedPosts } from "@/lib/posts";
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 export default async function HomePage() {
   let posts: Awaited<ReturnType<typeof listPublishedPosts>>["posts"] = [];
   try { posts = (await listPublishedPosts(1, 9)).posts; } catch (error) { console.error(error); }
@@ -31,11 +31,6 @@ export default async function HomePage() {
           <div className="card p-8">
             <p className="font-heading text-xl font-bold">New guides are on the way</p>
             <p className="mt-2 text-sm text-slate-600">Browse search topics or check back soon for featured writing by Abdul Faheem.</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <a href="/search?q=careers" className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold">Careers</a>
-              <a href="/search?q=SOP" className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold">SOP</a>
-              <a href="/search?q=scholarships" className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold">Scholarships</a>
-            </div>
           </div>
         ) : (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">{posts.map((post) => <PostCard key={post.id} post={post} />)}</div>

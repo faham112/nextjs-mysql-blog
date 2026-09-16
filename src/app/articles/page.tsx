@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Every published career, skills, and study guide on Global Career Hub.",
   alternates: { canonical: "/articles" },
 };
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 export default async function ArticlesPage() {
   let posts: Awaited<ReturnType<typeof listPublishedPosts>>["posts"] = [];
   try { posts = (await listPublishedPosts(1, 24)).posts; } catch (error) { console.error(error); }
