@@ -36,10 +36,11 @@ export async function createSession(user: SessionUser) {
     .sign(secret());
 
   const store = await cookies();
+  const https = (process.env.NEXT_PUBLIC_SITE_URL || "").startsWith("https");
   store.set(COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: https || process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
   });
@@ -95,7 +96,7 @@ export async function ensureAdminUser() {
 
   if (existing) {
     await query("UPDATE users SET name = ?, password_hash = ? WHERE id = ?", [
-      "Abdul Faheem",
+      "Faham Baloch",
       password_hash,
       existing.id,
     ]);
@@ -103,7 +104,7 @@ export async function ensureAdminUser() {
   }
 
   await query("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')", [
-    "Abdul Faheem",
+    "Faham Baloch",
     email,
     password_hash,
   ]);
