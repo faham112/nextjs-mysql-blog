@@ -58,7 +58,7 @@ export default function PostEditor({ categories, post, redirectTo }: Props) {
       slug: form.get("slug"),
       excerpt: form.get("excerpt"),
       content: form.get("content"),
-      featured_image: imageUrl || form.get("featured_image") || null,
+      featured_image: imageUrl || null,
       category_id: form.get("category_id") || null,
       status: form.get("status"),
       scheduled_at: form.get("scheduled_at"),
@@ -113,7 +113,6 @@ export default function PostEditor({ categories, post, redirectTo }: Props) {
         className="input"
       />
 
-      {/* Featured image */}
       <div className="space-y-2">
         <label
           className="block text-xs font-bold uppercase tracking-wider"
@@ -123,7 +122,10 @@ export default function PostEditor({ categories, post, redirectTo }: Props) {
         </label>
 
         {imageUrl ? (
-          <div className="relative overflow-hidden rounded-xl border" style={{ borderColor: "var(--border)" }}>
+          <div
+            className="relative overflow-hidden rounded-xl border"
+            style={{ borderColor: "var(--border)" }}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageUrl}
@@ -146,7 +148,7 @@ export default function PostEditor({ categories, post, redirectTo }: Props) {
             <input
               ref={fileRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+              accept="image/jpeg,image/png,image/webp,image/gif"
               className="hidden"
               disabled={uploading || saving}
               onChange={(e) => {
@@ -156,7 +158,7 @@ export default function PostEditor({ categories, post, redirectTo }: Props) {
             />
           </label>
           <span className="text-xs" style={{ color: "var(--muted)" }}>
-            or paste a URL below
+            or paste HTTPS /uploads URL below
           </span>
         </div>
 
@@ -168,7 +170,7 @@ export default function PostEditor({ categories, post, redirectTo }: Props) {
           className="input"
         />
         <p className="text-xs" style={{ color: "var(--muted)" }}>
-          JPEG / PNG / WebP / GIF / SVG · max 4 MB. Upload saves to /uploads/
+          JPEG / PNG / WebP / GIF · max 4 MB · no SVG
         </p>
       </div>
 

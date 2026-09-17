@@ -1,16 +1,52 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { escapeHtml } from "@/lib/sanitize";
+import { clientIp, rateLimit } from "@/lib/rateLimit";
 
 export async function POST(req: Request) {
+  const ip = clientIp(req);
+  const rl = rateLimit(`comment:${ip}`, 5, 15 * 60 * 1000);
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: "Too many comments. Try again later." },
+      { status: 429 }
+    );
+  }
+
   const body = await req.json();
-  const name = String(body.name || "").trim();
-  const email = String(body.email || "").trim();
-  const content = String(body.content || "").trim();
+  const name = escapeHtml(String(body.name || "").trim()).slice(0, 120);
+  const email = String(body.email || "")
+    .trim()
+    .toLowerCase()
+    .slice(0, 190);
+  const content = escapeHtml(String(body.content || "").trim()).slice(0, 5000);
   const postId = Number(body.postId);
 
-  if (!name || !email || !content || !postId) {
+  if (!name || !email || !content || !postId || !Number.isFinite(postId)) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  }
+
+  if (!/^[^
+
+
+@]+@[^
+
+
+@]+\.[^
+
+
+@]+$/.test(email)) {
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+  }
+
+  // Ensure post exists and is published
+  const posts = await query<Array<{ id: number }>>(
+    "SELECT id FROM posts WHERE id = :id AND status = 'published' LIMIT 1",
+    { id: postId }
+  );
+  if (!posts[0]) {
+    return NextResponse.json({ error: "Post not found" }, { status: 404 });
   }
 
   await query(

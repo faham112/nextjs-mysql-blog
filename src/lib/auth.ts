@@ -84,6 +84,7 @@ export async function findUserByEmail(email: string) {
   return rows[0] ?? null;
 }
 
+/** Create admin from env only if missing — never overwrite password on every login. */
 export async function ensureAdminUser() {
   const email = process.env.ADMIN_EMAIL?.toLowerCase().trim();
   const password = process.env.ADMIN_PASSWORD;
@@ -92,17 +93,9 @@ export async function ensureAdminUser() {
   }
 
   const existing = await findUserByEmail(email);
+  if (existing) return;
+
   const password_hash = await hashPassword(password);
-
-  if (existing) {
-    await query("UPDATE users SET name = ?, password_hash = ? WHERE id = ?", [
-      "Faham Baloch",
-      password_hash,
-      existing.id,
-    ]);
-    return;
-  }
-
   await query("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')", [
     "Faham Baloch",
     email,
