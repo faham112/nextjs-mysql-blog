@@ -4,6 +4,21 @@ import { getSession } from "@/lib/auth";
 import { escapeHtml } from "@/lib/sanitize";
 import { clientIp, rateLimit } from "@/lib/rateLimit";
 
+function isValidEmail(email: string): boolean {
+  // Simple practical check — avoids complex regex edge cases
+  if (email.length < 5 || email.length > 190) return false;
+  const at = email.indexOf("@");
+  if (at < 1) return false;
+  const domain = email.slice(at + 1);
+  if (!domain.includes(".") || domain.startsWith(".") || domain.endsWith(".")) {
+    return false;
+  }
+  if (email.includes(" ") || email.includes("\n") || email.includes("\r")) {
+    return false;
+  }
+  return true;
+}
+
 export async function POST(req: Request) {
   const ip = clientIp(req);
   const rl = rateLimit(`comment:${ip}`, 5, 15 * 60 * 1000);
@@ -27,20 +42,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  if (!/^[^
-
-
-@]+@[^
-
-
-@]+\.[^
-
-
-@]+$/.test(email)) {
+  if (!isValidEmail(email)) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
 
-  // Ensure post exists and is published
   const posts = await query<Array<{ id: number }>>(
     "SELECT id FROM posts WHERE id = :id AND status = 'published' LIMIT 1",
     { id: postId }
