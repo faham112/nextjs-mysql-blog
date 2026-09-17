@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { getSession } from "@/lib/auth";
+import { query } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -66,5 +67,24 @@ export async function POST(req: Request) {
   await writeFile(fullPath, buffer);
 
   const url = `/uploads/${safeName}`;
+
+  // Save metadata in MySQL media table
+  try {
+    await query(
+      `INSERT INTO media (filename, path, mime, size, uploaded_by)
+       VALUES (:filename, :path, :mime, :size, :uploaded_by)`,
+      {
+        filename: file.name || safeName,
+        path: url,
+        mime: file.type,
+        size: file.size,
+        uploaded_by: user.id,
+      }
+    );
+  } catch (err) {
+    // Table may not exist yet — still return file URL so upload works
+    console.error("media insert failed (run media table SQL?):", err);
+  }
+
   return NextResponse.json({ ok: true, url });
 }
