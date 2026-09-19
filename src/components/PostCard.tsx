@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { PostRow } from "@/lib/posts";
+import SmartImage from "@/components/SmartImage";
 
 function formatDate(value: Date | string | null) {
   if (!value) return "";
@@ -30,14 +31,13 @@ export default function PostCard({ post }: { post: PostRow }) {
     <article className="card group flex flex-col overflow-hidden transition hover:shadow-xl">
       <Link href={`/posts/${post.slug}`} className="flex h-full flex-col">
         {post.featured_image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <SmartImage
             src={post.featured_image}
             alt={post.title}
-            className="h-52 w-full object-cover"
             width={640}
             height={208}
-            loading="lazy"
+            className="h-52 w-full object-cover"
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
           <div className="flex h-52 flex-col justify-between bg-gradient-to-br from-brand-600 via-red-700 to-dark-900 p-6">

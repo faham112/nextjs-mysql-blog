@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { PostRow } from "@/lib/posts";
+import SmartImage from "@/components/SmartImage";
 
 function formatDate(value: Date | string | null) {
   if (!value) return "";
@@ -19,16 +20,15 @@ export default function PostRowCompact({ post }: { post: PostRow }) {
       className="group flex gap-3 border-b py-3 last:border-b-0"
       style={{ borderColor: "var(--border)" }}
     >
-      <div className="h-16 w-20 shrink-0 overflow-hidden rounded-lg sm:h-20 sm:w-28">
+      <div className="h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-[var(--bg2)] sm:h-20 sm:w-28">
         {post.featured_image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <SmartImage
             src={post.featured_image}
-            alt=""
-            className="h-full w-full object-cover transition group-hover:scale-105"
+            alt={post.title}
             width={112}
             height={80}
-            loading="lazy"
+            className="h-full w-full object-cover transition group-hover:scale-105"
+            sizes="112px"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-600 to-dark-900 text-[10px] font-bold uppercase text-white">

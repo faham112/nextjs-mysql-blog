@@ -8,7 +8,8 @@ html.light {
   --bg: #f8fafc;
   --bg2: #ffffff;
   --fg: #0f172a;
-  --muted: #64748b;
+  /* Stronger contrast vs old #64748b for a11y */
+  --muted: #475569;
   --border: #e2e8f0;
   --nav: rgba(255, 255, 255, 0.92);
 }
@@ -17,7 +18,8 @@ html.dark {
   --bg: #09090b;
   --bg2: #18181b;
   --fg: #f8fafc;
-  --muted: #94a3b8;
+  /* Stronger contrast vs old #94a3b8 for a11y */
+  --muted: #cbd5e1;
   --border: #27272a;
   --nav: rgba(9, 9, 11, 0.92);
 }

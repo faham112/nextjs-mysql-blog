@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { PostRow } from "@/lib/posts";
+import SmartImage from "@/components/SmartImage";
 
 function formatDate(value: Date | string | null) {
   if (!value) return "";
@@ -12,19 +13,25 @@ function formatDate(value: Date | string | null) {
   });
 }
 
-export default function PostFeatured({ post }: { post: PostRow }) {
+export default function PostFeatured({
+  post,
+  priority = false,
+}: {
+  post: PostRow;
+  priority?: boolean;
+}) {
   return (
     <Link href={`/posts/${post.slug}`} className="group block">
-      <div className="overflow-hidden rounded-xl">
+      <div className="overflow-hidden rounded-xl bg-[var(--bg2)]">
         {post.featured_image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <SmartImage
             src={post.featured_image}
             alt={post.title}
-            className="aspect-[16/10] w-full object-cover transition duration-300 group-hover:scale-[1.02]"
             width={800}
             height={500}
-            loading="eager"
+            className="aspect-[16/10] h-auto w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+            priority={priority}
+            sizes="(max-width: 1024px) 100vw, 60vw"
           />
         ) : (
           <div className="flex aspect-[16/10] w-full items-end bg-gradient-to-br from-brand-600 via-red-700 to-dark-900 p-6">

@@ -7,10 +7,12 @@ type Props = {
   title: string;
   href?: string;
   posts: PostRow[];
+  /** First block on page — LCP priority for main image */
+  priority?: boolean;
 };
 
 /** 1 main featured post + up to 3 compact rows underneath (news-style). */
-export default function NewsBlock({ title, href, posts }: Props) {
+export default function NewsBlock({ title, href, posts, priority = false }: Props) {
   if (!posts.length) return null;
 
   const [main, ...rest] = posts;
@@ -23,11 +25,11 @@ export default function NewsBlock({ title, href, posts }: Props) {
         style={{ borderColor: "var(--border)" }}
       >
         <div className="flex items-center gap-3">
-          <span className="h-0.5 w-8 bg-brand-600" />
+          <span className="h-0.5 w-8 bg-brand-600" aria-hidden />
           <h2 className="font-heading text-xl font-extrabold sm:text-2xl">
             {title}
           </h2>
-          <span className="h-0.5 w-8 bg-brand-600" />
+          <span className="h-0.5 w-8 bg-brand-600" aria-hidden />
         </div>
         {href ? (
           <Link
@@ -41,7 +43,7 @@ export default function NewsBlock({ title, href, posts }: Props) {
 
       <div className="grid gap-8 lg:grid-cols-5">
         <div className="lg:col-span-3">
-          <PostFeatured post={main} />
+          <PostFeatured post={main} priority={priority} />
         </div>
         <div className="lg:col-span-2">
           {side.length > 0 ? (

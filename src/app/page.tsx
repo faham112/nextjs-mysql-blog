@@ -18,7 +18,6 @@ export default async function HomePage() {
     categories = await listCategories();
   } catch {}
 
-  // Per category: 1 main + 3 side = 4 posts each
   const byCategory: {
     name: string;
     slug: string;
@@ -33,13 +32,12 @@ export default async function HomePage() {
         byCategory.push({ name: c.name, slug: c.slug, posts });
       }
     } catch {
-      // skip broken category
+      // skip
     }
   }
 
   return (
     <>
-      {/* Hero */}
       <section
         className="relative overflow-hidden border-b py-14 lg:py-20"
         style={{
@@ -48,7 +46,10 @@ export default async function HomePage() {
           color: "var(--fg)",
         }}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(#e11d48_1px,transparent_1px)] bg-[size:24px_24px] opacity-10" />
+        <div
+          className="absolute inset-0 bg-[radial-gradient(#e11d48_1px,transparent_1px)] bg-[size:24px_24px] opacity-10"
+          aria-hidden
+        />
         <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
           <p
             className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-500"
@@ -78,6 +79,7 @@ export default async function HomePage() {
               placeholder="Search guides..."
               className="w-full bg-transparent px-3 text-sm outline-none"
               style={{ color: "var(--fg)" }}
+              aria-label="Search guides"
             />
             <button className="btn !rounded-xl" type="submit">
               Search
@@ -101,9 +103,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Latest: 1 main + 3 small */}
       {latest.length > 0 ? (
-        <NewsBlock title="Latest" href="/articles" posts={latest} />
+        <NewsBlock title="Latest" href="/articles" posts={latest} priority />
       ) : (
         <section className="mx-auto max-w-7xl px-4 py-16">
           <div className="card p-8">
@@ -115,9 +116,12 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Each category: 1 main + 3 small */}
       {byCategory.map((block) => (
-        <div key={block.slug} className="border-t" style={{ borderColor: "var(--border)" }}>
+        <div
+          key={block.slug}
+          className="border-t"
+          style={{ borderColor: "var(--border)" }}
+        >
           <NewsBlock
             title={block.name}
             href={`/category/${block.slug}`}
@@ -126,7 +130,6 @@ export default async function HomePage() {
         </div>
       ))}
 
-      {/* Author */}
       <section
         className="border-y py-14"
         style={{
