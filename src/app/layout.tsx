@@ -4,6 +4,7 @@ import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScriptSlots from "@/components/ScriptSlots";
+import { organizationJsonLd, personJsonLd, websiteJsonLd } from "@/lib/schema";
 
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -11,6 +12,7 @@ const sans = Plus_Jakarta_Sans({
   display: "swap",
   variable: "--font-sans",
 });
+
 const heading = Space_Grotesk({
   subsets: ["latin"],
   weight: ["500", "700"],
@@ -22,63 +24,31 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default: "GlobalCareerHub — Career, Skills & Study Guides",
-    template: "%s · GlobalCareerHub",
-  },
-  description:
-    "Free, practical guides on careers, skills, scholarships and studying abroad — written for students and early-career professionals.",
+  title: { default: "GlobalCareerHub — Career, Skills & Study Guides", template: "%s · GlobalCareerHub" },
+  description: "Free guides on careers, skills, scholarships, and study.",
+  keywords: ["career guides", "scholarships", "skills", "study abroad", "Faham Baloch", "Global Career Hub"],
+  authors: [{ name: "Faham Baloch" }],
+  creator: "Faham Baloch",
   icons: { icon: "/logo.svg", apple: "/logo.svg" },
   alternates: { canonical: "/" },
-  robots: { index: true, follow: true },
   openGraph: {
     type: "website",
-    siteName: "GlobalCareerHub",
+    locale: "en_US",
     url: siteUrl,
+    siteName: "GlobalCareerHub",
     title: "GlobalCareerHub — Career, Skills & Study Guides",
-    description:
-      "Free, practical guides on careers, skills, scholarships and studying abroad.",
-    images: [{ url: "/logo.svg", width: 512, height: 512, alt: "GlobalCareerHub" }],
+    description: "Free guides on careers, skills, scholarships, and study.",
   },
   twitter: {
     card: "summary_large_image",
     title: "GlobalCareerHub",
-    description: "Free guides on careers, skills and study abroad.",
-    images: ["/logo.svg"],
+    description: "Free career, skills, and study guides.",
   },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": `${siteUrl}/#website`,
-        name: "GlobalCareerHub",
-        url: siteUrl,
-        description:
-          "Free guides on careers, skills, scholarships, and study paths.",
-        publisher: { "@id": `${siteUrl}/#person` },
-        potentialAction: {
-          "@type": "SearchAction",
-          target: {
-            "@type": "EntryPoint",
-            urlTemplate: `${siteUrl}/search?q={search_term_string}`,
-          },
-          "query-input": "required name=search_term_string",
-        },
-      },
-      {
-        "@type": "Person",
-        "@id": `${siteUrl}/#person`,
-        name: "Faham Baloch",
-        url: `${siteUrl}/about`,
-        sameAs: ["https://github.com/faham112"],
-      },
-    ],
-  };
-
+  const jsonLd = [organizationJsonLd(), personJsonLd(), websiteJsonLd()];
   return (
     <html lang="en" className={`dark ${sans.variable} ${heading.variable}`}>
       <head>
@@ -87,10 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `try{var t=localStorage.getItem('gch-theme')||'dark';var r=document.documentElement;r.classList.toggle('dark',t==='dark');r.classList.toggle('light',t==='light')}catch(e){}`,
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <ScriptSlots slot="header" />
       </head>
       <body className={`${sans.className} min-h-screen`}>
