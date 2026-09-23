@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { organizationJsonLd, personJsonLd } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "About the author",
@@ -9,10 +10,14 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const jsonLd = [organizationJsonLd(), personJsonLd()];
   return (
     <div className="mx-auto max-w-3xl px-4 py-16">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <p className="text-xs font-bold uppercase tracking-widest text-brand-600">Author</p>
-      <h1 className="mt-2 font-heading text-4xl font-extrabold">Faham Baloch</h1>
+      <h1 id="person" className="mt-2 font-heading text-4xl font-extrabold">
+        Faham Baloch
+      </h1>
       <p className="mt-3 text-sm" style={{ color: "var(--muted)" }}>
         Writes and edits Global Career Hub. Last reviewed 23 September 2026.
       </p>
