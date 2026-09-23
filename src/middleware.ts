@@ -19,6 +19,15 @@ async function sessionFrom(req: NextRequest) {
 }
 
 export async function middleware(req: NextRequest) {
+  const host = (req.headers.get("host") || "").split(":")[0].toLowerCase();
+  if (host === "www.globalcareerhub.org") {
+    const url = req.nextUrl.clone();
+    url.protocol = "https:";
+    url.host = "globalcareerhub.org";
+    url.port = "";
+    return NextResponse.redirect(url, 301);
+  }
+
   const { pathname } = req.nextUrl;
   if (pathname.endsWith(".map")) {
     return new NextResponse("Not found", { status: 404 });
@@ -52,5 +61,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/dashboard", "/dashboard/:path*", "/:path*.map"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|uploads/|logo.svg).*)",
+  ],
 };
