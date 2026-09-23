@@ -47,7 +47,6 @@ export default function SmartImage({
       className={className}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
-      // @ts-expect-error fetchPriority is valid in modern browsers
       fetchPriority={priority ? "high" : "auto"}
     />
   );
