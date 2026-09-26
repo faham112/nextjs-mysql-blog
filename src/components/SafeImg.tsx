@@ -1,57 +1,59 @@
 "use client";
 
 import { useState } from "react";
+import { DEFAULT_COVER } from "@/lib/covers";
 
 type Props = {
   src: string;
+  fallback?: string;
   alt?: string;
   className?: string;
   width?: number;
   height?: number;
 };
 
-/** Shows gradient fallback when image 404s (common after Hostinger redeploy). */
+/** Tries src; on 404 falls back to permanent /covers image. */
 export default function SafeImg({
   src,
+  fallback = DEFAULT_COVER,
   alt = "",
   className = "",
   width,
   height,
 }: Props) {
-  const [failed, setFailed] = useState(false);
+  const [current, setCurrent] = useState(src || fallback);
+  const [gaveUp, setGaveUp] = useState(false);
 
-  if (!src || failed) {
+  if (gaveUp) {
     return (
       <div
-        className={`bg-gradient-to-br from-slate-700 via-slate-800 to-rose-900 ${className}`}
-        style={{ width: width ? `${width}px` : undefined, height: height ? `${height}px` : undefined }}
+        className={`bg-gradient-to-br from-slate-800 via-slate-900 to-rose-900 ${className}`}
+        style={{
+          width: width ? `${width}px` : undefined,
+          height: height ? `${height}px` : undefined,
+        }}
         aria-hidden
       />
     );
   }
 
-  // Prefer relative /uploads path (works with rewrite)
-  let url = src;
-  try {
-    if (src.startsWith("http")) {
-      const u = new URL(src);
-      if (u.pathname.startsWith("/uploads/")) url = u.pathname;
-    }
-  } catch {
-    /* keep src */
-  }
-
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={url}
+      src={current}
       alt={alt}
       width={width}
       height={height}
       className={className}
       loading="lazy"
       decoding="async"
-      onError={() => setFailed(true)}
+      onError={() => {
+        if (current !== fallback) {
+          setCurrent(fallback);
+        } else {
+          setGaveUp(true);
+        }
+      }}
     />
   );
 }

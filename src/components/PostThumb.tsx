@@ -1,9 +1,12 @@
 "use client";
 
 import SafeImg from "@/components/SafeImg";
+import { coverForCategory, resolveCover } from "@/lib/covers";
 
 type PostLike = {
   featured_image?: string | null;
+  category_slug?: string | null;
+  category_name?: string | null;
 };
 
 export default function PostThumb({
@@ -13,18 +16,15 @@ export default function PostThumb({
   post: PostLike;
   className?: string;
 }) {
-  if (post.featured_image) {
-    return (
-      <SafeImg
-        src={post.featured_image}
-        alt=""
-        className={className || "h-full w-full object-cover object-center"}
-      />
-    );
-  }
+  const src = resolveCover(post.featured_image, post.category_slug);
+  const fallback = coverForCategory(post.category_slug);
+
   return (
-    <div
-      className={`${className || "h-full w-full"} bg-gradient-to-br from-slate-700 via-slate-800 to-rose-900`}
+    <SafeImg
+      src={src}
+      fallback={fallback}
+      alt=""
+      className={className || "h-full w-full object-cover object-center"}
     />
   );
 }
