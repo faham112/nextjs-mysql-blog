@@ -12,9 +12,38 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: false,
   },
+  async redirects() {
+    return [
+      // Broken internal related-post slugs → live posts
+      {
+        source: "/posts/build-a-portfolio-employers-actually-open-in-2026",
+        destination: "/posts/build-a-portfolio-employers-actually-open",
+        permanent: true,
+      },
+      {
+        source: "/posts/remote-work-skills-that-still-pass-a-hiring-screen-in-2026",
+        destination: "/posts/remote-work-skills-that-still-show-up-on-hiring-screens",
+        permanent: true,
+      },
+      {
+        source: "/posts/ai-skills-path-pakistan-2026",
+        destination: "/posts/ai-skills-employers-want-in-2026",
+        permanent: true,
+      },
+      {
+        source: "/posts/ai-tools-freelance-without-coding",
+        destination: "/category/skills",
+        permanent: true,
+      },
+      {
+        source: "/posts/how-to-keep-a-job-search-from-eating-your-whole-life",
+        destination: "/posts/sunday-reset-long-job-search",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
-      // Always serve uploads via API (survives missing public/ files on Hostinger)
       {
         source: "/uploads/:name",
         destination: "/api/media/:name",
