@@ -18,13 +18,19 @@ type MediaRow = {
   data: Buffer | Uint8Array | null;
 };
 
-function toResponse(data: Buffer | Uint8Array, contentType: string) {
-  const bytes = Buffer.isBuffer(data)
+/** Copy bytes into a plain ArrayBuffer so TS accepts BodyInit / BlobPart. */
+function toUint8Array(data: Buffer | Uint8Array): Uint8Array {
+  const src = Buffer.isBuffer(data)
     ? data
     : Buffer.from(data.buffer, data.byteOffset, data.byteLength);
-  // Blob is a valid BodyInit and avoids Buffer/Uint8Array typing issues on Next 15
-  const blob = new Blob([bytes], { type: contentType });
-  return new NextResponse(blob, {
+  const out = new Uint8Array(src.byteLength);
+  out.set(src);
+  return out;
+}
+
+function imageResponse(data: Buffer | Uint8Array, contentType: string) {
+  const body = toUint8Array(data);
+  return new NextResponse(body as unknown as BodyInit, {
     status: 200,
     headers: {
       "Content-Type": contentType,
@@ -49,16 +55,14 @@ export async function GET(
     return new NextResponse("Not found", { status: 404 });
   }
 
-  // 1) Disk
   try {
     const full = path.join(process.cwd(), "public", "uploads", name);
     const buf = await readFile(full);
-    return toResponse(buf, MIME[ext]);
+    return imageResponse(buf, MIME[ext]);
   } catch {
-    // continue to DB
+    // fall through to DB
   }
 
-  // 2) MySQL blob
   try {
     const rows = await query<MediaRow>(
       `SELECT mime, data FROM media WHERE path = :path OR path = :path2 LIMIT 1`,
@@ -66,7 +70,7 @@ export async function GET(
     );
     const row = rows[0];
     if (row?.data) {
-      return toResponse(row.data as Buffer, row.mime || MIME[ext]);
+      return imageResponse(row.data as Buffer, row.mime || MIME[ext]);
     }
   } catch (err) {
     console.error("media serve failed:", err);
