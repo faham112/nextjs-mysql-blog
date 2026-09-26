@@ -8,7 +8,6 @@ import { clientIp, rateLimit } from "@/lib/rateLimit";
 export const runtime = "nodejs";
 
 const MAX_BYTES = 4 * 1024 * 1024; // 4 MB
-// SVG blocked — can carry embedded scripts
 const ALLOWED = new Set([
   "image/jpeg",
   "image/png",
@@ -67,29 +66,58 @@ export async function POST(req: Request) {
           : "gif";
 
   const safeName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-  const dir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(dir, { recursive: true });
-  const fullPath = path.join(dir, safeName);
-
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(fullPath, buffer);
+
+  // Best-effort disk write (may be wiped on Hostinger redeploy)
+  try {
+    const dir = path.join(process.cwd(), "public", "uploads");
+    await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, safeName), buffer);
+  } catch (err) {
+    console.error("disk write failed (continuing with DB storage):", err);
+  }
 
   const url = `/uploads/${safeName}`;
 
+  // Primary storage: MySQL (survives redeploy)
   try {
     await query(
-      `INSERT INTO media (filename, path, mime, size, uploaded_by)
-       VALUES (:filename, :path, :mime, :size, :uploaded_by)`,
+      `INSERT INTO media (filename, path, mime, size, data, uploaded_by)
+       VALUES (:filename, :path, :mime, :size, :data, :uploaded_by)`,
       {
         filename: (file.name || safeName).slice(0, 255),
         path: url,
         mime: file.type,
         size: file.size,
+        data: buffer,
         uploaded_by: user.id,
       }
     );
   } catch (err) {
-    console.error("media insert failed (run media table SQL?):", err);
+    // Fallback without blob column if migration not run yet
+    console.error("media insert with data failed, trying without blob:", err);
+    try {
+      await query(
+        `INSERT INTO media (filename, path, mime, size, uploaded_by)
+         VALUES (:filename, :path, :mime, :size, :uploaded_by)`,
+        {
+          filename: (file.name || safeName).slice(0, 255),
+          path: url,
+          mime: file.type,
+          size: file.size,
+          uploaded_by: user.id,
+        }
+      );
+    } catch (err2) {
+      console.error("media insert failed:", err2);
+      return NextResponse.json(
+        {
+          error:
+            "Could not save image to database. Run migrations/media_blob.sql in phpMyAdmin.",
+        },
+        { status: 500 }
+      );
+    }
   }
 
   return NextResponse.json({ ok: true, url });
