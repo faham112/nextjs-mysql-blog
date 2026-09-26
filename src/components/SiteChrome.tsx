@@ -20,7 +20,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
     );
   }
 
-  // Homepage uses its own editorial header + footer
+  // Homepage uses editorial chrome; all other public pages (posts, articles, etc.) get Header + Footer
   if (homeEditorial) {
     return <main className="min-h-screen">{children}</main>;
   }
@@ -28,7 +28,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Header />
-      <main className="flex-grow">{children}</main>
+      <main className="min-h-[70vh] flex-grow">{children}</main>
       <Footer />
     </>
   );

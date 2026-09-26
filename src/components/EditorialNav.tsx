@@ -21,61 +21,85 @@ export default function EditorialNav({ categories }: { categories: Cat[] }) {
         }}
       >
         <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
-          <div className="flex min-h-[76px] items-center justify-between gap-5">
-            <Link href="/" className="shrink-0">
-              <div className="font-heading text-[25px] font-bold tracking-[-0.05em] sm:text-[30px]">
-                GlobalCareer<span style={{ color: "var(--accent)" }}>Hub</span>
-              </div>
-              <div
-                className="mt-0.5 hidden text-[9px] font-semibold uppercase tracking-[0.24em] sm:block"
-                style={{ color: "var(--muted)" }}
+          <div className="grid min-h-[84px] grid-cols-[1fr_auto_1fr] items-center gap-3 py-2">
+            {/* LEFT */}
+            <nav className="hidden items-center justify-start gap-5 lg:flex">
+              <a
+                href="#latest"
+                className="text-[12px] font-semibold uppercase tracking-[0.08em] transition"
+                style={{ color: "var(--fg)" }}
               >
-                Careers · Skills · Study
+                Latest
+              </a>
+              <Link
+                href="/category/careers"
+                className="text-[12px] font-semibold uppercase tracking-[0.08em] transition"
+                style={{ color: "var(--fg)" }}
+              >
+                Careers
+              </Link>
+              <Link
+                href="/category/scholarships"
+                className="text-[12px] font-semibold uppercase tracking-[0.08em] transition"
+                style={{ color: "var(--fg)" }}
+              >
+                Scholarships
+              </Link>
+            </nav>
+            <div className="lg:hidden" />
+
+            {/* CENTER LOGO */}
+            <Link
+              href="/"
+              className="flex flex-col items-center justify-center gap-1 justify-self-center"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.svg"
+                alt="Global Career Hub"
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-xl object-contain"
+              />
+              <div className="text-center">
+                <div className="font-heading text-[18px] font-bold tracking-[-0.04em] sm:text-[22px]">
+                  GlobalCareer
+                  <span style={{ color: "var(--accent)" }}>Hub</span>
+                </div>
+                <div
+                  className="hidden text-[8px] font-semibold uppercase tracking-[0.22em] sm:block"
+                  style={{ color: "var(--muted)" }}
+                >
+                  Careers · Skills · Study
+                </div>
               </div>
             </Link>
 
-            <nav className="hidden items-center gap-7 lg:flex">
-              {(
-                [
-                  ["#latest", "Latest"],
-                  ["/category/careers", "Careers"],
-                  ["/category/scholarships", "Scholarships"],
-                  ["/category/study-abroad", "Study Abroad"],
-                  ["/category/technology", "Technology"],
-                  ["/articles", "All"],
-                ] as const
-              ).map(([href, label]) =>
-                href.startsWith("#") ? (
-                  <a
-                    key={href}
-                    href={href}
-                    className="text-[12px] font-semibold uppercase tracking-[0.08em] transition hover:opacity-80"
-                    style={{ color: "var(--fg)" }}
-                  >
-                    {label}
-                  </a>
-                ) : (
-                  <Link
-                    key={href}
-                    href={href}
-                    className="text-[12px] font-semibold uppercase tracking-[0.08em] transition"
-                    style={{ color: "var(--fg)" }}
-                    onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.color =
-                        "var(--accent)")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.color =
-                        "var(--fg)")
-                    }
-                  >
-                    {label}
-                  </Link>
-                )
-              )}
-            </nav>
-
-            <div className="flex items-center gap-2">
+            {/* RIGHT */}
+            <div className="flex items-center justify-end gap-2">
+              <nav className="hidden items-center gap-5 lg:flex">
+                <Link
+                  href="/category/study-abroad"
+                  className="text-[12px] font-semibold uppercase tracking-[0.08em]"
+                  style={{ color: "var(--fg)" }}
+                >
+                  Study Abroad
+                </Link>
+                <Link
+                  href="/category/technology"
+                  className="text-[12px] font-semibold uppercase tracking-[0.08em]"
+                  style={{ color: "var(--fg)" }}
+                >
+                  Technology
+                </Link>
+                <Link
+                  href="/articles"
+                  className="text-[12px] font-semibold uppercase tracking-[0.08em]"
+                  style={{ color: "var(--fg)" }}
+                >
+                  All
+                </Link>
+              </nav>
               <ThemeToggle />
               <button
                 type="button"
@@ -109,10 +133,7 @@ export default function EditorialNav({ categories }: { categories: Cat[] }) {
           </div>
 
           {searchOpen && (
-            <div
-              className="border-t py-4"
-              style={{ borderColor: "var(--border)" }}
-            >
+            <div className="border-t py-4" style={{ borderColor: "var(--border)" }}>
               <form
                 action="/search"
                 className="flex border"
@@ -179,7 +200,7 @@ export default function EditorialNav({ categories }: { categories: Cat[] }) {
             <Link
               key={c.slug}
               href={`/category/${c.slug}`}
-              className={`whitespace-nowrap border-r px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] transition first:border-l hover:opacity-90 ${
+              className={`whitespace-nowrap border-r px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em] transition first:border-l ${
                 index === 0 ? "border-l" : ""
               }`}
               style={{

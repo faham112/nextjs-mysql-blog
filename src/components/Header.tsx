@@ -5,12 +5,17 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 
-const links = [
+const leftLinks = [
   { href: "/", label: "Home" },
   { href: "/articles", label: "Articles" },
+];
+
+const rightLinks = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
+
+const allLinks = [...leftLinks, ...rightLinks];
 
 export default function Header() {
   const pathname = usePathname();
@@ -27,6 +32,12 @@ export default function Header() {
     };
   }, [open]);
 
+  function isActive(href: string) {
+    return (
+      pathname === href || (href !== "/" && pathname.startsWith(href))
+    );
+  }
+
   return (
     <>
       <header
@@ -37,48 +48,71 @@ export default function Header() {
           color: "var(--fg)",
         }}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <Link href="/" className="flex min-w-0 items-center gap-2">
+        <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-3">
+          {/* LEFT NAV */}
+          <nav className="hidden items-center justify-start gap-1 text-sm font-semibold md:flex">
+            {leftLinks.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="rounded-lg px-3 py-2 transition"
+                style={{
+                  color: isActive(l.href) ? "var(--fg)" : "var(--muted)",
+                  background: isActive(l.href)
+                    ? "color-mix(in srgb, var(--fg) 8%, transparent)"
+                    : "transparent",
+                }}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Mobile: spacer left for balance */}
+          <div className="md:hidden" />
+
+          {/* CENTER LOGO */}
+          <Link
+            href="/"
+            className="flex flex-col items-center justify-center gap-1 justify-self-center"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo.svg"
               alt="Global Career Hub"
-              width={40}
-              height={40}
-              className="h-10 w-10 shrink-0 rounded-xl"
+              width={44}
+              height={44}
+              className="h-11 w-11 rounded-xl object-contain"
             />
-            <span className="truncate font-heading text-lg font-extrabold">
+            <span className="font-heading text-sm font-extrabold tracking-tight sm:text-base">
               Global<span className="text-brand-500">CareerHub</span>
             </span>
           </Link>
-          <nav className="hidden items-center gap-1 text-sm font-semibold md:flex">
-            {links.map((l) => {
-              const active =
-                pathname === l.href ||
-                (l.href !== "/" && pathname.startsWith(l.href));
-              return (
+
+          {/* RIGHT NAV + THEME */}
+          <div className="flex items-center justify-end gap-1">
+            <nav className="hidden items-center gap-1 text-sm font-semibold md:flex">
+              {rightLinks.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="rounded-lg px-4 py-2 transition"
+                  className="rounded-lg px-3 py-2 transition"
                   style={{
-                    color: active ? "var(--fg)" : "var(--muted)",
-                    background: active
+                    color: isActive(l.href) ? "var(--fg)" : "var(--muted)",
+                    background: isActive(l.href)
                       ? "color-mix(in srgb, var(--fg) 8%, transparent)"
                       : "transparent",
                   }}
                 >
                   {l.label}
                 </Link>
-              );
-            })}
-            <ThemeToggle />
-          </nav>
-          <div className="flex shrink-0 items-center gap-1 md:hidden">
+              ))}
+            </nav>
             <ThemeToggle />
             <button
               type="button"
               aria-label="Open menu"
-              className="p-2"
+              className="p-2 md:hidden"
               onClick={() => setOpen(true)}
             >
               <Menu size={22} />
@@ -104,7 +138,17 @@ export default function Header() {
             className="flex items-center justify-between px-4 py-3"
             style={{ borderBottom: "1px solid var(--border)" }}
           >
-            <span className="font-heading text-base font-extrabold">Menu</span>
+            <div className="flex items-center gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.svg"
+                alt=""
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-lg"
+              />
+              <span className="font-heading text-base font-extrabold">Menu</span>
+            </div>
             <button
               type="button"
               aria-label="Close menu"
@@ -115,28 +159,23 @@ export default function Header() {
             </button>
           </div>
           <nav className="flex flex-col p-4 text-base font-semibold">
-            {links.map((l) => {
-              const active =
-                pathname === l.href ||
-                (l.href !== "/" && pathname.startsWith(l.href));
-              return (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  style={{
-                    display: "block",
-                    padding: "14px 16px",
-                    borderRadius: 12,
-                    marginBottom: 8,
-                    background: active ? "#e11d48" : "var(--bg2)",
-                    color: active ? "#ffffff" : "var(--fg)",
-                  }}
-                >
-                  {l.label}
-                </Link>
-              );
-            })}
+            {allLinks.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                style={{
+                  display: "block",
+                  padding: "14px 16px",
+                  borderRadius: 12,
+                  marginBottom: 8,
+                  background: isActive(l.href) ? "#e11d48" : "var(--bg2)",
+                  color: isActive(l.href) ? "#ffffff" : "var(--fg)",
+                }}
+              >
+                {l.label}
+              </Link>
+            ))}
           </nav>
         </div>
       ) : null}
