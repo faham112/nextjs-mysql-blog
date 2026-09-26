@@ -18,13 +18,20 @@ type MediaRow = {
   data: Buffer | Uint8Array | null;
 };
 
-function toBody(data: Buffer | Uint8Array): Uint8Array {
-  if (data instanceof Uint8Array && !(data instanceof Buffer)) {
-    return data;
-  }
-  // Copy into a plain ArrayBuffer-backed Uint8Array for BodyInit typing
-  const buf = Buffer.isBuffer(data) ? data : Buffer.from(data);
-  return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+function toResponse(data: Buffer | Uint8Array, contentType: string) {
+  const bytes = Buffer.isBuffer(data)
+    ? data
+    : Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+  // Blob is a valid BodyInit and avoids Buffer/Uint8Array typing issues on Next 15
+  const blob = new Blob([bytes], { type: contentType });
+  return new NextResponse(blob, {
+    status: 200,
+    headers: {
+      "Content-Type": contentType,
+      "Cache-Control": "public, max-age=2592000, immutable",
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
 }
 
 export async function GET(
@@ -46,14 +53,7 @@ export async function GET(
   try {
     const full = path.join(process.cwd(), "public", "uploads", name);
     const buf = await readFile(full);
-    return new NextResponse(toBody(buf), {
-      status: 200,
-      headers: {
-        "Content-Type": MIME[ext],
-        "Cache-Control": "public, max-age=2592000, immutable",
-        "X-Content-Type-Options": "nosniff",
-      },
-    });
+    return toResponse(buf, MIME[ext]);
   } catch {
     // continue to DB
   }
@@ -66,14 +66,7 @@ export async function GET(
     );
     const row = rows[0];
     if (row?.data) {
-      return new NextResponse(toBody(row.data as Buffer), {
-        status: 200,
-        headers: {
-          "Content-Type": row.mime || MIME[ext],
-          "Cache-Control": "public, max-age=2592000, immutable",
-          "X-Content-Type-Options": "nosniff",
-        },
-      });
+      return toResponse(row.data as Buffer, row.mime || MIME[ext]);
     }
   } catch (err) {
     console.error("media serve failed:", err);
