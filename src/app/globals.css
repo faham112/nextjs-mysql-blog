@@ -5,23 +5,33 @@
 html { scroll-behavior: smooth; }
 html.light {
   color-scheme: light;
-  --bg: #f8fafc;
+  --bg: #f7f7f5;
   --bg2: #ffffff;
-  --fg: #0f172a;
-  /* Stronger contrast vs old #64748b for a11y */
-  --muted: #475569;
-  --border: #e2e8f0;
-  --nav: rgba(255, 255, 255, 0.92);
+  --fg: #111827;
+  --muted: #666666;
+  --border: #deded9;
+  --nav: rgba(247, 247, 245, 0.95);
+  --accent: #c5222a;
+  --accent-soft: #e0565c;
+  --strip: #111827;
+  --strip-fg: #ffffff;
+  --paper: #f7f7f5;
+  --ink: #111827;
 }
 html.dark {
   color-scheme: dark;
   --bg: #09090b;
   --bg2: #18181b;
-  --fg: #f8fafc;
-  /* Stronger contrast vs old #94a3b8 for a11y */
-  --muted: #cbd5e1;
+  --fg: #f4f4f5;
+  --muted: #a1a1aa;
   --border: #27272a;
-  --nav: rgba(9, 9, 11, 0.92);
+  --nav: rgba(9, 9, 11, 0.95);
+  --accent: #f43f5e;
+  --accent-soft: #fb7185;
+  --strip: #18181b;
+  --strip-fg: #f4f4f5;
+  --paper: #09090b;
+  --ink: #f4f4f5;
 }
 body { background: var(--bg); color: var(--fg); @apply antialiased; }
 .prose-blog h2 { @apply mt-10 mb-3 font-heading text-2xl font-bold; color: var(--fg); }
@@ -53,3 +63,10 @@ html.dark .admin-root { background: #09090b; color: #fff; }
 .admin-link { @apply rounded-2xl px-3 py-2.5 text-sm font-semibold transition; color: var(--muted); }
 .admin-link:hover { color: var(--fg); background: color-mix(in srgb, var(--fg) 8%, transparent); }
 .admin-link-active { @apply bg-brand-600 text-white shadow-lg shadow-brand-600/30; }
+
+/* Editorial homepage helpers */
+.ed-rule { border-color: var(--border); }
+.ed-accent { color: var(--accent); }
+.ed-double {
+  border-bottom: 3px double var(--fg);
+}
