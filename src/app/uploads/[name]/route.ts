@@ -15,8 +15,17 @@ const MIME: Record<string, string> = {
 
 type MediaRow = {
   mime: string;
-  data: Buffer | null;
+  data: Buffer | Uint8Array | null;
 };
+
+function toBody(data: Buffer | Uint8Array): Uint8Array {
+  if (data instanceof Uint8Array && !(data instanceof Buffer)) {
+    return data;
+  }
+  // Copy into a plain ArrayBuffer-backed Uint8Array for BodyInit typing
+  const buf = Buffer.isBuffer(data) ? data : Buffer.from(data);
+  return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength);
+}
 
 export async function GET(
   _req: Request,
@@ -24,7 +33,6 @@ export async function GET(
 ) {
   const { name } = await params;
 
-  // Prevent path traversal
   if (!name || name.includes("..") || name.includes("/") || name.includes("\\")) {
     return new NextResponse("Not found", { status: 404 });
   }
@@ -34,11 +42,11 @@ export async function GET(
     return new NextResponse("Not found", { status: 404 });
   }
 
-  // 1) Try disk (fast path when file still exists)
+  // 1) Disk
   try {
     const full = path.join(process.cwd(), "public", "uploads", name);
     const buf = await readFile(full);
-    return new NextResponse(buf, {
+    return new NextResponse(toBody(buf), {
       status: 200,
       headers: {
         "Content-Type": MIME[ext],
@@ -50,7 +58,7 @@ export async function GET(
     // continue to DB
   }
 
-  // 2) MySQL blob (survives Hostinger redeploy)
+  // 2) MySQL blob
   try {
     const rows = await query<MediaRow>(
       `SELECT mime, data FROM media WHERE path = :path OR path = :path2 LIMIT 1`,
@@ -58,10 +66,7 @@ export async function GET(
     );
     const row = rows[0];
     if (row?.data) {
-      const body = Buffer.isBuffer(row.data)
-        ? row.data
-        : Buffer.from(row.data as unknown as ArrayBuffer);
-      return new NextResponse(body, {
+      return new NextResponse(toBody(row.data as Buffer), {
         status: 200,
         headers: {
           "Content-Type": row.mime || MIME[ext],
