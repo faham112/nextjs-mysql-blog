@@ -1,80 +1,37 @@
 import { NextResponse } from "next/server";
-import { readFile } from "fs/promises";
-import path from "path";
-import { query } from "@/lib/db";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-const MIME: Record<string, string> = {
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  png: "image/png",
-  webp: "image/webp",
-  gif: "image/gif",
-};
-
-type MediaRow = {
-  mime: string;
-  data: Buffer | Uint8Array | null;
-};
-
-/** Copy bytes into a plain ArrayBuffer so TS accepts BodyInit / BlobPart. */
-function toUint8Array(data: Buffer | Uint8Array): Uint8Array {
-  const src = Buffer.isBuffer(data)
-    ? data
-    : Buffer.from(data.buffer, data.byteOffset, data.byteLength);
-  const out = new Uint8Array(src.byteLength);
-  out.set(src);
-  return out;
-}
-
-function imageResponse(data: Buffer | Uint8Array, contentType: string) {
-  const body = toUint8Array(data);
-  return new NextResponse(body as unknown as BodyInit, {
-    status: 200,
-    headers: {
-      "Content-Type": contentType,
-      "Cache-Control": "public, max-age=2592000, immutable",
-      "X-Content-Type-Options": "nosniff",
-    },
-  });
-}
-
+/** Proxy to /api/media so one implementation serves both paths. */
 export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ name: string }> }
+  req: Request,
+  ctx: { params: Promise<{ name: string }> }
 ) {
-  const { name } = await params;
-
-  if (!name || name.includes("..") || name.includes("/") || name.includes("\\")) {
+  const { name } = await ctx.params;
+  if (!name || name.includes("..") || name.includes("/")) {
     return new NextResponse("Not found", { status: 404 });
   }
-
-  const ext = name.split(".").pop()?.toLowerCase() || "";
-  if (!MIME[ext]) {
-    return new NextResponse("Not found", { status: 404 });
-  }
-
+  const url = new URL(req.url);
+  const target = `${url.origin}/api/media/${encodeURIComponent(name)}`;
   try {
-    const full = path.join(process.cwd(), "public", "uploads", name);
-    const buf = await readFile(full);
-    return imageResponse(buf, MIME[ext]);
-  } catch {
-    // fall through to DB
-  }
-
-  try {
-    const rows = await query<MediaRow>(
-      `SELECT mime, data FROM media WHERE path = :path OR path = :path2 LIMIT 1`,
-      { path: `/uploads/${name}`, path2: name }
-    );
-    const row = rows[0];
-    if (row?.data) {
-      return imageResponse(row.data as Buffer, row.mime || MIME[ext]);
+    const res = await fetch(target, { cache: "no-store" });
+    if (!res.ok) {
+      return new NextResponse("Not found", { status: 404 });
     }
-  } catch (err) {
-    console.error("media serve failed:", err);
+    const buf = Buffer.from(await res.arrayBuffer());
+    const out = new Uint8Array(buf.byteLength);
+    out.set(buf);
+    return new NextResponse(out as unknown as BodyInit, {
+      status: 200,
+      headers: {
+        "Content-Type":
+          res.headers.get("Content-Type") || "application/octet-stream",
+        "Cache-Control": "public, max-age=2592000, immutable",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+  } catch {
+    return new NextResponse("Not found", { status: 404 });
   }
-
-  return new NextResponse("Not found", { status: 404 });
 }

@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**" },
       { protocol: "http", hostname: "**" },
     ],
+    unoptimized: false,
+  },
+  async rewrites() {
+    return [
+      // Always serve uploads via API (survives missing public/ files on Hostinger)
+      {
+        source: "/uploads/:name",
+        destination: "/api/media/:name",
+      },
+    ];
   },
   async headers() {
     const csp = [
@@ -54,22 +64,6 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/_next/image",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, stale-while-revalidate=604800",
-          },
-        ],
-      },
-      {
-        source: "/:path*.map",
-        headers: [
-          { key: "X-Robots-Tag", value: "noindex, nofollow" },
-          { key: "Cache-Control", value: "no-store" },
-        ],
-      },
-      {
         source: "/uploads/:path*",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
@@ -80,11 +74,12 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/covers/:path*",
+        source: "/api/media/:path*",
         headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value: "public, max-age=2592000, stale-while-revalidate=86400",
           },
         ],
       },

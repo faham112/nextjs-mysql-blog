@@ -6,14 +6,31 @@ import { query } from "@/lib/db";
 import { clientIp, rateLimit } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-const MAX_BYTES = 4 * 1024 * 1024; // 4 MB
+const MAX_BYTES = 4 * 1024 * 1024;
 const ALLOWED = new Set([
   "image/jpeg",
   "image/png",
   "image/webp",
   "image/gif",
 ]);
+
+async function writeEverywhere(name: string, buffer: Buffer) {
+  const dirs = [
+    path.join(process.cwd(), "public", "uploads"),
+    path.join(process.cwd(), "uploads_data"),
+    path.join("/tmp", "gch-uploads"),
+  ];
+  for (const dir of dirs) {
+    try {
+      await mkdir(dir, { recursive: true });
+      await writeFile(path.join(dir, name), buffer);
+    } catch (err) {
+      console.error("upload disk write failed:", dir, err);
+    }
+  }
+}
 
 export async function POST(req: Request) {
   const user = await getSession();
@@ -68,52 +85,45 @@ export async function POST(req: Request) {
   const safeName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const buffer = Buffer.from(await file.arrayBuffer());
 
-  // Best-effort disk write (may be wiped on Hostinger redeploy)
-  try {
-    const dir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(dir, { recursive: true });
-    await writeFile(path.join(dir, safeName), buffer);
-  } catch (err) {
-    console.error("disk write failed (continuing with DB storage):", err);
-  }
+  await writeEverywhere(safeName, buffer);
 
+  // Public URL stays /uploads/... (rewrite + route serve from DB/disk)
   const url = `/uploads/${safeName}`;
 
-  // Primary storage: MySQL (survives redeploy)
   try {
     await query(
       `INSERT INTO media (filename, path, mime, size, data, uploaded_by)
-       VALUES (:filename, :path, :mime, :size, :data, :uploaded_by)`,
-      {
-        filename: (file.name || safeName).slice(0, 255),
-        path: url,
-        mime: file.type,
-        size: file.size,
-        data: buffer,
-        uploaded_by: user.id,
-      }
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        (file.name || safeName).slice(0, 255),
+        url,
+        file.type,
+        file.size,
+        buffer,
+        user.id,
+      ]
     );
   } catch (err) {
-    // Fallback without blob column if migration not run yet
-    console.error("media insert with data failed, trying without blob:", err);
+    console.error("media insert with data failed:", err);
     try {
       await query(
         `INSERT INTO media (filename, path, mime, size, uploaded_by)
-         VALUES (:filename, :path, :mime, :size, :uploaded_by)`,
-        {
-          filename: (file.name || safeName).slice(0, 255),
-          path: url,
-          mime: file.type,
-          size: file.size,
-          uploaded_by: user.id,
-        }
+         VALUES (?, ?, ?, ?, ?)`,
+        [
+          (file.name || safeName).slice(0, 255),
+          url,
+          file.type,
+          file.size,
+          user.id,
+        ]
       );
     } catch (err2) {
       console.error("media insert failed:", err2);
       return NextResponse.json(
         {
           error:
-            "Could not save image to database. Run migrations/media_blob.sql in phpMyAdmin.",
+            "Saved on disk but DB failed. Run: ALTER TABLE media ADD COLUMN data LONGBLOB NULL;",
+          url,
         },
         { status: 500 }
       );
