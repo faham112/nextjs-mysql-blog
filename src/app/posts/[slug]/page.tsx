@@ -6,7 +6,8 @@ import { listApprovedComments } from "@/lib/comments";
 import CommentForm from "@/components/CommentForm";
 import { readingTimeLabel } from "@/lib/readingTime";
 import { articleJsonLd } from "@/lib/schema";
-import { absoluteCover, resolveCover } from "@/lib/covers";
+import { ogCover, resolveCover } from "@/lib/covers";
+import { rewriteLegacyLinks } from "@/lib/redirects";
 
 export const revalidate = 60;
 
@@ -19,7 +20,7 @@ export async function generateMetadata({
   const post = await getPublishedPostBySlug(slug).catch(() => null);
   if (!post) return { title: "Article" };
   const description = (post.excerpt || post.title).slice(0, 160);
-  const cover = absoluteCover(
+  const cover = ogCover(
     post.featured_image,
     post.category_slug,
     process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org"
@@ -30,9 +31,10 @@ export async function generateMetadata({
     alternates: { canonical: `/posts/${post.slug}` },
     openGraph: {
       type: "article",
+      url: `/posts/${post.slug}`,
       title: post.title,
       description,
-      images: [{ url: cover }],
+      images: [{ url: cover, width: 1200, height: 630, alt: post.title }],
     },
     twitter: {
       card: "summary_large_image",
@@ -97,7 +99,7 @@ export default async function PostPage({
       />
       <div
         className="prose-blog mt-8"
-        dangerouslySetInnerHTML={{ __html: post.content }}
+        dangerouslySetInnerHTML={{ __html: rewriteLegacyLinks(post.content) }}
       />
 
       <section className="mt-14 border-t pt-8" style={{ borderColor: "var(--border)" }}>

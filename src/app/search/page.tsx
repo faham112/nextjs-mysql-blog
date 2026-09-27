@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ q?: string }> }): Promise<Metadata> {
   const { q = "" } = await searchParams;
   const title = q.trim() ? `Search: ${q.trim()}` : "Search guides";
-  return { title, robots: { index: false, follow: true } };
+  return { title, alternates: { canonical: "/search" }, robots: { index: false, follow: true } };
 }
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string; category?: string }> }) {
   const { q = "", category = "" } = await searchParams;

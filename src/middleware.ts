@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { CANONICAL_HOST, canonicalPath } from "@/lib/redirects";
 
 const COOKIE = "blog_session";
 
@@ -20,18 +21,29 @@ async function sessionFrom(req: NextRequest) {
 
 export async function middleware(req: NextRequest) {
   const host = (req.headers.get("host") || "").split(":")[0].toLowerCase();
-  if (host === "www.globalcareerhub.org") {
-    const url = req.nextUrl.clone();
-    url.protocol = "https:";
-    url.host = "globalcareerhub.org";
-    url.port = "";
-    return NextResponse.redirect(url, 301);
-  }
+  const { pathname, search } = req.nextUrl;
 
-  const { pathname } = req.nextUrl;
   if (pathname.endsWith(".map")) {
     return new NextResponse("Not found", { status: 404 });
   }
+
+  // Canonical URL: one 301 hop to https://globalcareerhub.org/<clean path>
+  // (www → apex, trailing slash, legacy slugs/paths). GET/HEAD only; never /api.
+  const isRead = req.method === "GET" || req.method === "HEAD";
+  const isWww = host === `www.${CANONICAL_HOST}`;
+  const cleanPath =
+    isRead && !pathname.startsWith("/api/") ? canonicalPath(pathname) : null;
+  if (isWww || cleanPath) {
+    const target = `https://${CANONICAL_HOST}${cleanPath ?? pathname}${search}`;
+    if (isWww || host === CANONICAL_HOST) {
+      return NextResponse.redirect(target, 301);
+    }
+    // local / preview hosts: same-host redirect
+    const url = req.nextUrl.clone();
+    url.pathname = cleanPath ?? pathname;
+    return NextResponse.redirect(url, 301);
+  }
+
   const user = await sessionFrom(req);
 
   if (pathname.startsWith("/admin")) {

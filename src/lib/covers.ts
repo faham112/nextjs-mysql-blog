@@ -85,3 +85,20 @@ export function absoluteCover(
   const src = resolveCover(featuredImage, categorySlug);
   return src.startsWith("http") ? src : `${siteUrl.replace(/\/$/, "")}${src}`;
 }
+
+/**
+ * Social previews (Facebook, X, LinkedIn, WhatsApp) do not render SVG og:images.
+ * Every /covers/<name>.svg has a 1200x630 PNG twin at /covers/og/<name>.png.
+ */
+export function ogCover(
+  featuredImage: string | null | undefined,
+  categorySlug: string | null | undefined,
+  siteUrl: string
+): string {
+  const src = resolveCover(featuredImage, categorySlug);
+  const m = src.match(/^\/covers\/([a-z0-9-]+)\.svg$/i);
+  const path = m ? `/covers/og/${m[1]}.png` : src;
+  return path.startsWith("http") ? path : `${siteUrl.replace(/\/$/, "")}${path}`;
+}
+
+export const DEFAULT_OG_IMAGE = "/covers/og/default.png";

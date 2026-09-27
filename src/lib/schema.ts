@@ -1,4 +1,4 @@
-import { absoluteCover } from "@/lib/covers";
+import { ogCover } from "@/lib/covers";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org";
 
@@ -74,7 +74,7 @@ export function articleJsonLd(post: {
   author_name?: string | null;
 }) {
   const url = `${siteUrl}/posts/${post.slug}`;
-  const img = absoluteCover(post.featured_image, post.category_slug, siteUrl);
+  const img = ogCover(post.featured_image, post.category_slug, siteUrl);
   return {
     "@context": "https://schema.org",
     "@type": "Article",

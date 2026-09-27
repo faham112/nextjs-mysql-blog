@@ -1,10 +1,25 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/covers";
 import EditorialNav from "@/components/EditorialNav";
 import PostThumb from "@/components/PostThumb";
 import { listPublishedPosts, type PostRow } from "@/lib/posts";
 import { listCategories } from "@/lib/categories";
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "GlobalCareerHub",
+    title: "GlobalCareerHub — Career, Skills & Study Guides",
+    description: "Free guides on careers, skills, scholarships, and study.",
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: "GlobalCareerHub" }],
+  },
+};
 
 function formatDate(value: Date | string | null) {
   if (!value) return "";

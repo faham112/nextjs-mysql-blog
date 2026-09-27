@@ -4,6 +4,7 @@ import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScriptSlots from "@/components/ScriptSlots";
+import { DEFAULT_OG_IMAGE } from "@/lib/covers";
 import { organizationJsonLd, personJsonLd, websiteJsonLd } from "@/lib/schema";
 
 const sans = Plus_Jakarta_Sans({
@@ -29,20 +30,26 @@ export const metadata: Metadata = {
   keywords: ["career guides", "scholarships", "skills", "study abroad", "Faham Baloch", "Global Career Hub"],
   authors: [{ name: "Faham Baloch" }],
   creator: "Faham Baloch",
-  icons: { icon: "/logo.svg", apple: "/logo.svg" },
-  alternates: { canonical: "/" },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.svg", type: "image/svg+xml" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: siteUrl,
     siteName: "GlobalCareerHub",
     title: "GlobalCareerHub — Career, Skills & Study Guides",
     description: "Free guides on careers, skills, scholarships, and study.",
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: "GlobalCareerHub" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "GlobalCareerHub",
     description: "Free career, skills, and study guides.",
+    images: [DEFAULT_OG_IMAGE],
   },
   robots: { index: true, follow: true },
 };
