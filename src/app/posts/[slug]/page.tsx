@@ -7,6 +7,7 @@ import CommentForm from "@/components/CommentForm";
 import { readingTimeLabel } from "@/lib/readingTime";
 import { AUTHOR_NAME, articleJsonLd } from "@/lib/schema";
 import { coverAlt, ogCover, resolveCover } from "@/lib/covers";
+import { COVER_SIZES, coverSrcSet } from "@/lib/coverSrcset";
 import { rewriteLegacyLinks } from "@/lib/redirects";
 
 export const revalidate = 60;
@@ -57,6 +58,7 @@ export default async function PostPage({
 
   const comments = await listApprovedComments(post.id);
   const cover = resolveCover(post.featured_image, post.category_slug, post.slug);
+  const coverImg = coverSrcSet(cover);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -92,7 +94,9 @@ export default async function PostPage({
       </p>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={cover}
+        src={coverImg?.src ?? cover}
+        srcSet={coverImg?.srcSet}
+        sizes={coverImg ? COVER_SIZES.article : undefined}
         alt={coverAlt(post.slug, post.title)}
         className="mt-8 max-h-[420px] w-full rounded-2xl object-cover"
         width={1200}

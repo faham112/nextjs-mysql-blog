@@ -2,24 +2,33 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScriptSlots from "@/components/ScriptSlots";
-import CookieConsent from "@/components/CookieConsent";
+import CookieConsent from "@/components/CookieConsentLazy";
 import { DEFAULT_OG_IMAGE } from "@/lib/covers";
 import { AUTHOR_NAME, organizationJsonLd, personJsonLd, websiteJsonLd } from "@/lib/schema";
 
+// Variable fonts: one file per family instead of one @font-face per weight.
+// Metric-matched fallbacks are declared in globals.css (gch-*-fallback) with several local()
+// sources, so the first layout never has to fall through to generic system fonts
+// (Next's built-in fallback only tries local("Arial"), which Linux often lacks — that
+// cost ~100 ms of layout in Lighthouse's headless Chrome).
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
   variable: "--font-sans",
+  adjustFontFallback: false,
+  fallback: ["gch-sans-fallback", "system-ui", "sans-serif"],
 });
 
 const heading = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["500", "700"],
   display: "swap",
   variable: "--font-heading",
+  adjustFontFallback: false,
+  fallback: ["gch-heading-fallback", "system-ui", "sans-serif"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org";
@@ -96,7 +105,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${sans.className} min-h-screen`}>
         <ScriptSlots slot="body" />
         <ThemeProvider>
-          <SiteChrome>{children}</SiteChrome>
+          <SiteChrome header={<Header />} footer={<Footer />}>
+            {children}
+          </SiteChrome>
         </ThemeProvider>
         <ScriptSlots slot="footer" />
         <CookieConsent />

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PostRow } from "@/lib/posts";
 import PostThumb from "@/components/PostThumb";
+import { COVER_SIZES } from "@/lib/coverSrcset";
 import { AUTHOR_NAME } from "@/lib/schema";
 
 function formatDate(value: Date | string | null) {
@@ -26,7 +27,7 @@ function readTime(post: PostRow) {
   return `${minutes} min read`;
 }
 
-export default function PostCard({ post }: { post: PostRow }) {
+export default function PostCard({ post, priority = false }: { post: PostRow; priority?: boolean }) {
   const category = post.category_name || "Guide";
   return (
     <article className="card group flex flex-col overflow-hidden transition hover:shadow-xl">
@@ -36,6 +37,8 @@ export default function PostCard({ post }: { post: PostRow }) {
           alt={post.title}
           width={640}
           height={336}
+          sizes={COVER_SIZES.card}
+          priority={priority}
           className="aspect-[1200/630] h-auto w-full object-cover object-center"
         />
         <div className="flex flex-grow flex-col p-6">

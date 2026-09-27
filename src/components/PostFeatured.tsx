@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PostRow } from "@/lib/posts";
 import PostThumb from "@/components/PostThumb";
+import { COVER_SIZES } from "@/lib/coverSrcset";
 
 function formatDate(value: Date | string | null) {
   if (!value) return "";
@@ -29,6 +30,7 @@ export default function PostFeatured({
           width={800}
           height={420}
           priority={priority}
+          sizes={COVER_SIZES.hero}
           className="aspect-[1200/630] h-auto w-full object-cover object-center transition duration-300 group-hover:scale-[1.02]"
         />
       </div>

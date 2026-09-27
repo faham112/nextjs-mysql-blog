@@ -16,7 +16,7 @@ export default async function ArticlesPage() {
       <p className="text-xs uppercase tracking-[0.2em] text-accent">Library</p>
       <h1 className="mt-2 font-heading text-4xl sm:text-5xl">All articles</h1>
       <p className="mt-3 max-w-2xl text-slate-600">Every published guide on Global Career Hub, written for readers first.</p>
-      <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{posts.map((post) => <PostCard key={post.id} post={post} />)}</div>
+      <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{posts.map((post, i) => <PostCard key={post.id} post={post} priority={i === 0} />)}</div>
       {posts.length === 0 && <div className="card mt-8 p-8"><p className="text-slate-600">No published articles yet. Check back soon.</p></div>}
     </div>
   );

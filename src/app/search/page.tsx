@@ -36,7 +36,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           <Link key={c.id} href={query ? `/search?q=${encodeURIComponent(query)}&category=${c.slug}` : `/search?category=${c.slug}`} className={`rounded-full px-3 py-1.5 text-xs font-bold ${category === c.slug ? "bg-brand-600 text-white" : "bg-slate-100 text-slate-700"}`}>{c.name}</Link>
         ))}
       </div>
-      <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{posts.map((post) => <PostCard key={post.id} post={post} />)}</div>
+      <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{posts.map((post, i) => <PostCard key={post.id} post={post} priority={i === 0} />)}</div>
       {(query || category) && posts.length === 0 && (
         <div className="card mt-8 p-8">
           <p className="font-heading text-xl font-bold">No matching articles</p>

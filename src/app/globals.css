@@ -34,6 +34,34 @@ html.dark {
   --ink: #f4f4f5;
 }
 body { background: var(--bg); color: var(--fg); @apply antialiased; }
+
+/* Metric-matched fallbacks for next/font (see layout.tsx). Arial, Arimo and Liberation Sans share
+   Arial's metrics, so the overrides (from next/font's own Arial calculation) fit all of them. */
+@font-face {
+  font-family: "gch-sans-fallback";
+  src: local("Arial"), local("ArialMT"), local("Arimo"), local("Liberation Sans"), local("Helvetica");
+  ascent-override: 98.88%;
+  descent-override: 21.15%;
+  line-gap-override: 0%;
+  size-adjust: 104.98%;
+}
+@font-face {
+  font-family: "gch-heading-fallback";
+  src: local("Arial"), local("ArialMT"), local("Arimo"), local("Liberation Sans"), local("Helvetica");
+  ascent-override: 89.71%;
+  descent-override: 26.62%;
+  line-gap-override: 0%;
+  size-adjust: 109.69%;
+}
+
+/* Homepage: skip layout/paint of below-the-fold sections until they approach the viewport
+   (cuts the first layout task; "auto" remembers the real size once rendered). */
+#topics > section,
+#topics ~ section,
+#topics ~ footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 640px;
+}
 .prose-blog h2 { @apply mt-10 mb-3 font-heading text-2xl font-bold; color: var(--fg); }
 .prose-blog h3 { @apply mt-8 mb-2 font-heading text-xl font-bold; color: var(--fg); }
 .prose-blog p { @apply mb-4 leading-8 text-[17px]; color: var(--fg); }

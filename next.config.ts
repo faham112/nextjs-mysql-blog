@@ -8,6 +8,24 @@ const nextConfig: NextConfig = {
   htmlLimitedBots: /.*/,
   compress: true,
   productionBrowserSourceMaps: false,
+  experimental: {
+    // Tree-shake icon imports to the icons actually used (also a Next default for lucide-react).
+    optimizePackageImports: ["lucide-react"],
+  },
+  webpack(config, { isServer, dev }) {
+    if (!isServer && !dev) {
+      // Next always bundles a small polyfill module (Array.prototype.at/flat/flatMap,
+      // Object.fromEntries/hasOwn, String trimStart/trimEnd, Promise.finally, URL.canParse...)
+      // regardless of browserslist. Every browser in our browserslist (package.json:
+      // Chrome/Edge/Firefox 111+, Safari 16.4+) has these natively, so drop it from the client
+      // build (PageSpeed "Legacy JavaScript"). URL.canParse is only used by the dev overlay.
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        [require.resolve("next/dist/build/polyfills/polyfill-module")]: false,
+      };
+    }
+    return config;
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
@@ -88,15 +106,24 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      {
-        source: "/logo.svg",
+      // Static files in public/. Post covers are requested with a ?v=<content hash> query
+      // (src/lib/coverSrcset.ts), so a year + immutable is safe. On Hostinger the front server
+      // serves existing public/ files itself (Next never sees them), so public/.htaccess sets
+      // the same headers there; these rules cover `next start` / any other host.
+      ...[
+        "/covers/:path*",
+        "/logo.svg",
+        "/favicon.ico",
+        "/apple-touch-icon.png",
+      ].map((source) => ({
+        source,
         headers: [
           {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
           },
         ],
-      },
+      })),
     ];
   },
 };

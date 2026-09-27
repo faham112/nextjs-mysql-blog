@@ -40,7 +40,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           {posts.length} guide{posts.length === 1 ? "" : "s"}
         </p>
       )}
-      <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{posts.map((post) => <PostCard key={post.id} post={post} />)}</div>
+      <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{posts.map((post, i) => <PostCard key={post.id} post={post} priority={i === 0} />)}</div>
       {posts.length === 0 && <p className="mt-6 text-slate-500">No published posts in this category yet.</p>}
       {others.length > 0 && (
         <nav className="mt-12 border-t pt-6" style={{ borderColor: "var(--border)" }} aria-label="Other categories">

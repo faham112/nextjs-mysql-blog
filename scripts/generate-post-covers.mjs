@@ -169,3 +169,6 @@ export const POST_COVERS: Record<string, string> = ${JSON.stringify(manifest, nu
 `;
 fs.writeFileSync(path.join(root, "src/lib/postCovers.generated.ts"), ts);
 console.log(`Generated ${data.length} covers in public/covers/posts`);
+
+// Responsive 480/768/960px variants + ?v= cache-busting hashes for the new covers.
+await import("./generate-cover-variants.mjs");

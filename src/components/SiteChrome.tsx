@@ -1,9 +1,19 @@
 "use client";
 import { usePathname } from "next/navigation";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
-export default function SiteChrome({ children }: { children: React.ReactNode }) {
+/**
+ * Picks the chrome for the current route. Header/Footer are passed in from the (server)
+ * root layout as slots, so the Footer stays a server component and ships no client JS.
+ */
+export default function SiteChrome({
+  children,
+  header,
+  footer,
+}: {
+  children: React.ReactNode;
+  header: React.ReactNode;
+  footer: React.ReactNode;
+}) {
   const pathname = usePathname();
   const desk =
     pathname.startsWith("/admin") || pathname.startsWith("/dashboard");
@@ -27,9 +37,9 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
 
   return (
     <>
-      <Header />
+      {header}
       <main className="min-h-[70vh] flex-grow">{children}</main>
-      <Footer />
+      {footer}
     </>
   );
 }

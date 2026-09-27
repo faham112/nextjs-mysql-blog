@@ -1,5 +1,6 @@
 import Link from "next/link";
 import PostThumb from "@/components/PostThumb";
+import { COVER_SIZES } from "@/lib/coverSrcset";
 import { listPublishedPosts, type PostRow } from "@/lib/posts";
 import { categoryIntro } from "@/lib/categoryIntros";
 
@@ -32,6 +33,7 @@ function TopicCard({ post, fallbackCategory }: { post: PostRow; fallbackCategory
             alt={post.title}
             width={600}
             height={315}
+            sizes={COVER_SIZES.topic}
             className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.02]"
           />
         </div>

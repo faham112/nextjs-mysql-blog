@@ -5,6 +5,7 @@ import { DEFAULT_OG_IMAGE } from "@/lib/covers";
 import { AUTHOR_NAME } from "@/lib/schema";
 import EditorialNav from "@/components/EditorialNav";
 import PostThumb from "@/components/PostThumb";
+import { COVER_SIZES } from "@/lib/coverSrcset";
 import { listPublishedPosts, type PostRow } from "@/lib/posts";
 import { listCategories } from "@/lib/categories";
 import CategoryChips from "@/components/home/CategoryChips";
@@ -172,7 +173,7 @@ export default async function HomePage() {
                     {featured.excerpt || "Practical guides on careers, technology, scholarships and study routes."}
                   </p>
                   <Link href={`/posts/${featured.slug}`} className="relative mt-8 block aspect-[1200/630] w-full overflow-hidden" style={{ background: "var(--bg2)" }}>
-                    <PostThumb post={featured} alt={featured.title} width={1200} height={630} priority className="h-full w-full object-cover object-center" />
+                    <PostThumb post={featured} alt={featured.title} width={1200} height={630} priority sizes={COVER_SIZES.hero} className="h-full w-full object-cover object-center" />
                   </Link>
                   <div className="mt-4 flex justify-between text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: "var(--muted)" }}>
                     <span>{`By ${AUTHOR_NAME}`}</span>

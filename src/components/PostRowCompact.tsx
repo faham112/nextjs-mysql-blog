@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PostRow } from "@/lib/posts";
 import PostThumb from "@/components/PostThumb";
+import { COVER_SIZES } from "@/lib/coverSrcset";
 
 function formatDate(value: Date | string | null) {
   if (!value) return "";
@@ -26,6 +27,7 @@ export default function PostRowCompact({ post }: { post: PostRow }) {
           alt={post.title}
           width={144}
           height={76}
+          sizes={COVER_SIZES.thumb}
           className="h-full w-full object-cover transition group-hover:scale-105"
         />
       </div>

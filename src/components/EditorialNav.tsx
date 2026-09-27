@@ -2,25 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { Menu, X, Search } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+
+const SearchModal = dynamic(() => import("@/components/SearchModal"));
 
 type Cat = { name: string; slug: string };
 
 export default function EditorialNav({ categories }: { categories: Cat[] }) {
-  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [q, setQ] = useState("");
-
-  function submitSearch(e: React.FormEvent) {
-    e.preventDefault();
-    const term = q.trim();
-    if (!term) return;
-    setSearchOpen(false);
-    router.push(`/search?q=${encodeURIComponent(term)}`);
-  }
 
   return (
     <>
@@ -191,56 +183,8 @@ export default function EditorialNav({ categories }: { categories: Cat[] }) {
         </div>
       )}
 
-      {/* Search modal */}
-      {searchOpen && (
-        <div
-          className="fixed inset-0 z-[99999] flex items-start justify-center bg-slate-950/70 px-4 pt-20 backdrop-blur-md"
-          onClick={() => setSearchOpen(false)}
-        >
-          <div
-            className="relative w-full max-w-2xl rounded-2xl border p-6 shadow-2xl"
-            style={{
-              background: "var(--bg2)",
-              borderColor: "var(--border)",
-              color: "var(--fg)",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              aria-label="Close search"
-              className="absolute right-4 top-4 p-1"
-              onClick={() => setSearchOpen(false)}
-            >
-              <X size={22} />
-            </button>
-            <h3 className="mb-4 font-heading text-lg font-bold">
-              Search GlobalCareerHub
-            </h3>
-            <form onSubmit={submitSearch} className="relative">
-              <input
-                autoFocus
-                type="search"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Type keywords (e.g. Cybersecurity, Scholarship)..."
-                className="w-full rounded-xl border px-5 py-3.5 pr-28 text-sm outline-none"
-                style={{
-                  background: "var(--bg)",
-                  borderColor: "var(--border)",
-                  color: "var(--fg)",
-                }}
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-2 rounded-lg bg-rose-600 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white"
-              >
-                Search
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Search modal (code loaded on first open) */}
+      {searchOpen ? <SearchModal onClose={() => setSearchOpen(false)} /> : null}
     </>
   );
 }

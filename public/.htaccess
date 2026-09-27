@@ -1,0 +1,22 @@
+# Long browser/CDN cache lifetimes for static files in public/ (PageSpeed "Use efficient cache
+# lifetimes"). On Hostinger these files are served by the web server directly, so Next's
+# headers() in next.config.ts never applies to them. Post covers are referenced with a
+# ?v=<content hash> query (src/lib/coverSrcset.ts), so a year + immutable is safe.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(svg|png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+</IfModule>
