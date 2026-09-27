@@ -56,11 +56,15 @@ body { background: var(--bg); color: var(--fg); @apply antialiased; }
 
 /* Homepage: skip layout/paint of below-the-fold sections until they approach the viewport
    (cuts the first layout task; "auto" remembers the real size once rendered). */
+#start-here,
 #topics > section,
-#topics ~ section,
-#topics ~ footer {
+#topics ~ section {
   content-visibility: auto;
   contain-intrinsic-size: auto 640px;
+}
+.site-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
 }
 .prose-blog h2 { @apply mt-10 mb-3 font-heading text-2xl font-bold; color: var(--fg); }
 .prose-blog h3 { @apply mt-8 mb-2 font-heading text-xl font-bold; color: var(--fg); }

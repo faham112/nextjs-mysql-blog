@@ -62,34 +62,35 @@ export default function CookieConsent() {
 
   if (!open) return null;
 
+  // Compact bottom bar: one short line + two buttons (about 100px tall on a 390px phone).
   return (
     <div
       role="dialog"
       aria-live="polite"
       aria-label="Cookie consent"
-      className="fixed inset-x-0 bottom-0 z-[100] border-t p-4 shadow-2xl sm:p-5"
-      style={{ background: "var(--bg)", color: "var(--fg)", borderColor: "var(--border)" }}
+      className="fixed inset-x-0 bottom-0 z-[100] border-t px-4 py-2.5 shadow-[0_-8px_30px_rgba(0,0,0,0.18)] sm:py-3"
+      style={{ background: "var(--bg2)", color: "var(--fg)", borderColor: "var(--border)" }}
     >
-      <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs leading-5 sm:text-sm" style={{ color: "var(--muted)" }}>
-          We use essential cookies to run this site. With your permission, Google and other
-          advertising partners may also use cookies to show and measure ads, including personalised
-          ads. See our <Link href="/privacy" className="font-semibold text-brand-600 underline">privacy policy</Link>{" "}
-          and <Link href="/cookies" className="font-semibold text-brand-600 underline">cookie notice</Link>.
+      <div className="mx-auto flex max-w-[1280px] flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-4">
+        <p className="text-[12px] leading-[1.45] sm:text-[13px]" style={{ color: "var(--muted)" }}>
+          We use cookies. With your OK, Google and partners also use them for personalised ads and measurement.{" "}
+          <Link href="/privacy" className="font-semibold underline underline-offset-2" style={{ color: "var(--fg)" }}>Privacy</Link>
+          {" · "}
+          <Link href="/cookies" className="font-semibold underline underline-offset-2" style={{ color: "var(--fg)" }}>Cookies</Link>
         </p>
         <div className="flex shrink-0 gap-2">
           <button
             type="button"
             onClick={() => choose("denied")}
-            className="rounded-lg border px-4 py-2 text-xs font-bold"
-            style={{ borderColor: "var(--border)" }}
+            className="h-8 flex-1 rounded-full border px-4 sm:h-9 text-[12.5px] font-bold sm:flex-none"
+            style={{ borderColor: "var(--border)", color: "var(--fg)" }}
           >
             Essential only
           </button>
           <button
             type="button"
             onClick={() => choose("granted")}
-            className="rounded-lg bg-brand-600 px-4 py-2 text-xs font-bold text-white"
+            className="h-8 flex-1 rounded-full bg-brand-600 px-5 sm:h-9 text-[12.5px] font-bold text-white sm:flex-none"
           >
             Accept all
           </button>

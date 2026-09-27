@@ -27,7 +27,7 @@ function TopicCard({ post, fallbackCategory }: { post: PostRow; fallbackCategory
   return (
     <article className="group w-[78%] shrink-0 snap-start sm:w-auto">
       <Link href={`/posts/${post.slug}`} className="block">
-        <div className="aspect-[1200/630] w-full overflow-hidden" style={{ background: "var(--bg2)" }}>
+        <div className="aspect-[1200/630] w-full overflow-hidden rounded-xl" style={{ background: "var(--bg2)" }}>
           <PostThumb
             post={post}
             alt={post.title}
@@ -37,13 +37,13 @@ function TopicCard({ post, fallbackCategory }: { post: PostRow; fallbackCategory
             className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.02]"
           />
         </div>
-        <div className="mt-4 flex items-center justify-between gap-3">
-          <span className="text-[9px] font-bold uppercase tracking-[0.15em]" style={{ color: "var(--accent)" }}>
+        <div className="mt-3 flex items-center justify-between gap-3 text-[12px]">
+          <span className="font-bold uppercase tracking-[0.08em]" style={{ color: "var(--accent)" }}>
             {post.category_name || fallbackCategory}
           </span>
-          <span className="text-[9px]" style={{ color: "var(--muted)" }}>{formatDate(post.published_at)}</span>
+          <span style={{ color: "var(--muted)" }}>{formatDate(post.published_at)}</span>
         </div>
-        <h3 className="mt-2 font-heading text-[18px] font-bold leading-[1.3] transition group-hover:opacity-80" style={{ color: "var(--fg)" }}>
+        <h3 className="mt-1.5 font-heading text-[16px] font-bold leading-snug transition group-hover:opacity-80 sm:text-[17px]" style={{ color: "var(--fg)" }}>
           {post.title}
         </h3>
       </Link>
@@ -53,18 +53,18 @@ function TopicCard({ post, fallbackCategory }: { post: PostRow; fallbackCategory
 
 function TopicHeader({ cat, total }: { cat: TopicCategory; total: number }) {
   return (
-    <div className="ed-double mb-6 flex items-end justify-between gap-4 pb-3">
+    <div className="mb-2 flex items-end justify-between gap-4">
       <div className="min-w-0">
-        <div className="mb-1 text-[9px] font-bold uppercase tracking-[0.17em]" style={{ color: "var(--accent)" }}>
+        <div className="mb-1.5 text-[12px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent)" }}>
           {total} {total === 1 ? "guide" : "guides"}
         </div>
-        <h2 className="font-heading text-[27px] font-bold tracking-[-0.025em] sm:text-[31px]" style={{ color: "var(--fg)" }}>
+        <h2 className="font-heading text-[26px] font-bold leading-tight tracking-[-0.02em] sm:text-[30px]" style={{ color: "var(--fg)" }}>
           {cat.name}
         </h2>
       </div>
       <Link
         href={`/category/${cat.slug}`}
-        className="shrink-0 text-[10px] font-bold uppercase tracking-[0.12em]"
+        className="shrink-0 text-[14px] font-semibold hover:underline"
         style={{ color: "var(--fg)" }}
       >
         View all →
@@ -92,12 +92,12 @@ export default async function TopicSections({ categories }: { categories: TopicC
         <section
           key={cat.slug}
           id={`topic-${cat.slug}`}
-          className="scroll-mt-28 border-b"
+          className="scroll-mt-24 border-b"
           style={{ borderColor: "var(--border)" }}
         >
-          <div className="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 lg:py-14">
+          <div className="mx-auto max-w-[1280px] px-5 py-10 sm:px-8 lg:py-12">
             <TopicHeader cat={cat} total={total} />
-            <p className="-mt-2 mb-6 max-w-[760px] text-[13px] leading-6" style={{ color: "var(--muted)" }}>
+            <p className="mb-6 max-w-[760px] text-[15px] leading-7" style={{ color: "var(--muted)" }}>
               {categoryIntro(cat.slug, cat.name)}
             </p>
             <div className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 sm:scroll-px-0 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
@@ -118,8 +118,8 @@ export function TopicSectionsSkeleton({ count = 3 }: { count?: number }) {
     <div aria-hidden="true">
       {Array.from({ length: count }).map((_, s) => (
         <section key={s} className="border-b" style={{ borderColor: "var(--border)" }}>
-          <div className="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 lg:py-14">
-            <div className="ed-double mb-6 flex items-end justify-between pb-3">
+          <div className="mx-auto max-w-[1280px] px-5 py-10 sm:px-8 lg:py-12">
+            <div className="mb-6 flex items-end justify-between">
               <div>
                 <div className="mb-2 h-2 w-16 animate-pulse rounded" style={{ background: "var(--border)" }} />
                 <div className="h-7 w-44 animate-pulse rounded" style={{ background: "var(--border)" }} />
@@ -129,7 +129,7 @@ export function TopicSectionsSkeleton({ count = 3 }: { count?: number }) {
             <div className="-mx-5 flex gap-4 overflow-hidden px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:px-0 lg:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="w-[78%] shrink-0 sm:w-auto">
-                  <div className="aspect-[1200/630] w-full animate-pulse" style={{ background: "var(--bg2)" }} />
+                  <div className="aspect-[1200/630] w-full animate-pulse rounded-xl" style={{ background: "var(--bg2)" }} />
                   <div className="mt-4 h-2 w-20 animate-pulse rounded" style={{ background: "var(--border)" }} />
                   <div className="mt-3 h-4 w-full animate-pulse rounded" style={{ background: "var(--border)" }} />
                   <div className="mt-2 h-4 w-2/3 animate-pulse rounded" style={{ background: "var(--border)" }} />

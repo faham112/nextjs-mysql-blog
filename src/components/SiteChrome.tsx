@@ -17,7 +17,6 @@ export default function SiteChrome({
   const pathname = usePathname();
   const desk =
     pathname.startsWith("/admin") || pathname.startsWith("/dashboard");
-  const homeEditorial = pathname === "/";
 
   if (desk) {
     return (
@@ -30,11 +29,7 @@ export default function SiteChrome({
     );
   }
 
-  // Homepage uses editorial chrome; all other public pages (posts, articles, etc.) get Header + Footer
-  if (homeEditorial) {
-    return <main className="min-h-screen">{children}</main>;
-  }
-
+  // Every public page (homepage included) shares one header (with the topic menu) and footer.
   return (
     <>
       {header}

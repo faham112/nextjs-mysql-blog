@@ -33,10 +33,17 @@ export default function AboutPage() {
           night — scholarships, skills, study routes, and the first years of work. The site is a
           reading desk. It is not a consultancy, a visa shop, or a job board.
         </p>
+        <h2 id="editorial-policy" className="scroll-mt-28 font-heading text-xl font-extrabold">
+          Editorial policy
+        </h2>
         <p className="text-sm leading-7" style={{ color: "var(--fg)" }}>
           When a page names a programme, it also points at the official source: HEC, DAAD,
           Chevening, GOV.UK, USEFP, and similar. If this site and that page disagree, trust the
           official page. Dates move. I would rather send you there than invent a deadline.
+        </p>
+        <p className="text-sm leading-7" style={{ color: "var(--fg)" }}>
+          Every guide shows the date it was published. Guides are updated when official rules or
+          dates change, and confirmed errors are corrected on the page.
         </p>
         <h2 className="font-heading text-xl font-extrabold">Background</h2>
         <p className="text-sm leading-7" style={{ color: "var(--fg)" }}>

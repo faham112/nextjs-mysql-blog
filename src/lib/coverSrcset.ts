@@ -20,10 +20,12 @@ export function coverSrcSet(src: string | null | undefined): { src: string; srcS
 
 /** `sizes` for the common cover slots (CSS px widths at each breakpoint). */
 export const COVER_SIZES = {
-  /** Homepage hero: left column of the 1.65fr/.75fr grid inside max-w-[1440px] px-8, pr-10. */
-  hero: "(min-width: 1440px) 906px, (min-width: 1024px) calc(68.75vw - 84px), (min-width: 640px) calc(100vw - 64px), calc(100vw - 40px)",
-  /** Homepage topic cards: 4 cols (lg) / 2 cols (sm) / 78% swipe cards (mobile). */
-  topic: "(min-width: 1440px) 326px, (min-width: 1024px) calc(25vw - 34px), (min-width: 640px) calc(50vw - 44px), calc(78vw - 32px)",
+  /** Homepage hero: editor's-pick card in the right half of the max-w-[1280px] px-8 gap-14 grid (full width below lg). */
+  hero: "(min-width: 1280px) 580px, (min-width: 1024px) calc(50vw - 60px), (min-width: 640px) calc(100vw - 64px), calc(100vw - 40px)",
+  /** Homepage "Latest" cards: 3 cols (lg) / 2 cols (sm) in max-w-[1280px] px-8; 132px row thumbnails on phones. */
+  latest: "(min-width: 1280px) 384px, (min-width: 1024px) calc(33vw - 37px), (min-width: 640px) calc(50vw - 44px), 132px",
+  /** Homepage topic cards: 4 cols (lg) / 2 cols (sm) in max-w-[1280px] px-8 / 78% swipe cards (mobile). */
+  topic: "(min-width: 1280px) 286px, (min-width: 1024px) calc(25vw - 34px), (min-width: 640px) calc(50vw - 44px), calc(78vw - 32px)",
   /** PostCard grid in max-w-7xl px-4: 3 cols (lg) / 2 cols (md) / 1 col. */
   card: "(min-width: 1280px) 400px, (min-width: 1024px) calc(33vw - 27px), (min-width: 768px) calc(50vw - 28px), calc(100vw - 32px)",
   /** Post page cover in max-w-3xl px-4 sm:px-6. */

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
-import Header from "@/components/Header";
+import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScriptSlots from "@/components/ScriptSlots";
@@ -111,7 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${sans.className} min-h-screen`}>
         <ScriptSlots slot="body" />
         <ThemeProvider>
-          <SiteChrome header={<Header />} footer={<Footer />}>
+          <SiteChrome header={<SiteHeader />} footer={<Footer />}>
             {children}
           </SiteChrome>
         </ThemeProvider>

@@ -28,6 +28,12 @@ export async function listPublishedPosts(page = 1, perPage = 8, categorySlug?: s
   const countRows = await query<{ total: number }>(`SELECT COUNT(*) AS total FROM posts p LEFT JOIN categories c ON c.id = p.category_id ${where}`, params);
   return { posts: rows, total: countRows[0]?.total ?? 0, page, perPage };
 }
+/** Published posts for a hand-picked list of slugs, returned in the order given (missing/unpublished ones are skipped). */
+export async function listPublishedPostsBySlugs(slugs: string[]) {
+  if (slugs.length === 0) return [] as PostRow[];
+  const rows = await query<PostRow>(`${SELECT} WHERE p.status = 'published' AND p.slug IN (${slugs.map(() => "?").join(",")})`, slugs);
+  return slugs.map((s) => rows.find((r) => r.slug === s)).filter((r): r is PostRow => Boolean(r));
+}
 export async function getPublishedPostBySlug(slug: string) {
   await publishDuePosts();
   const rows = await query<PostRow>(`${SELECT} WHERE p.slug = :slug AND p.status = 'published' LIMIT 1`, { slug });

@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { DEFAULT_OG_IMAGE } from "@/lib/covers";
+import { preload } from "react-dom";
+import { ArrowRight, BadgeCheck, CalendarCheck, Landmark, Mail, Search } from "lucide-react";
+import { DEFAULT_OG_IMAGE, resolveCover } from "@/lib/covers";
 import { AUTHOR_NAME } from "@/lib/schema";
-import EditorialNav from "@/components/EditorialNav";
 import PostThumb from "@/components/PostThumb";
-import { COVER_SIZES } from "@/lib/coverSrcset";
-import { listPublishedPosts, type PostRow } from "@/lib/posts";
+import { COVER_SIZES, coverSrcSet } from "@/lib/coverSrcset";
+import { readingTimeLabel } from "@/lib/readingTime";
+import { listPublishedPosts, listPublishedPostsBySlugs, type PostRow } from "@/lib/posts";
 import { listCategories } from "@/lib/categories";
-import CategoryChips from "@/components/home/CategoryChips";
 import TopicSections, { TopicSectionsSkeleton, orderCategories } from "@/components/home/TopicSections";
 
 // Always render from the live DB (never bake an empty build-time snapshot).
@@ -27,273 +28,268 @@ export const metadata: Metadata = {
   },
 };
 
-function formatDate(value: Date | string | null) {
+/** Editor's pick: the first of these that is currently published (else the newest post). */
+const EDITORS_PICK = [
+  "official-scholarship-map-pakistan-2026-hec-fulbright-daad",
+  "germany-2026-pakistani-students-daad-aps-calendar",
+  "study-abroad-roi-checklist-2026",
+];
+
+/** "Start here": hand-picked first reads, one per common goal (unpublished ones are skipped). */
+const START_HERE: { slug: string; goal: string }[] = [
+  { slug: "official-scholarship-map-pakistan-2026-hec-fulbright-daad", goal: "Find a scholarship" },
+  { slug: "study-abroad-timelines-if-you-are-starting-from-pakistan", goal: "Plan study abroad" },
+  { slug: "germany-2026-pakistani-students-daad-aps-calendar", goal: "Study in Germany" },
+  { slug: "how-to-write-a-statement-of-purpose-that-a-reviewer-actually-finishes", goal: "Write your SOP" },
+  { slug: "skills-that-get-interviews-2026", goal: "Get interviews" },
+  { slug: "hec-attestation-mofa-tutorial-foreign-file", goal: "Prepare documents" },
+  { slug: "scholarship-applications-without-scams", goal: "Avoid scams" },
+];
+
+const SHORT: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "numeric" };
+function formatDate(value: Date | string | null | undefined, opts: Intl.DateTimeFormatOptions = SHORT) {
   if (!value) return "";
-  return new Date(value).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  return new Date(value).toLocaleDateString("en-US", opts);
+}
+/** Most recent of published/updated (what readers see as "Updated"). */
+function lastUpdated(p: PostRow) {
+  const pub = p.published_at ? new Date(p.published_at).getTime() : 0;
+  const upd = p.updated_at ? new Date(p.updated_at).getTime() : 0;
+  return new Date(Math.max(pub, upd) || Date.now());
 }
 
-function SectionHeader({
-  eyebrow,
-  title,
-  href,
-  linkLabel,
-}: {
-  eyebrow: string;
-  title: string;
-  href: string;
-  linkLabel: string;
-}) {
+function SectionHeading({ id, eyebrow, title, intro, href, linkLabel }: { id?: string; eyebrow: string; title: string; intro?: string; href?: string; linkLabel?: string }) {
   return (
-    <div className="ed-double mb-7 flex items-end justify-between pb-3">
-      <div>
-        <div
-          className="mb-1 text-[9px] font-bold uppercase tracking-[0.17em]"
-          style={{ color: "var(--accent)" }}
-        >
+    <div className="mb-7 flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+      <div className="max-w-[720px]">
+        <div className="mb-2 text-[12px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent)" }}>
           {eyebrow}
         </div>
-        <h2
-          className="font-heading text-[31px] font-bold tracking-[-0.025em]"
-          style={{ color: "var(--fg)" }}
-        >
+        <h2 id={id} className="font-heading text-[28px] font-bold leading-tight tracking-[-0.02em] sm:text-[34px]" style={{ color: "var(--fg)" }}>
           {title}
         </h2>
+        {intro ? (
+          <p className="mt-2 text-[15px] leading-7" style={{ color: "var(--muted)" }}>
+            {intro}
+          </p>
+        ) : null}
       </div>
-      <Link
-        href={href}
-        className="hidden text-[10px] font-bold uppercase tracking-[0.12em] sm:block"
-        style={{ color: "var(--fg)" }}
-      >
-        {linkLabel} →
-      </Link>
+      {href ? (
+        <Link href={href} className="inline-flex items-center gap-1.5 text-[14px] font-semibold hover:underline" style={{ color: "var(--fg)" }}>
+          {linkLabel} <ArrowRight size={15} />
+        </Link>
+      ) : null}
     </div>
   );
 }
 
-function FooterColumn({
-  title,
-  links,
-}: {
-  title: string;
-  links: { label: string; href: string }[];
-}) {
+function LatestCard({ post }: { post: PostRow }) {
   return (
-    <div>
-      <div className="mb-4 text-[10px] font-bold uppercase tracking-[0.15em] text-white/70">
-        {title}
-      </div>
-      <div className="space-y-2">
-        {links.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            className="block text-[13px] text-white/70 transition hover:text-white"
-          >
-            {l.label}
-          </Link>
-        ))}
-      </div>
-    </div>
+    <article className="group">
+      <Link href={`/posts/${post.slug}`} className="flex items-start gap-4 sm:block">
+        <div className="aspect-[1200/630] w-[132px] shrink-0 overflow-hidden rounded-lg sm:w-full sm:rounded-xl" style={{ background: "var(--bg2)" }}>
+          <PostThumb post={post} alt={post.title} width={600} height={315} sizes={COVER_SIZES.latest} className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.02]" />
+        </div>
+        <div className="min-w-0 sm:mt-4">
+          <div className="flex flex-wrap items-center gap-x-2 text-[12px]" style={{ color: "var(--muted)" }}>
+            <span className="font-bold uppercase tracking-[0.08em]" style={{ color: "var(--accent)" }}>{post.category_name || "Guide"}</span>
+            <span aria-hidden="true">·</span>
+            <time dateTime={new Date(post.published_at || post.created_at).toISOString()}>{formatDate(post.published_at)}</time>
+          </div>
+          <h3 className="mt-1.5 font-heading text-[16px] font-bold leading-snug transition group-hover:opacity-80 sm:text-[19px]" style={{ color: "var(--fg)" }}>
+            {post.title}
+          </h3>
+        </div>
+      </Link>
+    </article>
   );
 }
 
 export default async function HomePage() {
   let latest: PostRow[] = [];
+  let total = 0;
+  let picks: PostRow[] = [];
   let categories: Awaited<ReturnType<typeof listCategories>> = [];
 
-  try {
-    latest = (await listPublishedPosts(1, 5)).posts;
-  } catch (e) {
-    console.error(e);
-  }
-  try {
-    categories = await listCategories();
-  } catch {}
-  const featured = latest[0];
-  const latestSide = latest.slice(1, 5);
+  await Promise.all([
+    listPublishedPosts(1, 8).then((r) => { latest = r.posts; total = Number(r.total) || r.posts.length; }).catch((e) => console.error(e)),
+    listPublishedPostsBySlugs([...new Set([...EDITORS_PICK, ...START_HERE.map((s) => s.slug)])]).then((r) => { picks = r; }).catch(() => {}),
+    listCategories().then((r) => { categories = r; }).catch(() => {}),
+  ]);
+
+  const bySlug = new Map(picks.map((p) => [p.slug, p]));
+  const featured = EDITORS_PICK.map((s) => bySlug.get(s)).find(Boolean) || latest[0];
+  const startHere = START_HERE.filter((s) => s.slug !== featured?.slug)
+    .map((s) => ({ ...s, post: bySlug.get(s.slug) }))
+    .filter((s): s is { slug: string; goal: string; post: PostRow } => Boolean(s.post))
+    .slice(0, 6);
+  const latestList = latest.filter((p) => p.id !== featured?.id).slice(0, 6);
   const orderedCategories = orderCategories(categories);
-
-  const monthLabel = new Date().toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
-
-  const catNav =
-    categories.length > 0
-      ? categories.map((c) => ({ name: c.name, slug: c.slug }))
-      : [
-          { name: "Applications", slug: "applications" },
-          { name: "Careers", slug: "careers" },
-          { name: "Scholarships", slug: "scholarships" },
-          { name: "Skills", slug: "skills" },
-          { name: "Study Abroad", slug: "study-abroad" },
-          { name: "Technology", slug: "technology" },
-          { name: "Tutorials", slug: "tutorials" },
-        ];
+  // Hint the LCP image (editor's-pick cover) in <head>, ahead of the CSS/JS requests.
+  const heroImg = featured ? coverSrcSet(resolveCover(featured.featured_image, featured.category_slug, featured.slug)) : null;
+  if (heroImg) preload(heroImg.src, { as: "image", imageSrcSet: heroImg.srcSet, imageSizes: COVER_SIZES.hero, fetchPriority: "high" });
+  const newest = [...latest, ...picks].reduce<Date | null>((d, p) => { const u = lastUpdated(p); return !d || u > d ? u : d; }, null);
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)", color: "var(--fg)" }}>
-      <div
-        className="border-b text-white"
-        style={{ background: "var(--strip)", borderColor: "var(--border)", color: "var(--strip-fg)" }}
-      >
-        <div className="mx-auto flex min-h-[34px] max-w-[1440px] items-center justify-between px-5 text-[11px] uppercase tracking-[0.16em] sm:px-8">
-          <span>Global Career & Study Desk</span>
-          <span className="hidden opacity-60 sm:block">{monthLabel} Edition</span>
-        </div>
-      </div>
-
-      <EditorialNav categories={catNav} />
-
-      <CategoryChips categories={orderedCategories} />
-
+    <div style={{ background: "var(--bg)", color: "var(--fg)" }}>
+      {/* Hero: who the site is for + the editor's pick */}
       <section className="border-b" style={{ borderColor: "var(--border)" }}>
-        <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:py-12">
-          <div className="grid gap-0 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,.75fr)]">
-            <article className="border-b pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10" style={{ borderColor: "var(--border)" }}>
-              <div className="mb-4 flex items-center gap-3">
-                <span className="h-[7px] w-[7px]" style={{ background: "var(--accent)" }} />
-                <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "var(--accent)" }}>
-                  Editor&apos;s Pick
-                </span>
-              </div>
-
-              {featured ? (
-                <>
-                  <h1 className="max-w-[950px] font-heading text-[36px] font-bold leading-[1.08] tracking-[-0.04em] sm:text-[52px] lg:text-[64px]">
-                    <Link href={`/posts/${featured.slug}`} className="transition hover:opacity-90" style={{ color: "var(--fg)" }}>
-                      {featured.title}
-                    </Link>
-                  </h1>
-                  <p className="mt-5 max-w-[720px] text-[16px] leading-7 sm:text-[17px]" style={{ color: "var(--muted)" }}>
-                    {featured.excerpt || "Practical guides on careers, technology, scholarships and study routes."}
-                  </p>
-                  <Link href={`/posts/${featured.slug}`} className="relative mt-8 block aspect-[1200/630] w-full overflow-hidden" style={{ background: "var(--bg2)" }}>
-                    <PostThumb post={featured} alt={featured.title} width={1200} height={630} priority sizes={COVER_SIZES.hero} className="h-full w-full object-cover object-center" />
-                  </Link>
-                  <div className="mt-4 flex justify-between text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: "var(--muted)" }}>
-                    <span>{`By ${AUTHOR_NAME}`}</span>
-                    <span>{formatDate(featured.published_at)}</span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <h1 className="max-w-[950px] font-heading text-[42px] font-bold leading-[1.04] tracking-[-0.045em] sm:text-[56px] lg:text-[72px]">
-                    Build a career that can move with you.
-                  </h1>
-                  <p className="mt-6 max-w-[720px] text-[16px] leading-7 sm:text-[18px]" style={{ color: "var(--muted)" }}>
-                    Practical guides on careers, technology, scholarships and study routes.
-                  </p>
-                </>
-              )}
-            </article>
-
-            <aside id="latest" className="pt-8 lg:pl-8 lg:pt-0">
-              <div className="ed-double mb-5 flex items-end justify-between pb-3">
-                <h2 className="font-heading text-[27px] font-bold">Latest</h2>
-                <Link href="/articles" className="text-[10px] font-bold uppercase tracking-[0.12em]" style={{ color: "var(--accent)" }}>View all</Link>
-              </div>
-              <div>
-                {latestSide.length === 0 && <p className="text-sm" style={{ color: "var(--muted)" }}>New guides coming soon.</p>}
-                {latestSide.map((story, index) => (
-                  <article key={story.id} className="group border-b py-5 first:pt-0" style={{ borderColor: "var(--border)" }}>
-                    <div className="mb-2 flex items-center justify-between gap-3">
-                      <span className="text-[9px] font-bold uppercase tracking-[0.15em]" style={{ color: "var(--accent)" }}>{story.category_name || "Guide"}</span>
-                      <span className="text-[9px]" style={{ color: "var(--muted)" }}>{formatDate(story.published_at)}</span>
-                    </div>
-                    <Link href={`/posts/${story.slug}`} className="font-heading text-[18px] font-bold leading-[1.3] transition group-hover:opacity-80" style={{ color: "var(--fg)" }}>
-                      {story.title}
-                    </Link>
-                    <div className="mt-3 text-[10px] font-bold" style={{ color: "var(--muted)" }}>0{index + 1}</div>
-                  </article>
-                ))}
-              </div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section style={{ background: "var(--strip)", color: "var(--strip-fg)" }}>
-        <div className="mx-auto max-w-[1440px] px-5 py-7 sm:px-8">
-          <div className="grid gap-6 md:grid-cols-[.65fr_1fr_1fr_1fr]">
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-soft)" }}>Explore</div>
-              <div className="mt-2 font-heading text-[25px] font-bold">Opportunities</div>
-            </div>
-            {([["01", "Scholarships", "Funding & study opportunities", "/category/scholarships"], ["02", "Careers", "Paths and proof for your next role", "/category/careers"], ["03", "Study Abroad", "Destinations, ROI and applications", "/category/study-abroad"]] as const).map(([number, title, description, href]) => (
-              <Link href={href} key={number} className="group border-l border-white/15 pl-5 transition hover:border-[var(--accent-soft)]">
-                <div className="text-[9px] font-bold opacity-70">{number}</div>
-                <div className="mt-2 font-heading text-[20px] font-bold transition group-hover:text-[var(--accent-soft)]">{title}</div>
-                <div className="mt-1 text-[12px] opacity-75">{description}</div>
+        <div className="mx-auto grid max-w-[1280px] items-center gap-8 px-5 py-8 sm:px-8 sm:py-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14 lg:py-16">
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[12px] font-semibold" style={{ borderColor: "var(--border)", color: "var(--muted)", background: "var(--bg2)" }}>
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--accent)" }} />
+              For students &amp; job seekers in Pakistan
+            </p>
+            <h1 className="mt-4 font-heading text-[34px] font-bold leading-[1.08] tracking-[-0.03em] sm:text-[46px] lg:text-[54px]">
+              Practical guides for your next <span style={{ color: "var(--accent)" }}>career or study</span> move.
+            </h1>
+            <p className="mt-4 max-w-[560px] text-[16px] leading-7 sm:text-[17px]" style={{ color: "var(--muted)" }}>
+              Free, step-by-step guides on scholarships, study abroad, skills and first jobs, written for readers
+              in Pakistan. Every guide points you to the official source.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="#start-here" className="inline-flex h-11 items-center gap-2 rounded-full bg-rose-600 px-6 text-[14px] font-bold text-white shadow-sm transition hover:bg-rose-700">
+                Start here <ArrowRight size={16} />
               </Link>
-            ))}
+              <Link href="/articles" className="inline-flex h-11 items-center rounded-full border px-6 text-[14px] font-bold transition hover:border-[var(--fg)]" style={{ borderColor: "var(--border)", color: "var(--fg)", background: "var(--bg2)" }}>
+                Browse all {total > 0 ? `${total} ` : ""}guides
+              </Link>
+            </div>
+            <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[13.5px] sm:mt-7 sm:gap-x-6" style={{ color: "var(--muted)" }}>
+              <li className="flex items-center gap-2"><Landmark size={16} style={{ color: "var(--accent)" }} /> Official sources linked</li>
+              <li className="flex items-center gap-2"><CalendarCheck size={16} style={{ color: "var(--accent)" }} /> {newest ? `Updated ${formatDate(newest, { month: "long", year: "numeric" })}` : "Dated and updated"}</li>
+              <li className="flex items-center gap-2"><BadgeCheck size={16} style={{ color: "var(--accent)" }} /> <span>By <Link href="/about" className="font-semibold hover:underline" style={{ color: "var(--fg)" }}>{AUTHOR_NAME}</Link>, not an agency</span></li>
+            </ul>
           </div>
+
+          {featured ? (
+            <article className="overflow-hidden rounded-2xl border" style={{ borderColor: "var(--border)", background: "var(--bg2)" }}>
+              <Link href={`/posts/${featured.slug}`} className="block aspect-[1200/630] w-full overflow-hidden" style={{ background: "var(--bg)" }}>
+                <PostThumb post={featured} alt={featured.title} width={1200} height={630} priority sizes={COVER_SIZES.hero} className="h-full w-full object-cover object-center" />
+              </Link>
+              <div className="p-5 sm:p-6">
+                <div className="flex flex-wrap items-center gap-2 text-[12px] font-bold uppercase tracking-[0.1em]">
+                  <span className="rounded-full px-2.5 py-0.5 text-white" style={{ background: "var(--accent)" }}>Editor&apos;s pick</span>
+                  {featured.category_slug ? (
+                    <Link href={`/category/${featured.category_slug}`} className="hover:underline" style={{ color: "var(--muted)" }}>{featured.category_name}</Link>
+                  ) : null}
+                </div>
+                <h2 className="mt-3 font-heading text-[21px] font-bold leading-snug sm:text-[24px]">
+                  <Link href={`/posts/${featured.slug}`} className="transition hover:opacity-80" style={{ color: "var(--fg)" }}>{featured.title}</Link>
+                </h2>
+                {featured.excerpt ? (
+                  <p className="mt-2 line-clamp-3 text-[15px] leading-6" style={{ color: "var(--muted)" }}>{featured.excerpt}</p>
+                ) : null}
+                <p className="mt-4 text-[12.5px]" style={{ color: "var(--muted)" }}>
+                  By {AUTHOR_NAME} · Updated {formatDate(lastUpdated(featured))} · {readingTimeLabel(featured.content || "")}
+                </p>
+              </div>
+            </article>
+          ) : null}
         </div>
       </section>
 
+      {/* Latest */}
+      {latestList.length > 0 ? (
+        <section id="latest" aria-labelledby="latest-title" className="scroll-mt-24">
+          <div className="mx-auto max-w-[1280px] px-5 py-12 sm:px-8 lg:py-16">
+            <SectionHeading id="latest-title" eyebrow="New and updated" title="Latest guides" href="/articles" linkLabel="All guides" />
+            <div className="grid gap-5 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
+              {latestList.map((p) => (
+                <LatestCard key={p.id} post={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Start here */}
+      {startHere.length > 0 ? (
+        <section id="start-here" aria-labelledby="start-title" className="scroll-mt-24 border-y" style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
+          <div className="mx-auto max-w-[1280px] px-5 py-12 sm:px-8 lg:py-16">
+            <SectionHeading id="start-title" eyebrow="Start here" title="The most useful first reads" intro="New here? Pick your goal. Each guide gives you the steps, the documents, and the official links to check." />
+            <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {startHere.map(({ goal, post }, i) => (
+                <li key={post.id}>
+                  <Link href={`/posts/${post.slug}`} className="group flex h-full flex-col rounded-xl border p-5 transition hover:border-[var(--accent)]" style={{ borderColor: "var(--border)", background: "var(--bg)" }}>
+                    <div className="flex items-center justify-between text-[12px] font-bold uppercase tracking-[0.1em]">
+                      <span style={{ color: "var(--accent)" }}>{goal}</span>
+                      <span className="tabular-nums" style={{ color: "var(--muted)" }}>0{i + 1}</span>
+                    </div>
+                    <h3 className="mt-2.5 font-heading text-[17px] font-bold leading-snug sm:text-[18px]" style={{ color: "var(--fg)" }}>{post.title}</h3>
+                    {post.excerpt ? <p className="mt-2 line-clamp-2 text-[14px] leading-6" style={{ color: "var(--muted)" }}>{post.excerpt}</p> : null}
+                    <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-[13px] font-semibold" style={{ color: "var(--fg)" }}>
+                      Read guide <ArrowRight size={14} className="transition group-hover:translate-x-0.5" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      ) : null}
+
+      {/* One section per topic (streams in) */}
       <Suspense fallback={<TopicSectionsSkeleton />}>
         <TopicSections categories={orderedCategories} />
       </Suspense>
 
-      <section style={{ background: "var(--bg2)" }}>
-        <div className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 lg:py-20">
-          <div className="grid items-center gap-10 lg:grid-cols-[280px_1fr]">
-            <div className="flex justify-center lg:justify-start">
-              <div className="flex h-[190px] w-[190px] items-center justify-center rounded-full" style={{ background: "var(--strip)", color: "var(--strip-fg)" }}>
-                <span className="font-heading text-[52px] font-bold">FB</span>
-              </div>
+      {/* Trust: who writes this and how */}
+      <section aria-labelledby="about-title" style={{ background: "var(--bg2)" }}>
+        <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:py-16">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-rose-700 font-heading text-[28px] font-bold text-white shadow-md" aria-hidden="true">
+              FB
             </div>
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.17em]" style={{ color: "var(--accent)" }}>About the publication</div>
-              <h2 className="mt-3 font-heading text-[35px] font-bold tracking-[-0.03em] sm:text-[45px]">GlobalCareerHub is written for the next move.</h2>
-              <p className="mt-5 max-w-[720px] text-[15px] leading-7" style={{ color: "var(--muted)" }}>
-                Founded and managed by <strong style={{ color: "var(--fg)" }}>{AUTHOR_NAME}</strong>, GlobalCareerHub publishes practical guides on careers, skills, scholarships, technology and study routes.
+              <div className="text-[12px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent)" }}>Who writes this</div>
+              <h2 id="about-title" className="mt-2 font-heading text-[28px] font-bold leading-tight sm:text-[32px]">Written and edited by {AUTHOR_NAME}</h2>
+              <p className="mt-3 max-w-[560px] text-[15px] leading-7" style={{ color: "var(--muted)" }}>
+                GlobalCareerHub is an independent reading desk for students and early-career readers in Pakistan.
+                It is not a consultancy, a visa shop, or a job board, and it never charges a fee.
               </p>
-              <Link href="/about" className="mt-6 inline-block border px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em]" style={{ borderColor: "var(--fg)", color: "var(--fg)" }}>About {AUTHOR_NAME}</Link>
+              <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[14px] font-semibold">
+                <Link href="/about" className="inline-flex items-center gap-1.5 hover:underline" style={{ color: "var(--fg)" }}>About the author <ArrowRight size={14} /></Link>
+                <Link href="/about#editorial-policy" className="inline-flex items-center gap-1.5 hover:underline" style={{ color: "var(--fg)" }}>Editorial policy <ArrowRight size={14} /></Link>
+                <Link href="/contact" className="inline-flex items-center gap-1.5 hover:underline" style={{ color: "var(--fg)" }}>Contact <ArrowRight size={14} /></Link>
+              </div>
             </div>
           </div>
+          <ul className="grid gap-5 sm:grid-cols-2">
+            {([
+              [Landmark, "Official sources first", "Guides link to HEC, DAAD, Fulbright/USEFP, GOV.UK and other official pages. If we disagree, trust them."],
+              [CalendarCheck, "Dated and updated", "Every guide shows when it was published, and dates are rechecked when rules change."],
+              [BadgeCheck, "No promises, no fees", "No visa, scholarship or job guarantees, and no agent packages or processing fees."],
+              [Mail, "Corrections welcome", "Spotted something out of date? Email admin@globalcareerhub.org and it gets fixed."],
+            ] as const).map(([Icon, title, text]) => (
+              <li key={title} className="rounded-xl border p-5" style={{ borderColor: "var(--border)", background: "var(--bg)" }}>
+                <Icon size={20} style={{ color: "var(--accent)" }} />
+                <div className="mt-3 font-heading text-[16px] font-bold">{title}</div>
+                <p className="mt-1 text-[14px] leading-6" style={{ color: "var(--muted)" }}>{text}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <section className="text-white" style={{ background: "#be123c" }}>
-        <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:py-16">
-          <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
+      {/* Search */}
+      <section aria-labelledby="search-title">
+        <div className="mx-auto max-w-[1280px] px-5 pt-12 sm:px-8 lg:pt-16">
+          <div className="grid gap-6 rounded-2xl bg-gradient-to-br from-rose-600 to-rose-800 p-6 text-white sm:p-10 lg:grid-cols-[1fr_1fr] lg:items-center">
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/90">The Career Brief</div>
-              <h2 className="mt-3 max-w-[650px] font-heading text-[36px] font-bold leading-[1.05] sm:text-[48px]">Useful opportunities. No noise.</h2>
-              <p className="mt-4 max-w-[600px] text-[14px] leading-6 text-white/90">Browse the latest career guides, scholarships and study opportunities.</p>
+              <h2 id="search-title" className="font-heading text-[26px] font-bold leading-tight sm:text-[34px]">Looking for something specific?</h2>
+              <p className="mt-2 text-[15px] leading-6 text-white/90">Search all guides: a scholarship name, a country, a document or a skill.</p>
             </div>
-            <form action="/search" className="border-b border-white/50">
-              <div className="flex">
-                <input name="q" type="search" placeholder="Search guides..." className="min-w-0 flex-1 bg-transparent px-0 py-4 text-[14px] text-white outline-none placeholder:text-white/50" aria-label="Search" />
-                <button type="submit" className="px-3 text-[10px] font-bold uppercase tracking-[0.14em]">Search →</button>
-              </div>
+            <form action="/search" role="search" className="flex overflow-hidden rounded-full bg-white p-1 shadow-sm">
+              <label htmlFor="home-search" className="sr-only">Search guides</label>
+              <input id="home-search" name="q" type="search" placeholder="e.g. DAAD, SOP, IELTS…" className="min-w-0 flex-1 bg-transparent px-4 text-[15px] text-slate-900 outline-none placeholder:text-slate-500" />
+              <button type="submit" className="inline-flex h-10 items-center gap-1.5 rounded-full bg-slate-900 px-5 text-[14px] font-bold text-white">
+                <Search size={15} /> Search
+              </button>
             </form>
           </div>
         </div>
       </section>
-
-      <footer className="text-white" style={{ background: "var(--strip)" }}>
-        <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8">
-          <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
-            <div>
-              <div className="font-heading text-[27px] font-bold tracking-[-0.04em]">GlobalCareer<span style={{ color: "var(--accent-soft)" }}>Hub</span></div>
-              <p className="mt-4 max-w-[430px] text-[13px] leading-6 text-white/70">Practical guides for careers, skills, scholarships, technology and study abroad.</p>
-            </div>
-            <FooterColumn title="Explore" links={[{ label: "Latest", href: "/articles" }, { label: "Careers", href: "/category/careers" }, { label: "Scholarships", href: "/category/scholarships" }, { label: "Study Abroad", href: "/category/study-abroad" }]} />
-            <FooterColumn title="Topics" links={[{ label: "Skills", href: "/category/skills" }, { label: "Technology", href: "/category/technology" }, { label: "Applications", href: "/category/applications" }, { label: "Tutorials", href: "/category/tutorials" }]} />
-            <FooterColumn title="Company" links={[{ label: "About", href: "/about" }, { label: "Contact", href: "/contact" }, { label: "Privacy", href: "/privacy" }, { label: "Disclaimer", href: "/disclaimer" }]} />
-          </div>
-          <div className="mt-12 flex flex-col justify-between gap-3 border-t border-white/10 pt-5 text-[10px] uppercase tracking-[0.1em] text-white/70 sm:flex-row">
-            <span>© {new Date().getFullYear()} GlobalCareerHub.org</span>
-            <span>By {AUTHOR_NAME}</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
