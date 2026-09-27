@@ -19,7 +19,7 @@ export default function PrivacyPage() {
 
       <p>
         Global Career Hub (globalcareerhub.org) is an independent reading site operated by{" "}
-        <strong>Abdul Faheem</strong>. You can read articles without creating an account.
+        <strong>Faham Baloch</strong>. You can read articles without creating an account.
       </p>
 
       <h2>What we collect</h2>

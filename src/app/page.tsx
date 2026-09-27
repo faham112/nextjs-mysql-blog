@@ -345,7 +345,7 @@ export default async function HomePage() {
           <div className="grid items-center gap-10 lg:grid-cols-[280px_1fr]">
             <div className="flex justify-center lg:justify-start">
               <div className="flex h-[190px] w-[190px] items-center justify-center rounded-full" style={{ background: "var(--strip)", color: "var(--strip-fg)" }}>
-                <span className="font-heading text-[52px] font-bold">AF</span>
+                <span className="font-heading text-[52px] font-bold">FB</span>
               </div>
             </div>
             <div>

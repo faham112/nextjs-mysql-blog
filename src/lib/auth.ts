@@ -97,7 +97,7 @@ export async function ensureAdminUser() {
 
   const password_hash = await hashPassword(password);
   await query("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'admin')", [
-    "Abdul Faheem",
+    "Faham Baloch",
     email,
     password_hash,
   ]);

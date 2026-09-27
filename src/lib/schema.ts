@@ -5,8 +5,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org
 export const SITE_NAME = "Global Career Hub";
 export const SITE_ALT = "GlobalCareerHub";
 /** Public author name used across the site (templates override the DB users.name). */
-export const AUTHOR_NAME = "Abdul Faheem";
-export const AUTHOR_ALIAS = "Faham Baloch";
+export const AUTHOR_NAME = "Faham Baloch";
 
 export function orgId() {
   return `${siteUrl}/#organization`;
@@ -39,7 +38,6 @@ export function personJsonLd() {
     "@type": "Person",
     "@id": personId(),
     name: AUTHOR_NAME,
-    alternateName: AUTHOR_ALIAS,
     url: `${siteUrl}/about`,
     jobTitle: "Editor",
     description:

@@ -26,7 +26,7 @@ export default function TermsPage() {
       </p>
       <h2>Ownership</h2>
       <p>
-        Text and original images on this site belong to <strong>Abdul Faheem</strong> unless a credit says otherwise. You may quote a short passage with a link
+        Text and original images on this site belong to <strong>Faham Baloch</strong> unless a credit says otherwise. You may quote a short passage with a link
         back. Do not copy a full article onto another site without written permission.
       </p>
       <h2>Your comments</h2>
