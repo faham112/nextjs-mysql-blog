@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { runSqlUpdates } from "@/lib/migrate";
 import { publishDuePosts } from "@/lib/posts";
 import { seedSeoPosts } from "@/lib/seed-posts";
+import { fixFeaturedImages } from "@/lib/coverTools";
 export const dynamic = "force-dynamic";
 export async function POST(req: Request) {
   const user = await getSession();
@@ -12,6 +13,10 @@ export async function POST(req: Request) {
   if (action === "publish") {
     await publishDuePosts(true);
     return NextResponse.json({ ok: true, log: ["scheduled posts published if due"] });
+  }
+  if (action === "covers-check" || action === "covers-fix") {
+    const log = await fixFeaturedImages(action === "covers-check");
+    return NextResponse.json({ ok: true, log });
   }
   if (action === "seed") {
     const log = await seedSeoPosts(user.id);

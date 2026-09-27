@@ -3,7 +3,8 @@ import { useState } from "react";
 export default function AdminToolsPage() {
   const [log, setLog] = useState<string[]>([]);
   const [busy, setBusy] = useState("");
-  async function run(action: "migrate" | "publish" | "seed") {
+  async function run(action: "migrate" | "publish" | "seed" | "covers-check" | "covers-fix") {
+    if (action === "covers-fix" && !window.confirm("Replace broken/temporary featured image URLs in the database with permanent /covers images?")) return;
     setBusy(action);
     const res = await fetch("/api/admin/tools", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action }) });
     const data = await res.json().catch(() => ({}));
@@ -19,6 +20,8 @@ export default function AdminToolsPage() {
       <div className="grid gap-3 sm:grid-cols-2">
         <button className="btn" disabled={!!busy} onClick={() => run("migrate")}>{busy === "migrate" ? "Running..." : "Run SQL updates"}</button>
         <button className="btn-outline" disabled={!!busy} onClick={() => run("publish")}>{busy === "publish" ? "Publishing..." : "Publish due posts now"}</button>
+        <button className="btn-outline" disabled={!!busy} onClick={() => run("covers-check")}>{busy === "covers-check" ? "Checking..." : "Check featured images (dry run)"}</button>
+        <button className="btn-outline" disabled={!!busy} onClick={() => run("covers-fix")}>{busy === "covers-fix" ? "Fixing..." : "Fix featured images → permanent covers"}</button>
         <button className="btn-outline sm:col-span-2" disabled={!!busy} onClick={() => run("seed")}>{busy === "seed" ? "Adding..." : "Add 12 SEO drafts (pending)"}</button>
       </div>
       {log.length > 0 && <pre className="card overflow-auto p-4 text-xs leading-6">{log.join("\n")}</pre>}
