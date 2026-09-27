@@ -61,7 +61,7 @@ export default function Footer() {
             </p>
           </div>
           {columns.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
+            <nav key={col.title} aria-label={`Footer ${col.title.toLowerCase()}`}>
               <div className="mb-3 text-[11px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--muted)" }}>
                 {col.title}
               </div>
