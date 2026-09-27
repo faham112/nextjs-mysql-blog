@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { CANONICAL_HOST, canonicalPath } from "@/lib/redirects";
+import { CANONICAL_HOST, canonicalPath, isGonePath } from "@/lib/redirects";
 
 const COOKIE = "blog_session";
 
@@ -25,6 +25,10 @@ export async function middleware(req: NextRequest) {
 
   if (pathname.endsWith(".map")) {
     return new NextResponse("Not found", { status: 404 });
+  }
+
+  if (isGonePath(pathname)) {
+    return new NextResponse("Gone", { status: 410, headers: { "X-Robots-Tag": "noindex" } });
   }
 
   // Canonical URL: one 301 hop to https://globalcareerhub.org/<clean path>

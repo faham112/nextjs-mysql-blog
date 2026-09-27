@@ -40,6 +40,11 @@ const EXACT: Record<string, string> = {
   "/terms-of-use": "/terms",
   "/cookie-policy": "/cookies",
   "/cookies-policy": "/cookies",
+  "/feed": "/rss.xml",
+  "/rss": "/rss.xml",
+  "/feed.xml": "/rss.xml",
+  "/atom.xml": "/rss.xml",
+  "/jobs": "/category/careers",
   "/sitemap_index.xml": "/sitemap.xml",
   "/wp-sitemap.xml": "/sitemap.xml",
   "/post-sitemap.xml": "/sitemap.xml",
@@ -60,17 +65,28 @@ export function canonicalPath(pathname: string): string | null {
   const lower = p.toLowerCase();
   const parts = lower.split("/").filter(Boolean);
 
+  const [first, second] = parts;
+
   if (EXACT[lower]) {
     p = EXACT[lower];
-  } else if (parts.length === 2 && ["post", "blog", "article", "articles", "posts"].includes(parts[0])) {
+  } else if (parts.length >= 2 && parts[parts.length - 1] === "feed") {
+    // WordPress feeds: /category/x/feed, /posts/x/feed, /comments/feed → RSS
+    p = "/rss.xml";
+  } else if (first === "job-category" || first === "job" || first === "jobs" || first === "job-type" || first === "job-location") {
+    // Old job-board (WP Job Manager) URLs → careers guides
+    p = "/category/careers";
+  } else if (parts.length === 2 && ["post", "blog", "article", "articles", "posts"].includes(first)) {
     // /post/x, /blog/x, /article/x, /articles/x, /posts/X → /posts/x
-    const slug = parts[1];
-    p = LEGACY_POST_SLUGS[slug] || `/posts/${slug}`;
-  } else if (parts.length === 2 && parts[0] === "category") {
-    p = `/category/${parts[1]}`;
-  } else if (parts[0] === "page" || parts[0] === "tag" || parts[0] === "author") {
+    p = LEGACY_POST_SLUGS[second] || `/posts/${second}`;
+  } else if (first === "category" && second) {
+    // /category/Skills, /category/x/page/2, /category/x/y → /category/x
+    p = `/category/${second}`;
+  } else if (first === "page" || first === "tag" || first === "author") {
     // /page/2, /tag/x, /author/x (old CMS archives)
-    p = parts[0] === "author" ? "/about" : "/articles";
+    p = first === "author" ? "/about" : "/articles";
+  } else if (parts.length === 2 && second === "amp") {
+    // /<slug>/amp (old AMP permalinks) → /<slug> (root fallback resolves posts)
+    p = `/${first}`;
   }
 
   return p !== pathname ? p : null;
@@ -85,6 +101,20 @@ export function rewriteLegacyLinks(htmlContent: string): string {
       if (!target) return match;
       return `href=${q}${target}${rest && target.startsWith("/posts/") ? rest : ""}${q}`;
     }
+  );
+}
+
+/** Old WordPress system paths: answer 410 Gone so Google drops them quickly. */
+export function isGonePath(pathname: string): boolean {
+  const l = pathname.toLowerCase();
+  return (
+    l.startsWith("/wp-admin") ||
+    l.startsWith("/wp-content") ||
+    l.startsWith("/wp-includes") ||
+    l.startsWith("/wp-json") ||
+    l === "/wp-login.php" ||
+    l === "/xmlrpc.php" ||
+    l === "/wp-cron.php"
   );
 }
 
