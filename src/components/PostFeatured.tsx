@@ -27,9 +27,9 @@ export default function PostFeatured({
           post={post}
           alt={post.title}
           width={800}
-          height={500}
+          height={420}
           priority={priority}
-          className="aspect-[16/10] h-auto w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+          className="aspect-[1200/630] h-auto w-full object-cover object-center transition duration-300 group-hover:scale-[1.02]"
         />
       </div>
       <h2

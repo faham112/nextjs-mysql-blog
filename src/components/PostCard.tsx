@@ -35,8 +35,8 @@ export default function PostCard({ post }: { post: PostRow }) {
           post={post}
           alt={post.title}
           width={640}
-          height={208}
-          className="h-52 w-full object-cover"
+          height={336}
+          className="aspect-[1200/630] h-auto w-full object-cover object-center"
         />
         <div className="flex flex-grow flex-col p-6">
           <div

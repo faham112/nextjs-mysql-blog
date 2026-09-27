@@ -20,12 +20,12 @@ export default function PostRowCompact({ post }: { post: PostRow }) {
       className="group flex gap-3 border-b py-3 last:border-b-0"
       style={{ borderColor: "var(--border)" }}
     >
-      <div className="h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-[var(--bg2)] sm:h-20 sm:w-28">
+      <div className="aspect-[1200/630] w-28 shrink-0 self-start overflow-hidden rounded-lg bg-[var(--bg2)] sm:w-36">
         <PostThumb
           post={post}
           alt={post.title}
-          width={112}
-          height={80}
+          width={144}
+          height={76}
           className="h-full w-full object-cover transition group-hover:scale-105"
         />
       </div>

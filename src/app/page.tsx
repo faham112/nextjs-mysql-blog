@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE } from "@/lib/covers";
 import { AUTHOR_NAME } from "@/lib/schema";
@@ -6,6 +7,8 @@ import EditorialNav from "@/components/EditorialNav";
 import PostThumb from "@/components/PostThumb";
 import { listPublishedPosts, type PostRow } from "@/lib/posts";
 import { listCategories } from "@/lib/categories";
+import CategoryChips from "@/components/home/CategoryChips";
+import TopicSections, { TopicSectionsSkeleton, orderCategories } from "@/components/home/TopicSections";
 
 // Always render from the live DB (never bake an empty build-time snapshot).
 export const dynamic = "force-dynamic";
@@ -99,10 +102,6 @@ function FooterColumn({
 
 export default async function HomePage() {
   let latest: PostRow[] = [];
-  let careers: PostRow[] = [];
-  let study: PostRow[] = [];
-  let scholarships: PostRow[] = [];
-  let technology: PostRow[] = [];
   let categories: Awaited<ReturnType<typeof listCategories>> = [];
 
   try {
@@ -113,30 +112,9 @@ export default async function HomePage() {
   try {
     categories = await listCategories();
   } catch {}
-  try {
-    careers = (await listPublishedPosts(1, 3, "careers")).posts;
-  } catch {}
-  try {
-    study = (await listPublishedPosts(1, 3, "study-abroad")).posts;
-  } catch {}
-  try {
-    scholarships = (await listPublishedPosts(1, 2, "scholarships")).posts;
-  } catch {}
-  try {
-    technology = (await listPublishedPosts(1, 4, "technology")).posts;
-  } catch {}
-
-  if (careers.length === 0) careers = latest.slice(0, 3);
-  if (study.length === 0) study = latest.slice(0, 3);
-  if (technology.length === 0) {
-    technology = (
-      await listPublishedPosts(1, 4, "skills").catch(() => ({ posts: [] }))
-    ).posts;
-  }
-
   const featured = latest[0];
   const latestSide = latest.slice(1, 5);
-  const scholarshipFeatured = scholarships[0];
+  const orderedCategories = orderCategories(categories);
 
   const monthLabel = new Date().toLocaleDateString("en-US", {
     month: "long",
@@ -170,6 +148,8 @@ export default async function HomePage() {
 
       <EditorialNav categories={catNav} />
 
+      <CategoryChips categories={orderedCategories} />
+
       <section className="border-b" style={{ borderColor: "var(--border)" }}>
         <div className="mx-auto max-w-[1440px] px-5 py-8 sm:px-8 lg:py-12">
           <div className="grid gap-0 lg:grid-cols-[minmax(0,1.65fr)_minmax(280px,.75fr)]">
@@ -191,13 +171,8 @@ export default async function HomePage() {
                   <p className="mt-5 max-w-[720px] text-[16px] leading-7 sm:text-[17px]" style={{ color: "var(--muted)" }}>
                     {featured.excerpt || "Practical guides on careers, technology, scholarships and study routes."}
                   </p>
-                  <Link href={`/posts/${featured.slug}`} className="relative mt-8 block aspect-[16/9] overflow-hidden" style={{ background: "var(--bg2)" }}>
-                    <PostThumb post={featured} priority className="h-full w-full object-cover object-center" />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                    <div className="pointer-events-none absolute bottom-0 left-0 max-w-[600px] p-6 text-white sm:p-8">
-                      <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-white/70">{featured.category_name || "Guide"}</div>
-                      <div className="font-heading text-[20px] font-bold leading-tight sm:text-[28px]">{featured.title}</div>
-                    </div>
+                  <Link href={`/posts/${featured.slug}`} className="relative mt-8 block aspect-[1200/630] w-full overflow-hidden" style={{ background: "var(--bg2)" }}>
+                    <PostThumb post={featured} alt={featured.title} width={1200} height={630} priority className="h-full w-full object-cover object-center" />
                   </Link>
                   <div className="mt-4 flex justify-between text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: "var(--muted)" }}>
                     <span>{`By ${AUTHOR_NAME}`}</span>
@@ -259,86 +234,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="careers" className="border-b" style={{ borderColor: "var(--border)" }}>
-        <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:py-16">
-          <SectionHeader eyebrow="Career Desk" title="Careers" href="/category/careers" linkLabel="Explore careers" />
-          <div className="grid gap-0 lg:grid-cols-3">
-            {careers.map((story, index) => (
-              <article
-                key={story.id}
-                className={`group py-6 lg:px-7 lg:py-0 ${index === 0 ? "lg:pl-0" : "border-t lg:border-l lg:border-t-0"} ${index === 2 ? "lg:pr-0" : ""}`}
-                style={{ borderColor: "var(--border)" }}
-              >
-                <Link href={`/posts/${story.slug}`} className="block">
-                  <div className="mb-5 aspect-[4/3] min-h-[260px] w-full overflow-hidden sm:min-h-[280px] lg:min-h-[300px]" style={{ background: "var(--bg2)" }}>
-                    <PostThumb post={story} className="h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.03]" />
-                  </div>
-                  <div className="text-[9px] font-bold uppercase tracking-[0.15em]" style={{ color: "var(--accent)" }}>{story.category_name || "Careers"}</div>
-                  <h3 className="mt-2 font-heading text-[23px] font-bold leading-[1.2] transition group-hover:opacity-80" style={{ color: "var(--fg)" }}>{story.title}</h3>
-                  <p className="mt-3 text-[13px] leading-6" style={{ color: "var(--muted)" }}>{story.excerpt || "A practical guide from GlobalCareerHub."}</p>
-                  <span className="mt-5 inline-block text-[10px] font-bold uppercase tracking-[0.12em]" style={{ color: "var(--fg)" }}>Read story →</span>
-                </Link>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="scholarships" className="border-b" style={{ borderColor: "var(--border)" }}>
-        <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:py-16">
-          <div className="grid gap-12 lg:grid-cols-[1.1fr_.9fr]">
-            <div>
-              <SectionHeader eyebrow="Funding & Education" title="Scholarships" href="/category/scholarships" linkLabel="View scholarships" />
-              <article className="group">
-                <Link href={scholarshipFeatured ? `/posts/${scholarshipFeatured.slug}` : "/category/scholarships"} className="relative block overflow-hidden p-7 text-white sm:p-10" style={{ background: "var(--strip)" }}>
-                  <div className="relative">
-                    <div className="text-[10px] font-bold uppercase tracking-[0.17em]" style={{ color: "var(--accent-soft)" }}>Featured Guide</div>
-                    <h3 className="mt-5 max-w-[650px] font-heading text-[28px] font-bold leading-[1.12] sm:text-[40px]">{scholarshipFeatured?.title || "Official scholarship map for Pakistan 2026"}</h3>
-                    <p className="mt-5 max-w-[620px] text-[14px] leading-7 text-white/80">{scholarshipFeatured?.excerpt || "HEC, Fulbright, DAAD and Chevening — clear routes and application files."}</p>
-                    <span className="mt-7 inline-flex border border-white/30 px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em]">Read guide</span>
-                  </div>
-                </Link>
-              </article>
-            </div>
-            <div id="study">
-              <SectionHeader eyebrow="International Education" title="Study Abroad" href="/category/study-abroad" linkLabel="Explore destinations" />
-              <div className="divide-y border-y" style={{ borderColor: "var(--border)" }}>
-                {study.map((post, index) => (
-                  <Link key={post.id} href={`/posts/${post.slug}`} className="group flex gap-5 py-5">
-                    <span className="font-heading text-[22px] font-bold" style={{ color: "var(--accent)" }}>0{index + 1}</span>
-                    <div>
-                      <div className="text-[9px] font-bold uppercase tracking-[0.13em]" style={{ color: "var(--muted)" }}>{post.category_name || "Study Abroad"}</div>
-                      <h3 className="mt-1 font-heading text-[17px] font-bold leading-[1.35]" style={{ color: "var(--fg)" }}>{post.title}</h3>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="technology" className="border-b" style={{ borderColor: "var(--border)" }}>
-        <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:py-16">
-          <SectionHeader eyebrow="Skills & Technology" title="Technology" href="/category/technology" linkLabel="View technology" />
-          <div className="grid gap-0 border-l border-t md:grid-cols-2 lg:grid-cols-4" style={{ borderColor: "var(--border)" }}>
-            {(technology.length > 0 ? technology : catNav.slice(0, 4).map((c, i) => ({ id: i, title: c.name, excerpt: `Explore ${c.name} guides.`, slug: "", category_name: c.name, category_slug: c.slug, featured_image: null }))).map((item, index) => {
-              const href = "slug" in item && item.slug ? `/posts/${item.slug}` : `/category/${(item as { category_slug?: string }).category_slug || "technology"}`;
-              return (
-                <Link key={String(item.id) + index} href={href} className="group min-h-[220px] border-b border-r p-6 transition" style={{ borderColor: "var(--border)", background: "var(--bg2)", color: "var(--fg)" }}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold uppercase tracking-[0.15em]" style={{ color: "var(--accent)" }}>{item.category_name || "Technology"}</span>
-                    <span className="font-heading text-[20px]" style={{ color: "var(--muted)" }}>0{index + 1}</span>
-                  </div>
-                  <h3 className="mt-8 font-heading text-[21px] font-bold leading-[1.25]">{item.title}</h3>
-                  <p className="mt-3 text-[12px] leading-6" style={{ color: "var(--muted)" }}>{item.excerpt || "Read the full guide."}</p>
-                  <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.12em]">Explore →</div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <Suspense fallback={<TopicSectionsSkeleton />}>
+        <TopicSections categories={orderedCategories} />
+      </Suspense>
 
       <section style={{ background: "var(--bg2)" }}>
         <div className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 lg:py-20">
