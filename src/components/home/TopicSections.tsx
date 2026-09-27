@@ -100,7 +100,7 @@ export default async function TopicSections({ categories }: { categories: TopicC
             <p className="-mt-2 mb-6 max-w-[760px] text-[13px] leading-6" style={{ color: "var(--muted)" }}>
               {categoryIntro(cat.slug, cat.name)}
             </p>
-            <div className="-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
+            <div className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 sm:scroll-px-0 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
               {posts.map((p) => (
                 <TopicCard key={p.id} post={p} fallbackCategory={cat.name} />
               ))}
