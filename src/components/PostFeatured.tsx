@@ -15,6 +15,7 @@ function formatDate(value: Date | string | null) {
 
 export default function PostFeatured({
   post,
+  priority = false,
 }: {
   post: PostRow;
   priority?: boolean;
@@ -27,6 +28,7 @@ export default function PostFeatured({
           alt={post.title}
           width={800}
           height={500}
+          priority={priority}
           className="aspect-[16/10] h-auto w-full object-cover transition duration-300 group-hover:scale-[1.02]"
         />
       </div>

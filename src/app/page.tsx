@@ -87,7 +87,7 @@ function FooterColumn({
           <Link
             key={l.href}
             href={l.href}
-            className="block text-[13px] text-white/45 transition hover:text-white"
+            className="block text-[13px] text-white/70 transition hover:text-white"
           >
             {l.label}
           </Link>
@@ -192,7 +192,7 @@ export default async function HomePage() {
                     {featured.excerpt || "Practical guides on careers, technology, scholarships and study routes."}
                   </p>
                   <Link href={`/posts/${featured.slug}`} className="relative mt-8 block aspect-[16/9] overflow-hidden" style={{ background: "var(--bg2)" }}>
-                    <PostThumb post={featured} className="h-full w-full object-cover object-center" />
+                    <PostThumb post={featured} priority className="h-full w-full object-cover object-center" />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                     <div className="pointer-events-none absolute bottom-0 left-0 max-w-[600px] p-6 text-white sm:p-8">
                       <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-white/70">{featured.category_name || "Guide"}</div>
@@ -250,9 +250,9 @@ export default async function HomePage() {
             </div>
             {([["01", "Scholarships", "Funding & study opportunities", "/category/scholarships"], ["02", "Careers", "Paths and proof for your next role", "/category/careers"], ["03", "Study Abroad", "Destinations, ROI and applications", "/category/study-abroad"]] as const).map(([number, title, description, href]) => (
               <Link href={href} key={number} className="group border-l border-white/15 pl-5 transition hover:border-[var(--accent-soft)]">
-                <div className="text-[9px] font-bold opacity-35">{number}</div>
+                <div className="text-[9px] font-bold opacity-70">{number}</div>
                 <div className="mt-2 font-heading text-[20px] font-bold transition group-hover:text-[var(--accent-soft)]">{title}</div>
-                <div className="mt-1 text-[12px] opacity-55">{description}</div>
+                <div className="mt-1 text-[12px] opacity-75">{description}</div>
               </Link>
             ))}
           </div>
@@ -294,7 +294,7 @@ export default async function HomePage() {
                   <div className="relative">
                     <div className="text-[10px] font-bold uppercase tracking-[0.17em]" style={{ color: "var(--accent-soft)" }}>Featured Guide</div>
                     <h3 className="mt-5 max-w-[650px] font-heading text-[28px] font-bold leading-[1.12] sm:text-[40px]">{scholarshipFeatured?.title || "Official scholarship map for Pakistan 2026"}</h3>
-                    <p className="mt-5 max-w-[620px] text-[14px] leading-7 text-white/60">{scholarshipFeatured?.excerpt || "HEC, Fulbright, DAAD and Chevening — clear routes and application files."}</p>
+                    <p className="mt-5 max-w-[620px] text-[14px] leading-7 text-white/80">{scholarshipFeatured?.excerpt || "HEC, Fulbright, DAAD and Chevening — clear routes and application files."}</p>
                     <span className="mt-7 inline-flex border border-white/30 px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em]">Read guide</span>
                   </div>
                 </Link>
@@ -360,13 +360,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="text-white" style={{ background: "var(--accent)" }}>
+      <section className="text-white" style={{ background: "#be123c" }}>
         <div className="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 lg:py-16">
           <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/60">The Career Brief</div>
+              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/90">The Career Brief</div>
               <h2 className="mt-3 max-w-[650px] font-heading text-[36px] font-bold leading-[1.05] sm:text-[48px]">Useful opportunities. No noise.</h2>
-              <p className="mt-4 max-w-[600px] text-[14px] leading-6 text-white/75">Browse the latest career guides, scholarships and study opportunities.</p>
+              <p className="mt-4 max-w-[600px] text-[14px] leading-6 text-white/90">Browse the latest career guides, scholarships and study opportunities.</p>
             </div>
             <form action="/search" className="border-b border-white/50">
               <div className="flex">
@@ -383,13 +383,13 @@ export default async function HomePage() {
           <div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr_1fr]">
             <div>
               <div className="font-heading text-[27px] font-bold tracking-[-0.04em]">GlobalCareer<span style={{ color: "var(--accent-soft)" }}>Hub</span></div>
-              <p className="mt-4 max-w-[430px] text-[13px] leading-6 text-white/45">Practical guides for careers, skills, scholarships, technology and study abroad.</p>
+              <p className="mt-4 max-w-[430px] text-[13px] leading-6 text-white/70">Practical guides for careers, skills, scholarships, technology and study abroad.</p>
             </div>
             <FooterColumn title="Explore" links={[{ label: "Latest", href: "/articles" }, { label: "Careers", href: "/category/careers" }, { label: "Scholarships", href: "/category/scholarships" }, { label: "Study Abroad", href: "/category/study-abroad" }]} />
             <FooterColumn title="Topics" links={[{ label: "Skills", href: "/category/skills" }, { label: "Technology", href: "/category/technology" }, { label: "Applications", href: "/category/applications" }, { label: "Tutorials", href: "/category/tutorials" }]} />
             <FooterColumn title="Company" links={[{ label: "About", href: "/about" }, { label: "Contact", href: "/contact" }, { label: "Privacy", href: "/privacy" }, { label: "Disclaimer", href: "/disclaimer" }]} />
           </div>
-          <div className="mt-12 flex flex-col justify-between gap-3 border-t border-white/10 pt-5 text-[10px] uppercase tracking-[0.1em] text-white/30 sm:flex-row">
+          <div className="mt-12 flex flex-col justify-between gap-3 border-t border-white/10 pt-5 text-[10px] uppercase tracking-[0.1em] text-white/70 sm:flex-row">
             <span>© {new Date().getFullYear()} GlobalCareerHub.org</span>
             <span>By {AUTHOR_NAME}</span>
           </div>

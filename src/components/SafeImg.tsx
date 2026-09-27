@@ -10,6 +10,8 @@ type Props = {
   className?: string;
   width?: number;
   height?: number;
+  /** Above-the-fold / LCP image: load eagerly with high fetch priority. */
+  priority?: boolean;
 };
 
 /** Tries src; on 404 falls back to permanent /covers image. */
@@ -20,6 +22,7 @@ export default function SafeImg({
   className = "",
   width,
   height,
+  priority = false,
 }: Props) {
   const [current, setCurrent] = useState(src || fallback);
   const [gaveUp, setGaveUp] = useState(false);
@@ -45,7 +48,8 @@ export default function SafeImg({
       width={width}
       height={height}
       className={className}
-      loading="lazy"
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : "auto"}
       decoding="async"
       onError={() => {
         if (current !== fallback) {

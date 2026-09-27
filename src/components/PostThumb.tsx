@@ -18,12 +18,14 @@ export default function PostThumb({
   alt = "",
   width,
   height,
+  priority = false,
 }: {
   post: PostLike;
   className?: string;
   alt?: string;
   width?: number;
   height?: number;
+  priority?: boolean;
 }) {
   const src = resolveCover(post.featured_image, post.category_slug);
   const fallback = coverForCategory(post.category_slug);
@@ -35,6 +37,7 @@ export default function PostThumb({
       alt={alt}
       width={width}
       height={height}
+      priority={priority}
       className={className || "h-full w-full object-cover object-center"}
     />
   );

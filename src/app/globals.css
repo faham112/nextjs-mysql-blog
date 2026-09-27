@@ -70,3 +70,7 @@ html.dark .admin-root { background: #09090b; color: #fff; }
 .ed-double {
   border-bottom: 3px double var(--fg);
 }
+
+/* Dark mode: brand-600 (#e11d48) on #09090b is 4.2:1; use rose-400 for text/links (WCAG AA) */
+html.dark .prose-blog a,
+html.dark .text-brand-600 { color: #fb7185; }

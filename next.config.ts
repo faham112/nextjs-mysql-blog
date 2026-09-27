@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Trailing slashes, www and legacy URLs are 301'd in one hop by src/middleware.ts
   skipTrailingSlashRedirect: true,
+  // Always render <title>/<meta description> in <head> (no streamed metadata) for every client
+  htmlLimitedBots: /.*/,
   compress: true,
   productionBrowserSourceMaps: false,
   images: {

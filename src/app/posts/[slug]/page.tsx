@@ -96,6 +96,9 @@ export default async function PostPage({
         className="mt-8 max-h-[420px] w-full rounded-2xl object-cover"
         width={1200}
         height={675}
+        loading="eager"
+        fetchPriority="high"
+        decoding="async"
       />
       <div
         className="prose-blog mt-8"
