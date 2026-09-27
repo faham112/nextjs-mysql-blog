@@ -16,7 +16,34 @@ export const LEGACY_POST_SLUGS: Record<string, string> = {
   "ai-skills-path-pakistan-2026": "/posts/ai-skills-employers-want-in-2026",
   "ai-tools-freelance-without-coding": "/category/skills",
   "how-to-keep-a-job-search-from-eating-your-whole-life":
-    "/posts/sunday-reset-long-job-search",
+    "/posts/job-search-without-burning-out",
+  // Merged duplicates (27 Sep 2026 content rewrite): source post unpublished, 301 to the kept post.
+  "write-a-statement-of-purpose-that-sounds-like-you":
+    "/posts/how-to-write-a-statement-of-purpose-that-a-reviewer-actually-finishes",
+  "remote-work-skills-hiring-screen-2026":
+    "/posts/remote-work-skills-that-still-show-up-on-hiring-screens",
+  "study-abroad-2026-roi-and-destination-shift":
+    "/posts/study-abroad-roi-checklist-2026",
+  "cybersecurity-skills-beginners-focus-2026":
+    "/posts/cybersecurity-career-starter-map-2026",
+  "sunday-reset-long-job-search":
+    "/posts/job-search-without-burning-out",
+  "sustainable-job-search-week-sleep-friday-close":
+    "/posts/job-search-without-burning-out",
+  "skills-over-degrees-what-hiring-looks-like-now":
+    "/posts/skills-based-hiring-2026-project-proof",
+  "data-storytelling-non-analysts-one-page-2026":
+    "/posts/data-skills-without-becoming-data-scientist",
+  "study-abroad-scholarships-pakistan-how-to-start":
+    "/posts/official-scholarship-map-pakistan-2026-hec-fulbright-daad",
+  "a-practical-checklist-before-you-apply-for-a-scholarship":
+    "/posts/build-2026-scholarship-job-file-official-portals",
+  "what-to-put-in-a-first-freelance-portfolio-when-you-have-no-clients":
+    "/posts/build-a-portfolio-employers-actually-open",
+  "how-to-read-job-post-asks-for-ai-2026":
+    "/posts/ai-skills-employers-want-in-2026",
+  "digital-skills-worth-learning-if-you-are-changing-fields-in-2026":
+    "/posts/one-skill-stack-career-change-2026",
 };
 
 /** Exact legacy paths (common CMS / typo URLs) → live path. Keys are lowercase, no trailing slash. */

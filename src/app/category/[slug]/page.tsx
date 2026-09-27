@@ -37,7 +37,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       <p className="mt-3 max-w-3xl" style={{ color: "var(--muted)" }}>{categoryIntro(category.slug, category.name)}</p>
       {posts.length > 0 && (
         <p className="mt-3 text-xs font-bold uppercase tracking-wider text-brand-600">
-          {posts.length} guide{posts.length === 1 ? "" : "s"}
+          {`${posts.length} ${posts.length === 1 ? "guide" : "guides"}`}
         </p>
       )}
       <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{posts.map((post, i) => <PostCard key={post.id} post={post} priority={i === 0} />)}</div>

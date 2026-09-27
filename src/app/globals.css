@@ -67,6 +67,13 @@ body { background: var(--bg); color: var(--fg); @apply antialiased; }
 .prose-blog p { @apply mb-4 leading-8 text-[17px]; color: var(--fg); }
 .prose-blog a { @apply text-brand-600 underline underline-offset-4; }
 .prose-blog ul, .prose-blog ol { @apply mb-4 ml-6 list-disc space-y-1; color: var(--fg); }
+.prose-blog ol { list-style-type: decimal; }
+.prose-blog li > ul, .prose-blog li > ol { @apply mb-0 mt-1; }
+.prose-blog li { @apply leading-7 text-[17px]; }
+.prose-blog code { @apply rounded px-1 py-0.5 text-[0.9em]; background: color-mix(in srgb, var(--fg) 8%, transparent); }
+.prose-blog table { @apply my-6 block w-full overflow-x-auto border-collapse text-sm; }
+.prose-blog th, .prose-blog td { @apply border px-3 py-2 text-left align-top; border-color: var(--border); color: var(--fg); }
+.prose-blog th { @apply font-bold; background: color-mix(in srgb, var(--fg) 5%, transparent); }
 .prose-blog img { @apply my-6 rounded-xl; }
 .prose-blog blockquote { @apply my-6 border-l-4 border-brand-600 pl-4 italic; color: var(--muted); }
 .btn { @apply inline-flex items-center justify-center rounded-xl bg-brand-600 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-brand-600/30 transition hover:bg-brand-700; }
