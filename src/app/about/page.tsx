@@ -5,7 +5,7 @@ import { organizationJsonLd, personJsonLd } from "@/lib/schema";
 export const metadata: Metadata = {
   title: "About the author",
   description:
-    "Faham Baloch writes Global Career Hub — independent guides on careers, skills, scholarships and study routes. Not an agency.",
+    "Abdul Faheem writes Global Career Hub — independent guides on careers, skills, scholarships and study routes. Not an agency.",
   alternates: { canonical: "/about" },
 };
 
@@ -19,11 +19,11 @@ export default function AboutPage() {
       />
       <p className="text-xs font-bold uppercase tracking-widest text-brand-600">Author</p>
       <h1 id="person" className="mt-2 font-heading text-4xl font-extrabold">
-        Faham Baloch
+        Abdul Faheem
       </h1>
       <p className="mt-3 text-sm" style={{ color: "var(--muted)" }}>
-        Writes and edits Global Career Hub. Legal name: Abdul Faheem. Last reviewed 26 September
-        2026.
+        Writes and edits Global Career Hub (also known online as Faham Baloch). Last reviewed 27
+        September 2026.
       </p>
 
       <div className="card mt-8 space-y-5 p-8">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PostRow } from "@/lib/posts";
 import PostThumb from "@/components/PostThumb";
+import { AUTHOR_NAME } from "@/lib/schema";
 
 function formatDate(value: Date | string | null) {
   if (!value) return "";
@@ -65,7 +66,7 @@ export default function PostCard({ post }: { post: PostRow }) {
             style={{ borderColor: "var(--border)" }}
           >
             <span className="font-bold" style={{ color: "var(--fg)" }}>
-              {post.author_name ? `By ${post.author_name}` : "Read"}
+              {`By ${AUTHOR_NAME}`}
             </span>
             <span className="font-bold text-brand-600">Read article →</span>
           </div>

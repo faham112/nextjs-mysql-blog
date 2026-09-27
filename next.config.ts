@@ -25,11 +25,13 @@ const nextConfig: NextConfig = {
   async headers() {
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      // AdSense / Google tags load from many Google domains and iframes
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: blob: https: http:",
-      "connect-src 'self'",
+      "connect-src 'self' https:",
+      "frame-src 'self' https:",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",

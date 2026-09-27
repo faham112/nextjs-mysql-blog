@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE } from "@/lib/covers";
+import { AUTHOR_NAME } from "@/lib/schema";
 import EditorialNav from "@/components/EditorialNav";
 import PostThumb from "@/components/PostThumb";
 import { listPublishedPosts, type PostRow } from "@/lib/posts";
@@ -199,7 +200,7 @@ export default async function HomePage() {
                     </div>
                   </Link>
                   <div className="mt-4 flex justify-between text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: "var(--muted)" }}>
-                    <span>{featured.author_name ? `By ${featured.author_name}` : "GlobalCareerHub Editorial"}</span>
+                    <span>{`By ${AUTHOR_NAME}`}</span>
                     <span>{formatDate(featured.published_at)}</span>
                   </div>
                 </>
@@ -344,16 +345,16 @@ export default async function HomePage() {
           <div className="grid items-center gap-10 lg:grid-cols-[280px_1fr]">
             <div className="flex justify-center lg:justify-start">
               <div className="flex h-[190px] w-[190px] items-center justify-center rounded-full" style={{ background: "var(--strip)", color: "var(--strip-fg)" }}>
-                <span className="font-heading text-[52px] font-bold">FB</span>
+                <span className="font-heading text-[52px] font-bold">AF</span>
               </div>
             </div>
             <div>
               <div className="text-[10px] font-bold uppercase tracking-[0.17em]" style={{ color: "var(--accent)" }}>About the publication</div>
               <h2 className="mt-3 font-heading text-[35px] font-bold tracking-[-0.03em] sm:text-[45px]">GlobalCareerHub is written for the next move.</h2>
               <p className="mt-5 max-w-[720px] text-[15px] leading-7" style={{ color: "var(--muted)" }}>
-                Founded and managed by <strong style={{ color: "var(--fg)" }}>Faham Baloch</strong>, GlobalCareerHub publishes practical guides on careers, skills, scholarships, technology and study routes.
+                Founded and managed by <strong style={{ color: "var(--fg)" }}>{AUTHOR_NAME}</strong>, GlobalCareerHub publishes practical guides on careers, skills, scholarships, technology and study routes.
               </p>
-              <Link href="/about" className="mt-6 inline-block border px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em]" style={{ borderColor: "var(--fg)", color: "var(--fg)" }}>About Faham Baloch</Link>
+              <Link href="/about" className="mt-6 inline-block border px-5 py-3 text-[10px] font-bold uppercase tracking-[0.12em]" style={{ borderColor: "var(--fg)", color: "var(--fg)" }}>About {AUTHOR_NAME}</Link>
             </div>
           </div>
         </div>
@@ -390,7 +391,7 @@ export default async function HomePage() {
           </div>
           <div className="mt-12 flex flex-col justify-between gap-3 border-t border-white/10 pt-5 text-[10px] uppercase tracking-[0.1em] text-white/30 sm:flex-row">
             <span>© {new Date().getFullYear()} GlobalCareerHub.org</span>
-            <span>By Faham Baloch</span>
+            <span>By {AUTHOR_NAME}</span>
           </div>
         </div>
       </footer>

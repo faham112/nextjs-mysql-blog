@@ -5,7 +5,7 @@ import { getPublishedPostBySlug } from "@/lib/posts";
 import { listApprovedComments } from "@/lib/comments";
 import CommentForm from "@/components/CommentForm";
 import { readingTimeLabel } from "@/lib/readingTime";
-import { articleJsonLd } from "@/lib/schema";
+import { AUTHOR_NAME, articleJsonLd } from "@/lib/schema";
 import { ogCover, resolveCover } from "@/lib/covers";
 import { rewriteLegacyLinks } from "@/lib/redirects";
 
@@ -78,7 +78,7 @@ export default async function PostPage({
         {post.title}
       </h1>
       <p className="mt-4 text-sm" style={{ color: "var(--muted)" }}>
-        {post.author_name ? `By ${post.author_name}` : ""}
+        {`By ${AUTHOR_NAME}`}
         {post.published_at
           ? ` · ${new Date(post.published_at).toLocaleDateString("en-US", {
               year: "numeric",

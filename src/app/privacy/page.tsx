@@ -14,13 +14,12 @@ export default function PrivacyPage() {
       <p className="text-xs font-bold uppercase tracking-widest text-brand-600">Legal</p>
       <h1 className="font-heading text-4xl font-extrabold">Privacy policy</h1>
       <p className="text-xs" style={{ color: "var(--muted)" }}>
-        Last updated: 26 September 2026
+        Last updated: 27 September 2026
       </p>
 
       <p>
         Global Career Hub (globalcareerhub.org) is an independent reading site operated by{" "}
-        <strong>Faham Baloch</strong> (legal name: Abdul Faheem). You can read articles without
-        creating an account.
+        <strong>Abdul Faheem</strong>. You can read articles without creating an account.
       </p>
 
       <h2>What we collect</h2>
@@ -32,8 +31,9 @@ export default function PrivacyPage() {
       <p>
         The hosting company may log standard request data such as page path, approximate region, and
         browser type. That log is used for security and reliability, not to build a marketing
-        profile of a named reader. We do not currently run a third-party analytics script on public
-        pages. If we add one later (for example Google Analytics 4), this policy will be updated.
+        profile of a named reader. We may use an analytics tool (for example Google Analytics or a
+        self-hosted counter) to see which pages are read, in aggregate. Where your consent is
+        required, it only runs after you accept cookies.
       </p>
 
       <h2>Cookies and advertising (including Google)</h2>
@@ -58,8 +58,45 @@ export default function PrivacyPage() {
         for more information about opt-out options from participating companies.
       </p>
       <p>
+        Third-party vendors and ad networks may also serve ads on this site. You can learn how
+        Google uses information from sites that use its services at{" "}
+        <a
+          href="https://policies.google.com/technologies/partner-sites"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          How Google uses information from sites or apps that use our services
+        </a>
+        .
+      </p>
+
+      <h2>Your consent</h2>
+      <p>
+        When you first visit, a cookie banner asks whether you accept advertising and analytics
+        cookies. If you choose &ldquo;Essential only&rdquo;, we signal Google (through Google
+        Consent Mode) not to use advertising cookies for personalisation; ads may still appear but
+        they are not based on your browsing history. Visitors from the European Economic Area, the
+        United Kingdom and Switzerland are treated as &ldquo;not consented&rdquo; until they accept.
+        You can change your choice at any time on the <Link href="/cookies">cookie notice</Link>{" "}
+        page.
+      </p>
+      <p>
         Essential cookies for writer login stay on this domain and are required for the admin desk
         to work.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        Depending on where you live (for example under the GDPR in the EU/UK or the CCPA in
+        California), you may ask what personal data we hold about you, ask us to correct or delete
+        it, or object to its use. Email us at the address below and we will reply within 30 days.
+        We do not sell personal information.
+      </p>
+
+      <h2>Children</h2>
+      <p>
+        This site is written for students and adults and is not directed at children under 13. We
+        do not knowingly collect personal information from children.
       </p>
 
       <h2>How long we keep data</h2>
