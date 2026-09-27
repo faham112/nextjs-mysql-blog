@@ -3,6 +3,7 @@
  *
  * For every public/covers/posts/<slug>.webp (1200x630) this writes smaller WebPs:
  *   public/covers/posts/w480/<slug>.webp
+ *   public/covers/posts/w600/<slug>.webp
  *   public/covers/posts/w768/<slug>.webp
  *   public/covers/posts/w960/<slug>.webp
  * and src/lib/coverVariants.generated.ts (slug -> short content hash). The hash is used as a
@@ -21,7 +22,7 @@ import sharp from "sharp";
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const dir = path.join(root, "public/covers/posts");
 const manifestFile = path.join(root, "src/lib/coverVariants.generated.ts");
-export const WIDTHS = [480, 768, 960];
+export const WIDTHS = [480, 600, 768, 960];
 
 function readManifest() {
   try {
