@@ -6,7 +6,7 @@ import { listApprovedComments } from "@/lib/comments";
 import CommentForm from "@/components/CommentForm";
 import { readingTimeLabel } from "@/lib/readingTime";
 import { articleJsonLd } from "@/lib/schema";
-import { resolveCover } from "@/lib/covers";
+import { absoluteCover, resolveCover } from "@/lib/covers";
 
 export const revalidate = 60;
 
@@ -19,7 +19,11 @@ export async function generateMetadata({
   const post = await getPublishedPostBySlug(slug).catch(() => null);
   if (!post) return { title: "Article" };
   const description = (post.excerpt || post.title).slice(0, 160);
-  const cover = resolveCover(post.featured_image, post.category_slug);
+  const cover = absoluteCover(
+    post.featured_image,
+    post.category_slug,
+    process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org"
+  );
   return {
     title: post.title,
     description,

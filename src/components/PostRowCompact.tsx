@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { PostRow } from "@/lib/posts";
-import SmartImage from "@/components/SmartImage";
+import PostThumb from "@/components/PostThumb";
 
 function formatDate(value: Date | string | null) {
   if (!value) return "";
@@ -21,20 +21,13 @@ export default function PostRowCompact({ post }: { post: PostRow }) {
       style={{ borderColor: "var(--border)" }}
     >
       <div className="h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-[var(--bg2)] sm:h-20 sm:w-28">
-        {post.featured_image ? (
-          <SmartImage
-            src={post.featured_image}
-            alt={post.title}
-            width={112}
-            height={80}
-            className="h-full w-full object-cover transition group-hover:scale-105"
-            sizes="112px"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-600 to-dark-900 text-[10px] font-bold uppercase text-white">
-            {(post.category_name || "GCH").slice(0, 8)}
-          </div>
-        )}
+        <PostThumb
+          post={post}
+          alt={post.title}
+          width={112}
+          height={80}
+          className="h-full w-full object-cover transition group-hover:scale-105"
+        />
       </div>
       <div className="min-w-0 flex-1">
         <h3

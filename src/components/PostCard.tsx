@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { PostRow } from "@/lib/posts";
-import SmartImage from "@/components/SmartImage";
+import PostThumb from "@/components/PostThumb";
 
 function formatDate(value: Date | string | null) {
   if (!value) return "";
@@ -30,25 +30,13 @@ export default function PostCard({ post }: { post: PostRow }) {
   return (
     <article className="card group flex flex-col overflow-hidden transition hover:shadow-xl">
       <Link href={`/posts/${post.slug}`} className="flex h-full flex-col">
-        {post.featured_image ? (
-          <SmartImage
-            src={post.featured_image}
-            alt={post.title}
-            width={640}
-            height={208}
-            className="h-52 w-full object-cover"
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
-        ) : (
-          <div className="flex h-52 flex-col justify-between bg-gradient-to-br from-brand-600 via-red-700 to-dark-900 p-6">
-            <span className="w-fit rounded-full border border-white/20 bg-black/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
-              {category}
-            </span>
-            <p className="font-heading text-2xl font-extrabold text-white">
-              {category}
-            </p>
-          </div>
-        )}
+        <PostThumb
+          post={post}
+          alt={post.title}
+          width={640}
+          height={208}
+          className="h-52 w-full object-cover"
+        />
         <div className="flex flex-grow flex-col p-6">
           <div
             className="mb-2 flex flex-wrap items-center gap-2 text-xs font-medium"

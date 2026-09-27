@@ -1,3 +1,5 @@
+import { absoluteCover } from "@/lib/covers";
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org";
 
 export const SITE_NAME = "Global Career Hub";
@@ -66,16 +68,13 @@ export function articleJsonLd(post: {
   slug: string;
   excerpt?: string | null;
   featured_image?: string | null;
+  category_slug?: string | null;
   published_at?: string | Date | null;
   updated_at?: string | Date | null;
   author_name?: string | null;
 }) {
   const url = `${siteUrl}/posts/${post.slug}`;
-  const img = post.featured_image
-    ? post.featured_image.startsWith("http")
-      ? post.featured_image
-      : `${siteUrl}${post.featured_image}`
-    : undefined;
+  const img = absoluteCover(post.featured_image, post.category_slug, siteUrl);
   return {
     "@context": "https://schema.org",
     "@type": "Article",
