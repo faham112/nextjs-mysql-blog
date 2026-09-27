@@ -81,13 +81,36 @@ function textWidth(str, size, bold) {
   }
   return w * size * (bold ? 1.04 : 1);
 }
+// Real Poppins advance widths (em) measured once with sharp, so wrapping matches the rendered
+// text (the rough estimate above under-measured large bold headlines by up to ~9%).
+const ADV = { 400: new Map(), 700: new Map() };
+async function inkWidth(text, weight) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="300"><rect width="2400" height="300" fill="#000"/><text x="20" y="220" font-family="Poppins" font-weight="${weight}" font-size="200" fill="#fff" xml:space="preserve">${esc(text)}</text></svg>`;
+  const { info } = await sharp(Buffer.from(svg)).trim({ threshold: 10 }).toBuffer({ resolveWithObject: true });
+  return info.width;
+}
+async function calibrate() {
+  const chars = new Set([...data.flatMap((p) => [...p.title, ...p.phrase])]);
+  for (const weight of [400, 700]) {
+    const base = await inkWidth("HH", weight);
+    for (const ch of chars) ADV[weight].set(ch, ((await inkWidth(`H${ch}H`, weight)) - base) / 200);
+  }
+}
+function measure(str, size, bold) {
+  const table = ADV[bold ? 700 : 400];
+  if (!table.size) return textWidth(str, size, bold);
+  let w = 0;
+  for (const ch of str) w += table.has(ch) ? table.get(ch) : textWidth(ch, 1, bold);
+  return w * size;
+}
+
 function wrap(str, size, maxW, bold, maxLines) {
   const words = str.split(/\s+/);
   const lines = [];
   let cur = "";
   for (const w of words) {
     const t = cur ? cur + " " + w : w;
-    if (textWidth(t, size, bold) <= maxW) cur = t;
+    if (measure(t, size, bold) <= maxW) cur = t;
     else { if (cur) lines.push(cur); cur = w; }
   }
   if (cur) lines.push(cur);
@@ -98,31 +121,59 @@ function wrap(str, size, maxW, bold, maxLines) {
   }
   return lines;
 }
-function fitPhrase(phrase, maxW) {
-  for (const size of [76, 70, 64, 58, 52, 48]) {
+/** Post title under the headline: up to 3 lines, never truncated; shrinks the font to fit. */
+function fitTitle(title, maxW) {
+  for (const size of [26, 24, 22, 20, 18]) {
+    const lines = wrap(title, size, maxW, false, 99);
+    if (lines.length <= 3) return { size, lines };
+  }
+  return { size: 18, lines: wrap(title, 18, maxW, false, 3) };
+}
+
+// Everything above the bottom brand band (y = H - 84) must end by this baseline.
+const TEXT_BOTTOM = H - 84 - 30;
+
+/** Headline + title layout that fits vertically: shrinks the headline first if needed. */
+function layoutText(p, maxW) {
+  const t = fitTitle(p.title, maxW);
+  const tLh = Math.round(t.size * 1.38);
+  let best;
+  for (const cap of [76, 64, 58, 52, 48, 44, 40]) {
+    const ph = fitPhraseCapped(p.phrase, maxW, cap);
+    const lh = Math.round(ph.size * 1.12);
+    const underlineY = 150 + ph.size + (ph.lines.length - 1) * lh + 38;
+    const titleY = underlineY + 56;
+    const lastBaseline = titleY + (t.lines.length - 1) * tLh;
+    best = { ph, lh, underlineY, titleY, t, tLh };
+    if (lastBaseline <= TEXT_BOTTOM) return best;
+  }
+  return best;
+}
+function fitPhraseCapped(phrase, maxW, cap) {
+  for (const size of [76, 70, 64, 58, 52, 48, 44, 40].filter((s) => s <= cap)) {
     const lines = wrap(phrase, size, maxW, true, 3);
     if (lines.length <= (size >= 64 ? 2 : 3) && !lines.join(" ").includes("…")) return { size, lines };
   }
-  return { size: 46, lines: wrap(phrase, 46, maxW, true, 3) };
+  return { size: 40, lines: wrap(phrase, 40, maxW, true, 3) };
 }
 
 function svgFor(p) {
   const [dark, mid, light] = COLORS[p.category] || COLORS.careers;
   const textMaxW = 660;
-  const { size, lines } = fitPhrase(p.phrase, textMaxW);
-  const lh = Math.round(size * 1.12);
+  const L = layoutText(p, textMaxW);
+  const { size, lines } = L.ph;
+  const lh = L.lh;
   const pillText = p.categoryName.toUpperCase();
   const pillW = Math.round(textWidth(pillText, 20, true) * 1.12 + 44);
   let y = 150;
   const phraseSvg = lines
     .map((l, i) => `<text x="72" y="${y + size + i * lh}" font-family="Poppins" font-weight="700" font-size="${size}" fill="#ffffff">${esc(l)}</text>`)
     .join("");
-  y = y + size + (lines.length - 1) * lh + 38;
+  y = L.underlineY;
   const underline = `<rect x="72" y="${y}" width="120" height="8" rx="4" fill="${light}"/>`;
-  y += 56;
-  const tLines = wrap(p.title, 26, textMaxW, false, 2);
-  const titleSvg = tLines
-    .map((l, i) => `<text x="72" y="${y + i * 36}" font-family="Poppins" font-weight="400" font-size="26" fill="#e2e8f0" fill-opacity="0.92">${esc(l)}</text>`)
+  y = L.titleY;
+  const titleSvg = L.t.lines
+    .map((l, i) => `<text x="72" y="${y + i * L.tLh}" font-family="Poppins" font-weight="400" font-size="${L.t.size}" fill="#e2e8f0" fill-opacity="0.92">${esc(l)}</text>`)
     .join("");
   const icon = ICONS[p.icon] || ICONS.check;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
@@ -153,14 +204,48 @@ ${titleSvg}
 </svg>`;
 }
 
+// Optional: only re-render some covers, e.g. `--only slug-a,slug-b` (alt manifest still lists all).
+const onlyArg = process.argv.indexOf("--only");
+const only = onlyArg > 0 ? new Set(process.argv[onlyArg + 1].split(",").filter(Boolean)) : null;
+
+/** Largest mean colour difference over 40x40 blocks (catches palette-quantization blobs). */
+async function worstBlockDiff(a, b) {
+  const A = await sharp(a).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const B = await sharp(b).removeAlpha().raw().toBuffer();
+  const { width, height } = A.info;
+  let worst = 0;
+  for (let by = 0; by < height; by += 40)
+    for (let bx = 0; bx < width; bx += 40) {
+      let t = 0, n = 0;
+      for (let y = by; y < Math.min(by + 40, height); y++)
+        for (let x = bx; x < Math.min(bx + 40, width); x++) {
+          const i = (y * width + x) * 3;
+          t += A.data[i] - B[i] + A.data[i + 1] - B[i + 1] + A.data[i + 2] - B[i + 2];
+          n++;
+        }
+      worst = Math.max(worst, Math.abs(t / n / 3));
+    }
+  return worst;
+}
+
+await calibrate();
+
 const manifest = {};
+let rendered = 0;
 for (const p of data) {
+  manifest[p.slug] = p.alt;
+  if (only && !only.has(p.slug)) continue;
+  rendered++;
   const svg = Buffer.from(svgFor(p));
   const png = path.join(outDir, `${p.slug}.png`);
   const webp = path.join(outDir, `${p.slug}.webp`);
-  await sharp(svg).png({ compressionLevel: 9, palette: true, quality: 90 }).toFile(png);
-  await sharp(svg).webp({ quality: 82 }).toFile(webp);
-  manifest[p.slug] = p.alt;
+  // Flatten first: quantizing the RGBA SVG render directly sometimes produced visible blobs
+  // (banding) in the dark gradient of the palette PNG.
+  const flat = await sharp(svg).removeAlpha().png({ compressionLevel: 0 }).toBuffer();
+  let pngBuf = await sharp(flat).png({ compressionLevel: 9, palette: true, quality: 90 }).toBuffer();
+  if ((await worstBlockDiff(flat, pngBuf)) > 4) pngBuf = await sharp(flat).png({ compressionLevel: 9 }).toBuffer();
+  fs.writeFileSync(png, pngBuf);
+  await sharp(flat).webp({ quality: 82 }).toFile(webp);
 }
 
 const ts = `/* AUTO-GENERATED by scripts/generate-post-covers.mjs — do not edit by hand. */
@@ -168,7 +253,7 @@ const ts = `/* AUTO-GENERATED by scripts/generate-post-covers.mjs — do not edi
 export const POST_COVERS: Record<string, string> = ${JSON.stringify(manifest, null, 2)};
 `;
 fs.writeFileSync(path.join(root, "src/lib/postCovers.generated.ts"), ts);
-console.log(`Generated ${data.length} covers in public/covers/posts`);
+console.log(`Generated ${rendered} of ${data.length} covers in public/covers/posts`);
 
 // Responsive 480/768/960px variants + ?v= cache-busting hashes for the new covers.
 await import("./generate-cover-variants.mjs");
