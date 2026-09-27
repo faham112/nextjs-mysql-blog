@@ -5,7 +5,7 @@ import { getPublishedPostBySlug } from "@/lib/posts";
 import { listApprovedComments } from "@/lib/comments";
 import CommentForm from "@/components/CommentForm";
 import { readingTimeLabel } from "@/lib/readingTime";
-import { AUTHOR_NAME, articleJsonLd } from "@/lib/schema";
+import { AUTHOR_NAME, articleJsonLd, breadcrumbJsonLd, faqJsonLd, jsonLdString } from "@/lib/schema";
 import { coverAlt, ogCover, resolveCover } from "@/lib/covers";
 import { COVER_SIZES, coverSrcSet } from "@/lib/coverSrcset";
 import { rewriteLegacyLinks } from "@/lib/redirects";
@@ -59,16 +59,29 @@ export default async function PostPage({
   const comments = await listApprovedComments(post.id);
   const cover = resolveCover(post.featured_image, post.category_slug, post.slug);
   const coverImg = coverSrcSet(cover);
+  const faqLd = faqJsonLd(post.content, post.slug);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(post)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(articleJsonLd(post)) }}
       />
-      <nav className="mb-4 text-xs" style={{ color: "var(--muted)" }}>
-        <Link href="/">Home</Link> · <Link href="/articles">Articles</Link> ·{" "}
-        <span style={{ color: "var(--fg)" }}>{post.title}</span>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd(post)) }}
+      />
+      {faqLd ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(faqLd) }} />
+      ) : null}
+      <nav aria-label="Breadcrumb" className="mb-4 text-xs" style={{ color: "var(--muted)" }}>
+        <Link href="/">Home</Link> ·{" "}
+        {post.category_slug && post.category_name ? (
+          <Link href={`/category/${post.category_slug}`}>{post.category_name}</Link>
+        ) : (
+          <Link href="/articles">Articles</Link>
+        )}{" "}
+        · <span style={{ color: "var(--fg)" }}>{post.title}</span>
       </nav>
       <p className="text-sm uppercase tracking-widest text-brand-600">
         {post.category_name ? (
