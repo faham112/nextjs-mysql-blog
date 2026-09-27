@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import Header from "@/components/Header";
@@ -10,21 +10,27 @@ import CookieConsent from "@/components/CookieConsentLazy";
 import { DEFAULT_OG_IMAGE } from "@/lib/covers";
 import { AUTHOR_NAME, organizationJsonLd, personJsonLd, websiteJsonLd } from "@/lib/schema";
 
-// Variable fonts: one file per family instead of one @font-face per weight.
+// Self-hosted variable fonts (latin subset, from Google Fonts, OFL) committed in ./fonts.
+// next/font/google downloads the fonts during `next build`; on Hostinger that fetch failed
+// intermittently ("An error occurred in `next/font`"), which failed whole deploys.
 // Metric-matched fallbacks are declared in globals.css (gch-*-fallback) with several local()
 // sources, so the first layout never has to fall through to generic system fonts
-// (Next's built-in fallback only tries local("Arial"), which Linux often lacks — that
+// (next/font's own fallback only tries local("Arial"), which Linux often lacks — that
 // cost ~100 ms of layout in Lighthouse's headless Chrome).
-const sans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
+const sans = localFont({
+  src: "./fonts/plus-jakarta-sans-latin-var.woff2",
+  weight: "200 800",
+  style: "normal",
   display: "swap",
   variable: "--font-sans",
   adjustFontFallback: false,
   fallback: ["gch-sans-fallback", "system-ui", "sans-serif"],
 });
 
-const heading = Space_Grotesk({
-  subsets: ["latin"],
+const heading = localFont({
+  src: "./fonts/space-grotesk-latin-var.woff2",
+  weight: "300 700",
+  style: "normal",
   display: "swap",
   variable: "--font-heading",
   adjustFontFallback: false,
