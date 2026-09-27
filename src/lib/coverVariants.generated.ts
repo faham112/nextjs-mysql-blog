@@ -41,7 +41,7 @@ export const COVER_VERSIONS: Record<string, string> = {
   "short-form-video-editing-freelance-2026": "eeb49a1e17",
   "skills-based-hiring-2026-project-proof": "a8e78c6050",
   "skills-over-degrees-what-hiring-looks-like-now": "9651eaa746",
-  "skills-that-get-interviews-2026": "1fb82ee33e",
+  "skills-that-get-interviews-2026": "370c1758ff",
   "solar-technician-careers-pakistan-2026": "92f3ccf2c3",
   "study-abroad-2026-roi-and-destination-shift": "0f5bb233cd",
   "study-abroad-roi-checklist-2026": "83ea285334",
@@ -50,7 +50,7 @@ export const COVER_VERSIONS: Record<string, string> = {
   "sunday-reset-long-job-search": "c2afaeba9a",
   "sustainable-job-search-week-sleep-friday-close": "71c1d92fe1",
   "trades-ai-cannot-replace-2026-electrician-solar-gcc": "a1ed0b4b3c",
-  "uk-skilled-worker-visa-sponsor-check-2026": "6064f349a0",
+  "uk-skilled-worker-visa-sponsor-check-2026": "be07d367f8",
   "what-to-put-in-a-first-freelance-portfolio-when-you-have-no-clients": "9cba8ef360",
   "write-a-statement-of-purpose-that-sounds-like-you": "5fc6484794"
 };
