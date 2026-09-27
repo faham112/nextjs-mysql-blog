@@ -5,7 +5,7 @@ import PostCard from "@/components/PostCard";
 import { getCategoryBySlug } from "@/lib/categories";
 import { listPublishedPosts } from "@/lib/posts";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org";
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug).catch(() => null);
@@ -23,7 +23,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
   if (!category) notFound();
-  const { posts } = await listPublishedPosts(1, 24, slug);
+  const { posts } = await listPublishedPosts(1, 100, slug);
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">
       <p className="text-sm uppercase tracking-widest text-accent">Category</p>

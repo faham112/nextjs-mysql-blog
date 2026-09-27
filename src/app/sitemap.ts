@@ -2,7 +2,8 @@ import type { MetadataRoute } from "next";
 import { listPublishedPosts } from "@/lib/posts";
 import { listCategories } from "@/lib/categories";
 
-export const revalidate = 300;
+// Rendered per request so a DB hiccup at build/revalidate time can't cache an empty sitemap.
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base =

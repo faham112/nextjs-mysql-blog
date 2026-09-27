@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const action = String(body.action || "migrate");
   if (action === "publish") {
-    await publishDuePosts();
+    await publishDuePosts(true);
     return NextResponse.json({ ok: true, log: ["scheduled posts published if due"] });
   }
   if (action === "seed") {

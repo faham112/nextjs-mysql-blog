@@ -14,7 +14,7 @@ export async function runSqlUpdates() {
     try { await pool.query(sql); log.push(`ok: ${label}`); }
     catch (e) { log.push(`skip: ${label}`); }
   }
-  await publishDuePosts();
+  await publishDuePosts(true);
   log.push("ok: publish due scheduled posts");
   return log;
 }

@@ -6,7 +6,8 @@ import PostThumb from "@/components/PostThumb";
 import { listPublishedPosts, type PostRow } from "@/lib/posts";
 import { listCategories } from "@/lib/categories";
 
-export const revalidate = 60;
+// Always render from the live DB (never bake an empty build-time snapshot).
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },

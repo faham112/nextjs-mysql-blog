@@ -9,7 +9,12 @@ export type PostRow = {
 const SELECT = `SELECT p.*, c.name AS category_name, c.slug AS category_slug, u.name AS author_name,
     (SELECT COUNT(*) FROM comments cm WHERE cm.post_id = p.id AND cm.approved = 1) AS comment_count
   FROM posts p LEFT JOIN categories c ON c.id = p.category_id LEFT JOIN users u ON u.id = p.author_id`;
-export async function publishDuePosts() {
+let lastPublishCheck = 0;
+/** Flip scheduled drafts to published. Throttled: pages call this on every render. */
+export async function publishDuePosts(force = false) {
+  const now = Date.now();
+  if (!force && now - lastPublishCheck < 60_000) return;
+  lastPublishCheck = now;
   await query(`UPDATE posts SET status = 'published' WHERE status = 'draft' AND published_at IS NOT NULL AND published_at <= NOW()`).catch(() => {});
 }
 export async function listPublishedPosts(page = 1, perPage = 8, categorySlug?: string) {

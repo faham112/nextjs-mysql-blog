@@ -8,6 +8,6 @@ export async function GET(req: Request) {
     const token = url.searchParams.get("secret") || req.headers.get("x-cron-secret");
     if (token !== secret) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
-  await publishDuePosts();
+  await publishDuePosts(true);
   return NextResponse.json({ ok: true, ran_at: new Date().toISOString() });
 }
