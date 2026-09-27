@@ -6,7 +6,7 @@ import { listApprovedComments } from "@/lib/comments";
 import CommentForm from "@/components/CommentForm";
 import { readingTimeLabel } from "@/lib/readingTime";
 import { AUTHOR_NAME, articleJsonLd } from "@/lib/schema";
-import { ogCover, resolveCover } from "@/lib/covers";
+import { coverAlt, ogCover, resolveCover } from "@/lib/covers";
 import { rewriteLegacyLinks } from "@/lib/redirects";
 
 export const revalidate = 60;
@@ -23,7 +23,8 @@ export async function generateMetadata({
   const cover = ogCover(
     post.featured_image,
     post.category_slug,
-    process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org",
+    post.slug
   );
   return {
     title: post.title,
@@ -34,7 +35,7 @@ export async function generateMetadata({
       url: `/posts/${post.slug}`,
       title: post.title,
       description,
-      images: [{ url: cover, width: 1200, height: 630, alt: post.title }],
+      images: [{ url: cover, width: 1200, height: 630, alt: coverAlt(post.slug, post.title) }],
     },
     twitter: {
       card: "summary_large_image",
@@ -55,7 +56,7 @@ export default async function PostPage({
   if (!post) notFound();
 
   const comments = await listApprovedComments(post.id);
-  const cover = resolveCover(post.featured_image, post.category_slug);
+  const cover = resolveCover(post.featured_image, post.category_slug, post.slug);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -92,10 +93,10 @@ export default async function PostPage({
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={cover}
-        alt={post.title}
+        alt={coverAlt(post.slug, post.title)}
         className="mt-8 max-h-[420px] w-full rounded-2xl object-cover"
         width={1200}
-        height={675}
+        height={630}
         loading="eager"
         fetchPriority="high"
         decoding="async"

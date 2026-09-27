@@ -20,7 +20,7 @@ export async function fixFeaturedImages(dryRun: boolean): Promise<string[]> {
   let changes = 0;
   for (const r of rows) {
     const current = (r.featured_image || "").trim();
-    const target = resolveCover(current, r.category_slug);
+    const target = resolveCover(current, r.category_slug, r.slug);
     if (current === target) continue;
     changes++;
     log.push(`${dryRun ? "would set" : "set"} #${r.id} ${r.slug}: ${current || "(empty)"} -> ${target}`);

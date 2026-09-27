@@ -75,7 +75,7 @@ export function articleJsonLd(post: {
   author_name?: string | null;
 }) {
   const url = `${siteUrl}/posts/${post.slug}`;
-  const img = ogCover(post.featured_image, post.category_slug, siteUrl);
+  const img = ogCover(post.featured_image, post.category_slug, siteUrl, post.slug);
   return {
     "@context": "https://schema.org",
     "@type": "Article",

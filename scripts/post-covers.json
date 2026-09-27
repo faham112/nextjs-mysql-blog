@@ -1,0 +1,443 @@
+[
+ {
+  "slug": "a-calm-system-for-job-applications-you-can-keep-for-six-weeks",
+  "category": "applications",
+  "categoryName": "Applications",
+  "title": "A calm system for job applications you can keep for six weeks",
+  "phrase": "6-week job application tracker",
+  "icon": "table",
+  "alt": "Cover: a simple six-week job application tracker table with columns for company, role, date sent and follow-up"
+ },
+ {
+  "slug": "a-practical-checklist-before-you-apply-for-a-scholarship",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "A practical checklist before you apply for a scholarship",
+  "phrase": "Scholarship checklist",
+  "icon": "checklist",
+  "alt": "Cover: scholarship application checklist with passport, transcripts and reference letters ticked off"
+ },
+ {
+  "slug": "ai-agents-office-workflows-non-engineers-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "AI agents and office workflows: what to practise if you are not an engineer",
+  "phrase": "AI agents at the office",
+  "icon": "robot",
+  "alt": "Cover: an AI assistant handling a routine office workflow while a person reviews the output"
+ },
+ {
+  "slug": "ai-skills-employers-want-in-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "AI skills employers actually want in 2026 (and how to show them)",
+  "phrase": "AI skills employers want",
+  "icon": "chip",
+  "alt": "Cover: three layers of AI skills employers look for, from daily AI use to human judgement"
+ },
+ {
+  "slug": "build-2026-scholarship-job-file-official-portals",
+  "category": "applications",
+  "categoryName": "Applications",
+  "title": "Build a 2026 scholarship and job file that survives official portals",
+  "phrase": "Build your application file",
+  "icon": "folder",
+  "alt": "Cover: a labelled document folder with degree, transcript, passport and CV scans ready for official portals"
+ },
+ {
+  "slug": "build-a-portfolio-employers-actually-open",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "Build a portfolio employers actually open in 2026",
+  "phrase": "Portfolio employers open",
+  "icon": "portfolio",
+  "alt": "Cover: a one-page portfolio with three named projects that a hiring manager can open quickly"
+ },
+ {
+  "slug": "campus-to-first-job-the-emails-that-actually-get-a-reply",
+  "category": "applications",
+  "categoryName": "Applications",
+  "title": "Campus to first job: the emails that actually get a reply",
+  "phrase": "Emails that get a reply",
+  "icon": "mail",
+  "alt": "Cover: a short, clear outreach email from a fresh graduate to an employer"
+ },
+ {
+  "slug": "cloud-saas-admin-jobs-beginner-path-2026",
+  "category": "technology",
+  "categoryName": "Technology",
+  "title": "Cloud and SaaS admin jobs: a beginner path that hiring teams actually use",
+  "phrase": "Cloud & SaaS admin path",
+  "icon": "cloud",
+  "alt": "Cover: a beginner's path into cloud and SaaS admin jobs, from user access to backups"
+ },
+ {
+  "slug": "communication-negotiation-skill-2026-behind-ai",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Communication and negotiation: the 2026 skill hiding behind every AI line",
+  "phrase": "Communication & negotiation",
+  "icon": "chat",
+  "alt": "Cover: two professionals negotiating across a table, showing communication as a core work skill"
+ },
+ {
+  "slug": "cybersecurity-career-starter-map-2026",
+  "category": "technology",
+  "categoryName": "Technology",
+  "title": "Cybersecurity career starter map for 2026",
+  "phrase": "Cybersecurity starter map",
+  "icon": "shield",
+  "alt": "Cover: a starter map for a cybersecurity career showing passwords, 2FA, backups and first projects"
+ },
+ {
+  "slug": "cybersecurity-skills-beginners-focus-2026",
+  "category": "technology",
+  "categoryName": "Technology",
+  "title": "Cybersecurity skills: where beginners should focus in 2026",
+  "phrase": "Cybersecurity skills to learn first",
+  "icon": "shield",
+  "alt": "Cover: the basic cybersecurity skills beginners should focus on first"
+ },
+ {
+  "slug": "data-skills-without-becoming-data-scientist",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Data skills without becoming a data scientist: what to learn first",
+  "phrase": "Data skills for non-analysts",
+  "icon": "chart",
+  "alt": "Cover: a one-page data summary with a simple chart that any office worker can present"
+ },
+ {
+  "slug": "data-storytelling-non-analysts-one-page-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Data storytelling for non-analysts: how to brief a boss in one page",
+  "phrase": "One-page data story",
+  "icon": "chart",
+  "alt": "Cover: a one-page data story with three key lines and one chart"
+ },
+ {
+  "slug": "digital-marketing-pakistan-sme-seo-ads-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Digital marketing for Pakistani SMEs in 2026: SEO and ads without burning cash",
+  "phrase": "Digital marketing for Pakistani SMEs",
+  "icon": "megaphone",
+  "alt": "Cover: digital marketing for a small Pakistani business, with local SEO and ads on a phone screen"
+ },
+ {
+  "slug": "digital-skills-worth-learning-if-you-are-changing-fields-in-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Digital skills worth learning if you are changing fields in 2026",
+  "phrase": "Digital skills for career change",
+  "icon": "laptop",
+  "alt": "Cover: digital skills worth learning when changing careers"
+ },
+ {
+  "slug": "english-test-prep-without-burning-three-months",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "English test prep without burning three months",
+  "phrase": "IELTS / English test prep plan",
+  "icon": "book",
+  "alt": "Cover: a focused English test preparation plan with practice papers and a timer"
+ },
+ {
+  "slug": "figma-freelance-pakistani-students-first-jobs-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Figma freelance for Pakistani students in 2026: first three paid jobs",
+  "phrase": "Figma freelancing for students",
+  "icon": "pen",
+  "alt": "Cover: a student designing an app screen in Figma for a first freelance client"
+ },
+ {
+  "slug": "gemini-ai-study-tools-students-2026",
+  "category": "tutorials",
+  "categoryName": "Tutorials",
+  "title": "Use Gemini and AI study tools in 2026 without wrecking your academic record",
+  "phrase": "AI study tools for students",
+  "icon": "book",
+  "alt": "Cover: a student using an AI study tool to quiz their own notes"
+ },
+ {
+  "slug": "germany-2026-pakistani-students-daad-aps-calendar",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "Germany 2026 for Pakistani students: DAAD, APS, and the calendar that actually works",
+  "phrase": "Germany: DAAD & APS calendar",
+  "icon": "calendar",
+  "alt": "Cover: a study-in-Germany calendar for Pakistani students with APS, language test and DAAD dates"
+ },
+ {
+  "slug": "google-career-certificates-pakistan-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Google Career Certificates in Pakistan 2026: what they are and how to use them",
+  "phrase": "Google Career Certificates",
+  "icon": "certificate",
+  "alt": "Cover: an online career certificate next to a real portfolio project"
+ },
+ {
+  "slug": "hec-attestation-mofa-tutorial-foreign-file",
+  "category": "tutorials",
+  "categoryName": "Tutorials",
+  "title": "HEC attestation and MOFA: a calm tutorial before any foreign file",
+  "phrase": "HEC & MOFA attestation steps",
+  "icon": "stamp",
+  "alt": "Cover: degree attestation steps in Pakistan, from university verification to HEC and MOFA stamps"
+ },
+ {
+  "slug": "how-to-pick-a-career-when-everyone-around-you-has-an-opinion",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "How to pick a career when everyone around you has an opinion",
+  "phrase": "Choosing your own career",
+  "icon": "compass",
+  "alt": "Cover: a young person choosing a career path while family and friends give different advice"
+ },
+ {
+  "slug": "how-to-read-a-course-page-before-you-pay-a-deposit",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "How to read a course page before you pay a deposit",
+  "phrase": "Read the course page first",
+  "icon": "search",
+  "alt": "Cover: checking a university course page for fees, modules and work rights before paying a deposit"
+ },
+ {
+  "slug": "how-to-read-job-post-asks-for-ai-2026",
+  "category": "applications",
+  "categoryName": "Applications",
+  "title": "How to read a 2026 job post that asks for AI — and still apply honestly",
+  "phrase": "Job posts that ask for AI",
+  "icon": "search",
+  "alt": "Cover: reading a job advert that asks for AI skills and marking what it really needs"
+ },
+ {
+  "slug": "how-to-write-a-statement-of-purpose-that-a-reviewer-actually-finishes",
+  "category": "applications",
+  "categoryName": "Applications",
+  "title": "How to write a statement of purpose that a reviewer actually finishes",
+  "phrase": "Statement of purpose guide",
+  "icon": "pen",
+  "alt": "Cover: writing a clear statement of purpose that a scholarship reviewer reads to the end"
+ },
+ {
+  "slug": "job-search-without-burning-out",
+  "category": "lifestyle",
+  "categoryName": "Lifestyle",
+  "title": "How to keep a job search from eating your whole life",
+  "phrase": "Job search without burnout",
+  "icon": "heart",
+  "alt": "Cover: a calm weekly job-search routine with fixed hours, rest and a Friday close"
+ },
+ {
+  "slug": "linkedin-profile-fixes-that-take-an-afternoon",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "LinkedIn profile fixes that take an afternoon",
+  "phrase": "LinkedIn profile fixes",
+  "icon": "user",
+  "alt": "Cover: a clean LinkedIn-style profile with a clear headline and featured work"
+ },
+ {
+  "slug": "nursing-caregiver-routes-pakistan-europe-2026",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "Nursing and caregiver routes from Pakistan to Europe in 2026",
+  "phrase": "Nursing & caregiver routes to Europe",
+  "icon": "heart",
+  "alt": "Cover: nursing and caregiver work routes from Pakistan to Europe, showing licence, language and visa steps"
+ },
+ {
+  "slug": "official-scholarship-map-pakistan-2026-hec-fulbright-daad",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "Official scholarship map for Pakistan 2026: HEC, Fulbright, DAAD, Chevening",
+  "phrase": "Official scholarship map 2026",
+  "icon": "globe",
+  "alt": "Cover: map of official scholarship sources for Pakistani students: HEC, Fulbright, DAAD and Chevening"
+ },
+ {
+  "slug": "one-skill-stack-career-change-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "One skill stack that actually helps if you are changing careers in 2026",
+  "phrase": "One skill stack for career change",
+  "icon": "layers",
+  "alt": "Cover: a single stack of connected skills for a career change, built one layer at a time"
+ },
+ {
+  "slug": "remote-work-security-basics-2026-passwords-devices",
+  "category": "technology",
+  "categoryName": "Technology",
+  "title": "Remote work security basics 2026: passwords, devices, and what companies actually check",
+  "phrase": "Remote work security basics",
+  "icon": "lock",
+  "alt": "Cover: remote work security basics: password manager, two-factor login and a locked laptop"
+ },
+ {
+  "slug": "remote-work-skills-hiring-screen-2026",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "Remote work skills that still pass a hiring screen in 2026",
+  "phrase": "Remote work skills",
+  "icon": "laptop",
+  "alt": "Cover: remote work skills that hiring screens test, like clear writing and time-zone planning"
+ },
+ {
+  "slug": "remote-work-skills-that-still-show-up-on-hiring-screens",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Remote work skills that still show up on hiring screens",
+  "phrase": "Remote skills on hiring screens",
+  "icon": "laptop",
+  "alt": "Cover: remote work skills that still show up on hiring screens: written updates, time zones and self-managed files"
+ },
+ {
+  "slug": "scholarship-applications-without-scams",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "How to apply for scholarships without falling for scams",
+  "phrase": "Avoid scholarship scams",
+  "icon": "alert",
+  "alt": "Cover: warning signs of scholarship scams, such as fees paid to agents and fake WhatsApp offers"
+ },
+ {
+  "slug": "short-form-video-editing-freelance-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Short-form video editing freelance in 2026: a realistic first-month plan",
+  "phrase": "Short-form video editing freelancing",
+  "icon": "video",
+  "alt": "Cover: editing a short vertical video on a laptop for a freelance client"
+ },
+ {
+  "slug": "skills-based-hiring-2026-project-proof",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "Skills-based hiring in 2026: how project managers and career changers show proof",
+  "phrase": "Skills-based hiring: show proof",
+  "icon": "check",
+  "alt": "Cover: skills-based hiring where a candidate shows a project log instead of a job title"
+ },
+ {
+  "slug": "skills-over-degrees-what-hiring-looks-like-now",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "Skills over degrees: what hiring looks like now",
+  "phrase": "Skills over degrees",
+  "icon": "check",
+  "alt": "Cover: a hiring manager looking at a skills portfolio next to a degree certificate"
+ },
+ {
+  "slug": "skills-that-get-interviews-2026",
+  "category": "technology",
+  "categoryName": "Technology",
+  "title": "The skills that actually get interviews in 2026 (and the ones that only look good on paper)",
+  "phrase": "Skills that get interviews",
+  "icon": "briefcase",
+  "alt": "Cover: the practical skills and proof that get candidates invited to interviews"
+ },
+ {
+  "slug": "solar-technician-careers-pakistan-2026",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "Solar technician careers in Pakistan 2026: skills, proof, and who is hiring",
+  "phrase": "Solar technician careers in Pakistan",
+  "icon": "sun",
+  "alt": "Cover: a solar technician installing rooftop panels in Pakistan"
+ },
+ {
+  "slug": "study-abroad-2026-roi-and-destination-shift",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "Study abroad in 2026: ROI, jobs, and why destinations are shifting",
+  "phrase": "Study abroad ROI & destinations",
+  "icon": "globe",
+  "alt": "Cover: comparing study-abroad destinations by total cost and work rights"
+ },
+ {
+  "slug": "study-abroad-roi-checklist-2026",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "Study abroad ROI in 2026: a simple checklist before you pay",
+  "phrase": "Study abroad ROI checklist",
+  "icon": "calculator",
+  "alt": "Cover: a study-abroad return-on-investment checklist with tuition, rent and post-study work"
+ },
+ {
+  "slug": "study-abroad-scholarships-pakistan-how-to-start",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "Study-abroad scholarships Pakistan students search most — how to start cleanly",
+  "phrase": "Scholarships: where to start",
+  "icon": "grad",
+  "alt": "Cover: first steps to finding study-abroad scholarships from Pakistan"
+ },
+ {
+  "slug": "study-abroad-timelines-if-you-are-starting-from-pakistan",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "Study-abroad timelines if you are starting from Pakistan",
+  "phrase": "Study abroad timeline from Pakistan",
+  "icon": "calendar",
+  "alt": "Cover: a month-by-month study-abroad timeline for students starting from Pakistan"
+ },
+ {
+  "slug": "sunday-reset-long-job-search",
+  "category": "lifestyle",
+  "categoryName": "Lifestyle",
+  "title": "Sunday reset for a long job search: one hour, then stop",
+  "phrase": "Sunday reset: one hour",
+  "icon": "calendar",
+  "alt": "Cover: a one-hour Sunday reset for a long job search, with a timer and a short task list"
+ },
+ {
+  "slug": "sustainable-job-search-week-sleep-friday-close",
+  "category": "lifestyle",
+  "categoryName": "Lifestyle",
+  "title": "A sustainable job-search week: sleep, walks, and a Friday close",
+  "phrase": "Sustainable job-search week",
+  "icon": "calendar",
+  "alt": "Cover: a sustainable job-search week with capped hours, sleep and a Friday close"
+ },
+ {
+  "slug": "trades-ai-cannot-replace-2026-electrician-solar-gcc",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Trades AI cannot replace in 2026: electrician, solar tech, and GCC demand",
+  "phrase": "Trades AI can't replace",
+  "icon": "bolt",
+  "alt": "Cover: electrician and solar trades that AI cannot replace, with work opportunities in the Gulf"
+ },
+ {
+  "slug": "uk-skilled-worker-visa-sponsor-check-2026",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "UK Skilled Worker visa 2026: how to check a real sponsor before you apply",
+  "phrase": "UK sponsor check before you apply",
+  "icon": "search",
+  "alt": "Cover: checking the UK register of licensed sponsors before applying for a Skilled Worker visa"
+ },
+ {
+  "slug": "what-to-put-in-a-first-freelance-portfolio-when-you-have-no-clients",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "What to put in a first freelance portfolio when you have no clients",
+  "phrase": "First freelance portfolio",
+  "icon": "portfolio",
+  "alt": "Cover: a first freelance portfolio built from practice projects when you have no clients yet"
+ },
+ {
+  "slug": "write-a-statement-of-purpose-that-sounds-like-you",
+  "category": "tutorials",
+  "categoryName": "Tutorials",
+  "title": "Write a statement of purpose that sounds like you, not like a brochure",
+  "phrase": "SOP that sounds like you",
+  "icon": "pen",
+  "alt": "Cover: writing a personal statement of purpose in your own voice"
+ }
+]

@@ -1,7 +1,8 @@
 import SafeImg from "@/components/SafeImg";
-import { coverForCategory, resolveCover } from "@/lib/covers";
+import { coverAlt, coverForCategory, postCover, resolveCover } from "@/lib/covers";
 
 type PostLike = {
+  slug?: string | null;
   featured_image?: string | null;
   category_slug?: string | null;
   category_name?: string | null;
@@ -27,14 +28,16 @@ export default function PostThumb({
   height?: number;
   priority?: boolean;
 }) {
-  const src = resolveCover(post.featured_image, post.category_slug);
+  const src = resolveCover(post.featured_image, post.category_slug, post.slug);
   const fallback = coverForCategory(post.category_slug);
+  // Branded per-post covers carry descriptive alt text; decorative thumbs keep alt="".
+  const altText = alt && postCover(post.slug) ? coverAlt(post.slug, alt) : alt;
 
   return (
     <SafeImg
       src={src}
       fallback={fallback}
-      alt={alt}
+      alt={altText}
       width={width}
       height={height}
       priority={priority}
