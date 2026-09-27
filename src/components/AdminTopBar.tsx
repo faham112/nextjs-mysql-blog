@@ -1,40 +1,105 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { LogOut, Menu, X } from "lucide-react";
-import ThemeToggle from "@/components/ThemeToggle";
-import AdminNav from "@/components/AdminNav";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, ExternalLink, LogOut, Moon, Plus, Settings, Sun } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
+import { initials, pageTitle } from "@/components/admin/nav";
+
 export default function AdminTopBar({ name, email }: { name: string; email: string }) {
+  const pathname = usePathname() || "/admin";
+  const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const title = pageTitle(pathname);
+  const light = theme === "light";
+
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <>
-      <header className="sticky top-0 z-40 mb-5 flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5 backdrop-blur" style={{ borderColor: "var(--border)", background: "var(--bg2)" }}>
-        <div className="flex min-w-0 items-center gap-3">
-          <button className="rounded-lg p-2 lg:hidden" type="button" aria-label="Open admin menu" onClick={() => setOpen(true)}><Menu size={20} /></button>
-          <img src="/logo.svg" alt="" className="h-9 w-9 shrink-0 rounded-lg" />
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">{name}</p>
-            <p className="truncate text-[11px]" style={{ color: "var(--muted)" }}>{email}</p>
-          </div>
+    <header className="a-glass a-border sticky top-0 z-20 border-b">
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6 md:h-16 lg:px-8">
+        <Link href="/admin" className="shrink-0 md:hidden" aria-label="Admin home">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.svg" alt="GlobalCareerHub" width={32} height={32} className="h-8 w-8 rounded-lg" />
+        </Link>
+        <div className="min-w-0 flex-1">
+          <p className="a-subtle hidden text-xs font-medium md:block">Admin</p>
+          <h1 className="a-fg truncate text-base font-semibold leading-tight md:text-[15px]">{title}</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <Link href="/" className="hidden text-xs font-semibold sm:inline" style={{ color: "var(--muted)" }}>Site</Link>
-          <form action="/api/auth/logout" method="post">
-            <button className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3 py-2 text-xs font-bold text-white" type="submit"><LogOut size={14} /> Logout</button>
-          </form>
+
+        <Link href="/admin/posts/new" className="btn btn-sm max-md:!hidden">
+          <Plus size={16} strokeWidth={2.4} />
+          Write
+        </Link>
+
+        <button
+          type="button"
+          onClick={toggle}
+          className="a-icon-btn"
+          aria-label={light ? "Switch to dark mode" : "Switch to light mode"}
+          title={light ? "Dark mode" : "Light mode"}
+        >
+          {light ? <Moon size={18} /> : <Sun size={18} />}
+        </button>
+
+        <div className="relative" ref={menuRef}>
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="a-focus a-hoverable flex min-h-[44px] items-center gap-2 rounded-lg px-1.5 md:min-h-0 md:py-1"
+            aria-haspopup="menu"
+            aria-expanded={open}
+            aria-label="Account menu"
+          >
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-rose-700 text-xs font-bold text-[#fff]">
+              {initials(name)}
+            </span>
+            <span className="hidden max-w-[140px] truncate text-left text-sm font-medium lg:block">{name}</span>
+            <ChevronDown size={14} className="a-subtle hidden lg:block" />
+          </button>
+          {open && (
+            <div
+              role="menu"
+              className="a-pop a-surface a-border absolute right-0 top-full mt-2 w-64 rounded-xl border p-1.5"
+              style={{ boxShadow: "var(--a-shadow-lg)" }}
+            >
+              <div className="a-border mb-1 border-b px-3 pb-2.5 pt-2">
+                <p className="a-fg truncate text-sm font-semibold">{name}</p>
+                <p className="a-muted truncate text-xs">{email}</p>
+              </div>
+              <Link href="/admin/settings" role="menuitem" className="a-menu-item">
+                <Settings size={16} /> Settings
+              </Link>
+              <Link href="/" role="menuitem" className="a-menu-item">
+                <ExternalLink size={16} /> View site
+              </Link>
+              <button type="button" role="menuitem" className="a-menu-item" onClick={toggle}>
+                {light ? <Moon size={16} /> : <Sun size={16} />} {light ? "Dark mode" : "Light mode"}
+              </button>
+              <div className="a-border my-1 border-t" />
+              <form action="/api/auth/logout" method="post">
+                <button type="submit" role="menuitem" className="a-menu-item">
+                  <LogOut size={16} /> Log out
+                </button>
+              </form>
+            </div>
+          )}
         </div>
-      </header>
-      <div className={`fixed inset-0 z-[90] lg:hidden ${open ? "pointer-events-auto" : "pointer-events-none"}`}>
-        <button className={`absolute inset-0 bg-black/50 transition-opacity ${open ? "opacity-100" : "opacity-0"}`} type="button" aria-label="Close" onClick={() => setOpen(false)} />
-        <aside className={`absolute left-0 top-0 flex h-full w-[min(82vw,300px)] flex-col border-r p-4 shadow-2xl transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"}`} style={{ background: "var(--bg2)", borderColor: "var(--border)" }}>
-          <div className="mb-4 flex items-center justify-between">
-            <p className="font-heading text-sm font-extrabold">Admin</p>
-            <button type="button" className="p-2" aria-label="Close" onClick={() => setOpen(false)}><X size={18} /></button>
-          </div>
-          <div onClick={() => setOpen(false)}><AdminNav /></div>
-        </aside>
       </div>
-    </>
+    </header>
   );
 }

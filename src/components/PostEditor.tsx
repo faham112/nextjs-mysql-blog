@@ -97,53 +97,176 @@ export default function PostEditor({ categories, post, redirectTo }: Props) {
         ? "scheduled"
         : (post?.status ?? "draft");
 
+  const muted = { color: "var(--a-muted, var(--muted))" } as const;
+  const labelCls = "mb-1.5 block text-[13px] font-medium";
+  const cardCls = "card p-4 sm:p-5";
+
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <input
-        name="title"
-        required
-        defaultValue={post?.title}
-        placeholder="Title"
-        className="input text-lg"
-      />
-      <input
-        name="slug"
-        defaultValue={post?.slug}
-        placeholder="slug-optional"
-        className="input"
-      />
-
-      <div className="space-y-2">
-        <label
-          className="block text-xs font-bold uppercase tracking-wider"
-          style={{ color: "var(--muted)" }}
-        >
-          Featured image
-        </label>
-
-        {imageUrl ? (
-          <div
-            className="relative overflow-hidden rounded-xl border"
-            style={{ borderColor: "var(--border)" }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imageUrl}
-              alt="Featured preview"
-              className="h-40 w-full object-cover"
+    <form onSubmit={onSubmit} className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-6">
+      <div className="min-w-0 space-y-5">
+        <section className={`${cardCls} space-y-5`}>
+          <div>
+            <label htmlFor="pe-title" className={labelCls}>
+              Title
+            </label>
+            <input
+              id="pe-title"
+              name="title"
+              required
+              defaultValue={post?.title}
+              placeholder="A clear, specific headline"
+              className="input !text-base !font-semibold sm:!text-lg"
             />
-            <button
-              type="button"
-              onClick={() => setImageUrl("")}
-              className="absolute right-2 top-2 rounded-lg bg-black/70 px-2 py-1 text-xs font-bold text-white"
-            >
-              Remove
-            </button>
           </div>
-        ) : null}
+          <div>
+            <label htmlFor="pe-slug" className={labelCls}>
+              Slug <span className="font-normal" style={muted}>(optional)</span>
+            </label>
+            <div className="flex items-stretch">
+              <span
+                className="hidden items-center rounded-l-lg border border-r-0 px-3 text-sm sm:flex"
+                style={{ ...muted, borderColor: "var(--a-border-strong, var(--border))", background: "var(--a-surface-2, var(--bg))" }}
+              >
+                /posts/
+              </span>
+              <input
+                id="pe-slug"
+                name="slug"
+                defaultValue={post?.slug}
+                placeholder="slug-optional"
+                className="input sm:!rounded-l-none"
+              />
+            </div>
+            <p className="mt-1.5 text-xs" style={muted}>
+              Leave empty to generate it from the title.
+            </p>
+          </div>
+          <div>
+            <label htmlFor="pe-excerpt" className={labelCls}>
+              Excerpt
+            </label>
+            <textarea
+              id="pe-excerpt"
+              name="excerpt"
+              rows={3}
+              defaultValue={post?.excerpt || ""}
+              placeholder="Short excerpt"
+              className="input"
+            />
+            <p className="mt-1.5 text-xs" style={muted}>
+              Shown on cards and used as the meta description.
+            </p>
+          </div>
+        </section>
 
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="btn cursor-pointer !bg-slate-700 hover:!bg-slate-800">
+        <section className={cardCls}>
+          <div className="mb-1.5 flex items-center justify-between gap-3">
+            <label htmlFor="pe-content" className="block text-[13px] font-medium">
+              Content
+            </label>
+            <span className="text-xs" style={muted}>
+              HTML supported
+            </span>
+          </div>
+          <textarea
+            id="pe-content"
+            name="content"
+            required
+            rows={18}
+            defaultValue={post?.content}
+            placeholder="HTML content is supported. Example: <p>Hello</p>"
+            className="input font-mono text-sm leading-6"
+          />
+        </section>
+      </div>
+
+      <aside className="flex min-w-0 flex-col gap-5 lg:sticky lg:top-24">
+        <section className={`${cardCls} order-last space-y-4 lg:order-first`}>
+          <h3 className="text-[15px] font-semibold">Publish</h3>
+          <div>
+            <label htmlFor="pe-status" className={labelCls}>
+              Status
+            </label>
+            <select id="pe-status" name="status" defaultValue={statusDefault} className="input">
+              <option value="draft">Draft</option>
+              <option value="scheduled">Schedule</option>
+              <option value="published">Publish now</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="pe-when" className={labelCls}>
+              Go live at
+            </label>
+            <input
+              id="pe-when"
+              name="scheduled_at"
+              type="datetime-local"
+              className="input"
+              defaultValue={scheduledDefault}
+            />
+            <p className="mt-1.5 text-xs" style={muted}>
+              Schedule = hidden until that time, then it goes public automatically.
+            </p>
+          </div>
+          {error && (
+            <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-400" role="alert">
+              {error}
+            </p>
+          )}
+          <div className="flex flex-col gap-2 sm:flex-row lg:flex-col">
+            <button className="btn w-full sm:flex-1 lg:flex-none" disabled={saving || uploading}>
+              {saving ? "Saving..." : "Save post"}
+            </button>
+            {post && (
+              <button type="button" onClick={onDelete} className="btn-outline btn-danger w-full text-red-700 sm:w-auto lg:w-full">
+                Delete
+              </button>
+            )}
+          </div>
+        </section>
+
+        <section className={cardCls}>
+          <label htmlFor="pe-category" className={labelCls}>
+            Category
+          </label>
+          <select id="pe-category" name="category_id" defaultValue={post?.category_id ?? ""} className="input">
+            <option value="">No category</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </section>
+
+        <section className={`${cardCls} space-y-3`}>
+          <p className="text-[13px] font-medium">Featured image</p>
+
+          {imageUrl ? (
+            <div
+              className="relative overflow-hidden rounded-lg border"
+              style={{ borderColor: "var(--a-border, var(--border))" }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={imageUrl} alt="Featured preview" className="aspect-[1200/630] w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => setImageUrl("")}
+                className="absolute right-2 top-2 min-h-[32px] rounded-md bg-black/70 px-2.5 text-xs font-semibold text-[#fff] backdrop-blur hover:bg-black/80"
+              >
+                Remove
+              </button>
+            </div>
+          ) : (
+            <div
+              className="flex aspect-[1200/630] w-full items-center justify-center rounded-lg border border-dashed text-xs"
+              style={{ ...muted, borderColor: "var(--a-border-strong, var(--border))" }}
+            >
+              No image yet
+            </div>
+          )}
+
+          <label className="btn-outline w-full cursor-pointer">
             {uploading ? "Uploading..." : "Upload image"}
             <input
               ref={fileRef}
@@ -157,87 +280,25 @@ export default function PostEditor({ categories, post, redirectTo }: Props) {
               }}
             />
           </label>
-          <span className="text-xs" style={{ color: "var(--muted)" }}>
-            or paste HTTPS /uploads URL below
-          </span>
-        </div>
 
-        <input
-          name="featured_image"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          placeholder="https://... or /uploads/..."
-          className="input"
-        />
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
-          JPEG / PNG / WebP / GIF · max 4 MB · no SVG
-        </p>
-      </div>
-
-      <textarea
-        name="excerpt"
-        rows={3}
-        defaultValue={post?.excerpt || ""}
-        placeholder="Short excerpt"
-        className="input"
-      />
-      <textarea
-        name="content"
-        required
-        rows={16}
-        defaultValue={post?.content}
-        placeholder="HTML content is supported. Example: <p>Hello</p>"
-        className="input font-mono text-sm"
-      />
-      <div className="grid gap-3 sm:grid-cols-2">
-        <select
-          name="category_id"
-          defaultValue={post?.category_id ?? ""}
-          className="input"
-        >
-          <option value="">No category</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <select name="status" defaultValue={statusDefault} className="input">
-          <option value="draft">Draft</option>
-          <option value="scheduled">Schedule</option>
-          <option value="published">Publish now</option>
-        </select>
-      </div>
-      <label
-        className="block text-xs font-bold uppercase tracking-wider"
-        style={{ color: "var(--muted)" }}
-      >
-        Go live at
-        <input
-          name="scheduled_at"
-          type="datetime-local"
-          className="input mt-2"
-          defaultValue={scheduledDefault}
-        />
-      </label>
-      <p className="text-xs" style={{ color: "var(--muted)" }}>
-        Schedule = hidden until that time, then it goes public automatically.
-      </p>
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <div className="flex gap-3">
-        <button className="btn" disabled={saving || uploading}>
-          {saving ? "Saving..." : "Save post"}
-        </button>
-        {post && (
-          <button
-            type="button"
-            onClick={onDelete}
-            className="btn-outline text-red-700"
-          >
-            Delete
-          </button>
-        )}
-      </div>
+          <div>
+            <label htmlFor="pe-image" className="mb-1.5 block text-xs" style={muted}>
+              or paste HTTPS /uploads URL
+            </label>
+            <input
+              id="pe-image"
+              name="featured_image"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://... or /uploads/..."
+              className="input"
+            />
+          </div>
+          <p className="text-xs" style={muted}>
+            JPEG / PNG / WebP / GIF · max 4 MB · no SVG
+          </p>
+        </section>
+      </aside>
     </form>
   );
 }

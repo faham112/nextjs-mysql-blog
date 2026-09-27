@@ -1,127 +1,153 @@
 import Link from "next/link";
+import { ArrowRight, CalendarClock, CircleCheck, FilePen, Files, MessageSquare, Plus } from "lucide-react";
 import { query } from "@/lib/db";
-import { PenLine } from "lucide-react";
+import { getSession } from "@/lib/auth";
+import PageHeader from "@/components/admin/PageHeader";
+import PostsTable from "@/components/admin/PostsTable";
+import { toAdminRows } from "@/components/admin/rows";
 
 export const dynamic = "force-dynamic";
 
-type CountRow = { n: number };
 type Row = {
   id: number;
   title: string;
   slug: string;
   status: string;
   updated_at: Date | string;
+  published_at: Date | string | null;
   category_name: string | null;
 };
+type Counts = { total: number | string | null; live: number | string | null; drafts: number | string | null; scheduled: number | string | null };
 
-function when(d: Date | string) {
-  try {
-    return new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-  } catch {
-    return "";
-  }
+function StatCard({
+  label,
+  value,
+  hint,
+  icon: Icon,
+  tone,
+  href,
+  highlight,
+}: {
+  label: string;
+  value: number;
+  hint: string;
+  icon: typeof Files;
+  tone: string;
+  href?: string;
+  highlight?: boolean;
+}) {
+  const body = (
+    <>
+      <div className="flex items-start justify-between gap-3">
+        <p className="a-muted text-[13px] font-medium">{label}</p>
+        <span className={`a-tile a-tile-${tone}`}>
+          <Icon size={18} strokeWidth={2} />
+        </span>
+      </div>
+      <p className="a-fg mt-2 text-[28px] font-bold leading-none tracking-tight tabular-nums">{value.toLocaleString("en-US")}</p>
+      <p className={`mt-2 text-xs ${highlight ? "font-medium text-amber-600 dark:text-amber-300" : "a-subtle"}`}>{hint}</p>
+    </>
+  );
+  const cls = "a-card block p-4 sm:p-5";
+  return href ? (
+    <Link href={href} className={`${cls} a-focus transition hover:-translate-y-px hover:shadow-md`} style={{ borderColor: highlight ? "rgba(245,158,11,.45)" : undefined }}>
+      {body}
+    </Link>
+  ) : (
+    <div className={cls} style={{ borderColor: highlight ? "rgba(245,158,11,.45)" : undefined }}>
+      {body}
+    </div>
+  );
 }
 
 export default async function AdminHome() {
   let posts = 0;
   let published = 0;
   let drafts = 0;
+  let scheduled = 0;
   let pending = 0;
   let rows: Row[] = [];
+  const user = await getSession().catch(() => null);
   try {
-    const [a, b, c, d, r] = await Promise.all([
-      query<CountRow>("SELECT COUNT(*) AS n FROM posts"),
-      query<CountRow>("SELECT COUNT(*) AS n FROM posts WHERE status = 'published'"),
-      query<CountRow>("SELECT COUNT(*) AS n FROM posts WHERE status = 'draft'"),
-      query<CountRow>("SELECT COUNT(*) AS n FROM comments WHERE approved = 0"),
+    const [c, d, r] = await Promise.all([
+      query<Counts>(
+        `SELECT COUNT(*) AS total,
+                SUM(status = 'published') AS live,
+                SUM(status = 'draft' AND (published_at IS NULL OR published_at <= NOW())) AS drafts,
+                SUM(status = 'draft' AND published_at > NOW()) AS scheduled
+         FROM posts`
+      ),
+      query<{ n: number }>("SELECT COUNT(*) AS n FROM comments WHERE approved = 0"),
       query<Row>(
-        `SELECT p.id, p.title, p.slug, p.status, p.updated_at, c.name AS category_name
+        `SELECT p.id, p.title, p.slug, p.status, p.updated_at, p.published_at, c.name AS category_name
          FROM posts p LEFT JOIN categories c ON c.id = p.category_id
          ORDER BY p.updated_at DESC LIMIT 20`
       ),
     ]);
-    posts = a[0]?.n ?? 0;
-    published = b[0]?.n ?? 0;
-    drafts = c[0]?.n ?? 0;
-    pending = d[0]?.n ?? 0;
+    posts = Number(c[0]?.total ?? 0);
+    published = Number(c[0]?.live ?? 0);
+    drafts = Number(c[0]?.drafts ?? 0);
+    scheduled = Number(c[0]?.scheduled ?? 0);
+    pending = Number(d[0]?.n ?? 0);
     rows = r;
   } catch (e) {
     console.error(e);
   }
 
-  return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/45">Overview</p>
-          <p className="mt-1 text-sm text-white/80">
-            {pending > 0 ? (
-              <span className="text-amber-300">{pending} comment{pending === 1 ? "" : "s"} waiting</span>
-            ) : (
-              <span>Queue clear.</span>
-            )}
-            <span className="text-white/35"> · </span>
-            {published} live · {drafts} draft · {posts} total
-          </p>
-        </div>
-        <Link
-          href="/admin/posts/new"
-          className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-3.5 py-2 text-sm font-semibold text-white"
-        >
-          <PenLine size={16} />
-          Write
-        </Link>
-      </div>
+  const first = (user?.name || "").trim().split(/\s+/)[0];
+  const livePct = posts > 0 ? Math.round((published / posts) * 100) : 0;
 
-      <div className="overflow-hidden rounded-xl border border-white/10">
-        <table className="w-full text-left text-sm">
-          <thead className="text-[11px] uppercase tracking-wider text-white/40">
-            <tr className="border-b border-white/10">
-              <th className="px-4 py-3 font-medium">Title</th>
-              <th className="hidden px-4 py-3 font-medium sm:table-cell">Status</th>
-              <th className="hidden px-4 py-3 font-medium md:table-cell">Section</th>
-              <th className="hidden px-4 py-3 font-medium lg:table-cell">Updated</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((p) => (
-              <tr key={p.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.03]">
-                <td className="max-w-[220px] truncate px-4 py-3 font-medium text-white">{p.title}</td>
-                <td className="hidden px-4 py-3 sm:table-cell">
-                  <span
-                    className={
-                      p.status === "published"
-                        ? "rounded-md bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-300"
-                        : "rounded-md bg-white/10 px-2 py-0.5 text-[11px] font-semibold text-white/60"
-                    }
-                  >
-                    {p.status}
-                  </span>
-                </td>
-                <td className="hidden px-4 py-3 text-white/50 md:table-cell">{p.category_name || "—"}</td>
-                <td className="hidden px-4 py-3 text-white/40 lg:table-cell">{when(p.updated_at)}</td>
-                <td className="px-4 py-3 text-right">
-                  <Link href={`/admin/posts/${p.id}/edit`} className="text-xs font-semibold text-brand-400 hover:text-white">
-                    Edit
-                  </Link>
-                </td>
-              </tr>
-            ))}
-            {rows.length === 0 && (
-              <tr>
-                <td className="px-4 py-10 text-white/50" colSpan={5}>
-                  No posts yet.{" "}
-                  <Link href="/admin/posts/new" className="font-semibold text-brand-400">
-                    Write the first
-                  </Link>
-                  .
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+  return (
+    <div>
+      <PageHeader
+        title={first ? `Welcome back, ${first}` : "Overview"}
+        description={
+          pending > 0 ? (
+            <>
+              <span className="font-medium text-amber-600 dark:text-amber-300">
+                {pending} comment{pending === 1 ? "" : "s"} waiting
+              </span>{" "}
+              · {published} live · {drafts + scheduled} draft · {posts} total
+            </>
+          ) : (
+            <>
+              Queue clear · {published} live · {drafts + scheduled} draft · {posts} total
+            </>
+          )
+        }
+        actions={
+          <Link href="/admin/posts/new" className="btn max-sm:!hidden">
+            <Plus size={16} strokeWidth={2.4} /> New article
+          </Link>
+        }
+      />
+
+      <section aria-label="Stats" className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
+        <div className="col-span-2 lg:col-span-1">
+          <StatCard label="Total posts" value={posts} hint="All articles" icon={Files} tone="slate" href="/admin/posts" />
+        </div>
+        <StatCard label="Live" value={published} hint={`${livePct}% of total`} icon={CircleCheck} tone="green" href="/admin/posts?status=published" />
+        <StatCard label="Drafts" value={drafts} hint="Not scheduled" icon={FilePen} tone="gray" href="/admin/posts?status=draft" />
+        <StatCard label="Scheduled" value={scheduled} hint="Auto-publishing" icon={CalendarClock} tone="blue" href="/admin/posts?status=scheduled" />
+        <StatCard
+          label="Comments waiting"
+          value={pending}
+          hint={pending > 0 ? "Needs review" : "All caught up"}
+          icon={MessageSquare}
+          tone={pending > 0 ? "amber" : "rose"}
+          highlight={pending > 0}
+        />
+      </section>
+
+      <PostsTable
+        rows={toAdminRows(rows)}
+        title="Recently updated"
+        footer={
+          <Link href="/admin/posts" className="a-accent-text inline-flex min-h-[32px] items-center gap-1 font-semibold hover:underline">
+            View all posts <ArrowRight size={14} />
+          </Link>
+        }
+      />
     </div>
   );
 }

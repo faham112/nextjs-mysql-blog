@@ -95,71 +95,75 @@ export default function TrackingForm({ initial }: { initial: Item[] }) {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-200">Analytics</p>
-        <h3 className="font-heading text-xl font-extrabold">Connect analytics</h3>
-        <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
+        <h3 className="a-h2">Connect analytics</h3>
+        <p className="a-muted mt-1 text-sm">
           Body scripts run right after the body tag — that is where Femantic belongs.
           Header is for GA4, Clarity, and verification tags. Multiple tools can be on at once.
         </p>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2">
-        {PRESETS.map((p) => (
-          <button
-            key={p.name}
-            type="button"
-            onClick={() => applyPreset(p)}
-            className="rounded-xl border p-4 text-left transition hover:border-brand-500"
-            style={{ borderColor: "var(--border)", background: "var(--bg2)" }}
-          >
-            <p className="font-semibold">{p.name}</p>
-            <p className="mt-1 text-xs" style={{ color: "var(--muted)" }}>
-              {p.placement} · {p.hint}
-            </p>
-          </button>
-        ))}
-      </div>
-      <form onSubmit={onSubmit} className="space-y-3">
+      <div>
+        <p className="a-eyebrow mb-2">Templates</p>
         <div className="grid gap-3 sm:grid-cols-2">
-          <label className="block text-xs font-bold uppercase">
-            Name
-            <input className="input mt-2" value={name} onChange={(e) => setName(e.target.value)} placeholder="Femantic" />
-          </label>
-          <label className="block text-xs font-bold uppercase">
-            Placement
-            <select className="input mt-2" value={placement} onChange={(e) => setPlacement(e.target.value as Item["placement"])}>
+          {PRESETS.map((p) => (
+            <button
+              key={p.name}
+              type="button"
+              onClick={() => applyPreset(p)}
+              className="a-focus a-border a-surface-2 group rounded-lg border p-3.5 text-left transition hover:border-rose-400/70"
+            >
+              <p className="a-fg flex items-center justify-between gap-2 text-sm font-semibold">
+                {p.name}
+                <span className="a-badge a-badge-draft before:!hidden">{p.placement}</span>
+              </p>
+              <p className="a-muted mt-1 text-xs leading-5">{p.hint}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+      <form onSubmit={onSubmit} className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="tf-name" className="a-label">Name</label>
+            <input id="tf-name" className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Femantic" />
+          </div>
+          <div>
+            <label htmlFor="tf-placement" className="a-label">Placement</label>
+            <select id="tf-placement" className="input" value={placement} onChange={(e) => setPlacement(e.target.value as Item["placement"])}>
               <option value="body">Body (after body tag)</option>
               <option value="header">Header</option>
               <option value="footer">Footer</option>
             </select>
-          </label>
+          </div>
         </div>
-        <label className="block text-xs font-bold uppercase">
-          Script
-          <textarea className="input mt-2 font-mono text-xs" rows={6} value={code} onChange={(e) => setCode(e.target.value)} placeholder="<script src=...></script>" />
-        </label>
-        <div className="flex gap-2">
+        <div>
+          <label htmlFor="tf-code" className="a-label">Script</label>
+          <textarea id="tf-code" className="input font-mono text-xs leading-5" rows={6} value={code} onChange={(e) => setCode(e.target.value)} placeholder="<script src=...></script>" />
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
           <button className="btn" type="submit">{editing ? "Update script" : "Add script"}</button>
           {editing ? <button className="btn-outline" type="button" onClick={resetForm}>Cancel</button> : null}
+          {msg ? <p className="a-accent-text text-sm" role="status">{msg}</p> : null}
         </div>
-        {msg ? <p className="text-sm text-brand-600">{msg}</p> : null}
       </form>
-      <div className="space-y-2">
-        <p className="text-xs font-bold uppercase tracking-wider">Connected ({items.length})</p>
+      <div>
+        <p className="a-eyebrow mb-2">Connected ({items.length})</p>
         {items.length === 0 ? (
-          <p className="text-sm" style={{ color: "var(--muted)" }}>No analytics connected yet. Pick a template above.</p>
+          <p className="a-muted a-border rounded-lg border border-dashed px-4 py-6 text-center text-sm">No analytics connected yet. Pick a template above.</p>
         ) : (
-          items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-3" style={{ borderColor: "var(--border)" }}>
-              <div className="min-w-0">
-                <p className="truncate font-semibold">{item.name}</p>
-                <p className="text-xs" style={{ color: "var(--muted)" }}>{item.placement}</p>
-              </div>
-              <div className="flex shrink-0 gap-2">
-                <button className="btn-outline px-3 py-1 text-xs" type="button" onClick={() => startEdit(item)}>Edit</button>
-                <button className="btn px-3 py-1 text-xs" type="button" onClick={() => remove(item.id)}>Delete</button>
-              </div>
-            </div>
-          ))
+          <ul className="a-border a-divide overflow-hidden rounded-lg border">
+            {items.map((item) => (
+              <li key={item.id} className="a-hoverable flex items-center justify-between gap-3 px-4 py-3">
+                <div className="min-w-0">
+                  <p className="a-fg truncate text-sm font-semibold">{item.name}</p>
+                  <p className="a-muted text-xs capitalize">{item.placement}</p>
+                </div>
+                <div className="flex shrink-0 gap-2">
+                  <button className="btn-outline btn-sm" type="button" onClick={() => startEdit(item)}>Edit</button>
+                  <button className="btn-danger btn-sm" type="button" onClick={() => remove(item.id)}>Delete</button>
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>
