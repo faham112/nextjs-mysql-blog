@@ -49,5 +49,10 @@ export const POST_COVERS: Record<string, string> = {
   "trades-ai-cannot-replace-2026-electrician-solar-gcc": "Jobs AI can't replace: electrician and solar trades, with skilled work opportunities in the Gulf",
   "uk-skilled-worker-visa-sponsor-check-2026": "UK sponsor licence check: searching the register of licensed sponsors before applying for a Skilled Worker visa",
   "what-to-put-in-a-first-freelance-portfolio-when-you-have-no-clients": "Cover: a first freelance portfolio built from practice projects when you have no clients yet",
-  "write-a-statement-of-purpose-that-sounds-like-you": "Cover: writing a personal statement of purpose in your own voice"
+  "write-a-statement-of-purpose-that-sounds-like-you": "Cover: writing a personal statement of purpose in your own voice",
+  "jobs-for-pakistani-students-2026": "Jobs for Pakistani students: a student balancing classes with a part-time or remote role",
+  "part-time-jobs-for-students-in-pakistan-2026": "Part-time jobs for students in Pakistan: a student finishing a shift after university classes",
+  "remote-jobs-for-pakistanis-2026": "Remote jobs for Pakistanis: a professional working from home on a laptop with a headset",
+  "internships-abroad-for-pakistani-students-2026": "Internships abroad for Pakistani students: a student researcher with a laptop and passport ready for a summer placement",
+  "hec-need-based-scholarship-2026": "HEC need based scholarship: a student reviewing a financial aid form with tuition and stipend notes"
 };

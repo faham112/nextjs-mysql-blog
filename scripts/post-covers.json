@@ -439,5 +439,50 @@
   "phrase": "SOP that sounds like you",
   "icon": "pen",
   "alt": "Cover: writing a personal statement of purpose in your own voice"
+ },
+ {
+  "slug": "jobs-for-pakistani-students-2026",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "Jobs for Pakistani Students: At Home and Abroad (2026)",
+  "phrase": "Jobs for Pakistani students",
+  "icon": "briefcase",
+  "alt": "Jobs for Pakistani students: a student balancing classes with a part-time or remote role"
+ },
+ {
+  "slug": "part-time-jobs-for-students-in-pakistan-2026",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "Part-Time Jobs for Students in Pakistan (2026 Guide)",
+  "phrase": "Part-time jobs for students",
+  "icon": "briefcase",
+  "alt": "Part-time jobs for students in Pakistan: a student finishing a shift after university classes"
+ },
+ {
+  "slug": "remote-jobs-for-pakistanis-2026",
+  "category": "careers",
+  "categoryName": "Careers",
+  "title": "Remote Jobs for Pakistanis: Where to Find Them in 2026",
+  "phrase": "Remote jobs for Pakistanis",
+  "icon": "laptop",
+  "alt": "Remote jobs for Pakistanis: a professional working from home on a laptop with a headset"
+ },
+ {
+  "slug": "internships-abroad-for-pakistani-students-2026",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "Internships Abroad for Pakistani Students (2026–27)",
+  "phrase": "Internships abroad",
+  "icon": "globe",
+  "alt": "Internships abroad for Pakistani students: a student researcher with a laptop and passport ready for a summer placement"
+ },
+ {
+  "slug": "hec-need-based-scholarship-2026",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "HEC Need Based Scholarship 2026: Eligibility & How to Apply",
+  "phrase": "HEC need-based scholarship",
+  "icon": "certificate",
+  "alt": "HEC need based scholarship: a student reviewing a financial aid form with tuition and stipend notes"
  }
 ]
