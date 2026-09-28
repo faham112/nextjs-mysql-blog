@@ -59,5 +59,9 @@ export const POST_COVERS: Record<string, string> = {
   "erasmus-mundus-scholarship-pakistani-students": "Erasmus Mundus scholarship for Pakistani students: a student planning a joint master's across several European universities",
   "study-in-canada-from-pakistan-2026": "Study in Canada from Pakistan: a student checking study permit documents and a Canadian university offer",
   "study-in-uk-from-pakistan-2026": "Study in UK from Pakistan: a student preparing a CAS, bank statements and a Student visa application",
-  "freelancing-in-pakistan-for-students-2026": "Freelancing in Pakistan for students: a student delivering a freelance project after university classes"
+  "freelancing-in-pakistan-for-students-2026": "Freelancing in Pakistan for students: a student delivering a freelance project after university classes",
+  "turkiye-burslari-scholarship-pakistan-2027": "Türkiye Bursları scholarship for Pakistani students: an applicant preparing a TBBS online application for study in Türkiye",
+  "chinese-government-scholarship-pakistan-csc-2027": "Chinese Government Scholarship Pakistan: a student reviewing CSC Type A and Type B application steps with HEC",
+  "mext-scholarship-pakistan-2027": "MEXT Japan scholarship for Pakistani students: documents prepared for the Embassy of Japan research student route",
+  "commonwealth-scholarship-pakistan-2027": "Commonwealth Scholarship Pakistan: an applicant completing both the HEC and CSC Central forms before the October deadline"
 };

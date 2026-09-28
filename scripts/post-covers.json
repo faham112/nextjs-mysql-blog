@@ -529,5 +529,41 @@
   "phrase": "Freelancing for students in Pakistan",
   "icon": "laptop",
   "alt": "Freelancing in Pakistan for students: a student delivering a freelance project after university classes"
+ },
+ {
+  "slug": "turkiye-burslari-scholarship-pakistan-2027",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "Türkiye Bursları for Pakistani Students (2027 Guide)",
+  "phrase": "Türkiye Bursları for Pakistan",
+  "icon": "certificate",
+  "alt": "Türkiye Bursları scholarship for Pakistani students: an applicant preparing a TBBS online application for study in Türkiye"
+ },
+ {
+  "slug": "chinese-government-scholarship-pakistan-csc-2027",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "CSC Scholarship Pakistan: Chinese Government Guide",
+  "phrase": "CSC scholarship Pakistan",
+  "icon": "globe",
+  "alt": "Chinese Government Scholarship Pakistan: a student reviewing CSC Type A and Type B application steps with HEC"
+ },
+ {
+  "slug": "mext-scholarship-pakistan-2027",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "MEXT Japan Scholarship for Pakistani Students 2027",
+  "phrase": "MEXT scholarship Pakistan",
+  "icon": "compass",
+  "alt": "MEXT Japan scholarship for Pakistani students: documents prepared for the Embassy of Japan research student route"
+ },
+ {
+  "slug": "commonwealth-scholarship-pakistan-2027",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "Commonwealth Scholarship Pakistan 2027: HEC + CSC",
+  "phrase": "Commonwealth Scholarship Pakistan",
+  "icon": "book",
+  "alt": "Commonwealth Scholarship Pakistan: an applicant completing both the HEC and CSC Central forms before the October deadline"
  }
 ]
