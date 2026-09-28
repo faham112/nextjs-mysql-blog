@@ -54,5 +54,10 @@ export const POST_COVERS: Record<string, string> = {
   "part-time-jobs-for-students-in-pakistan-2026": "Part-time jobs for students in Pakistan: a student finishing a shift after university classes",
   "remote-jobs-for-pakistanis-2026": "Remote jobs for Pakistanis: a professional working from home on a laptop with a headset",
   "internships-abroad-for-pakistani-students-2026": "Internships abroad for Pakistani students: a student researcher with a laptop and passport ready for a summer placement",
-  "hec-need-based-scholarship-2026": "HEC need based scholarship: a student reviewing a financial aid form with tuition and stipend notes"
+  "hec-need-based-scholarship-2026": "HEC need based scholarship: a student reviewing a financial aid form with tuition and stipend notes",
+  "chevening-scholarship-pakistan-2027": "Chevening scholarship Pakistan: an applicant finishing essays for a fully funded UK master's before the deadline",
+  "erasmus-mundus-scholarship-pakistani-students": "Erasmus Mundus scholarship for Pakistani students: a student planning a joint master's across several European universities",
+  "study-in-canada-from-pakistan-2026": "Study in Canada from Pakistan: a student checking study permit documents and a Canadian university offer",
+  "study-in-uk-from-pakistan-2026": "Study in UK from Pakistan: a student preparing a CAS, bank statements and a Student visa application",
+  "freelancing-in-pakistan-for-students-2026": "Freelancing in Pakistan for students: a student delivering a freelance project after university classes"
 };

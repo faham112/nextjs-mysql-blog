@@ -484,5 +484,50 @@
   "phrase": "HEC need-based scholarship",
   "icon": "certificate",
   "alt": "HEC need based scholarship: a student reviewing a financial aid form with tuition and stipend notes"
+ },
+ {
+  "slug": "chevening-scholarship-pakistan-2027",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "Chevening Scholarship Pakistan: 2027–28 Deadline Guide",
+  "phrase": "Chevening scholarship Pakistan",
+  "icon": "certificate",
+  "alt": "Chevening scholarship Pakistan: an applicant finishing essays for a fully funded UK master's before the deadline"
+ },
+ {
+  "slug": "erasmus-mundus-scholarship-pakistani-students",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "Erasmus Mundus for Pakistani Students: How to Apply",
+  "phrase": "Erasmus Mundus for Pakistanis",
+  "icon": "globe",
+  "alt": "Erasmus Mundus scholarship for Pakistani students: a student planning a joint master's across several European universities"
+ },
+ {
+  "slug": "study-in-canada-from-pakistan-2026",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "Study in Canada from Pakistan: Cost, Visa & Timeline",
+  "phrase": "Study in Canada from Pakistan",
+  "icon": "compass",
+  "alt": "Study in Canada from Pakistan: a student checking study permit documents and a Canadian university offer"
+ },
+ {
+  "slug": "study-in-uk-from-pakistan-2026",
+  "category": "study-abroad",
+  "categoryName": "Study Abroad",
+  "title": "Study in the UK from Pakistan: Requirements & Cost (2026)",
+  "phrase": "Study in the UK from Pakistan",
+  "icon": "book",
+  "alt": "Study in UK from Pakistan: a student preparing a CAS, bank statements and a Student visa application"
+ },
+ {
+  "slug": "freelancing-in-pakistan-for-students-2026",
+  "category": "skills",
+  "categoryName": "Skills",
+  "title": "Freelancing in Pakistan for Students: A Realistic Start",
+  "phrase": "Freelancing for students in Pakistan",
+  "icon": "laptop",
+  "alt": "Freelancing in Pakistan for students: a student delivering a freelance project after university classes"
  }
 ]
