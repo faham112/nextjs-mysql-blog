@@ -14,7 +14,7 @@ export default function CookiesPage() {
       <p className="text-xs font-bold uppercase tracking-widest text-brand-600">Legal</p>
       <h1 className="font-heading text-4xl font-extrabold">Cookie notice</h1>
       <p className="text-xs" style={{ color: "var(--muted)" }}>
-        Last updated: 27 September 2026
+        Last updated: 28 September 2026
       </p>
       <p>
         A cookie is a small file stored by your browser. Some features use similar browser storage
@@ -33,10 +33,16 @@ export default function CookiesPage() {
           <strong>gch-theme</strong> (localStorage): remembers light or dark mode.
         </li>
       </ul>
-      <h2>Advertising and analytics (only with consent where required)</h2>
+      <h2>Analytics (site measurement)</h2>
       <p>
-        When advertising is enabled, third-party vendors, including Google, use cookies to serve ads
-        based on your prior visits to this website or other websites. Google&apos;s use of
+        We use Google Analytics 4 (Measurement ID G-T6M9L9BRWD) to understand which pages are read.
+        Choosing <strong>Essential only</strong> turns off advertising cookies but still allows this
+        first-party measurement. Choosing <strong>Accept all</strong> also allows advertising cookies.
+      </p>
+      <h2>Advertising (only with &quot;Accept all&quot;)</h2>
+      <p>
+        When you accept all cookies, third-party vendors, including Google, may use cookies to serve
+        ads based on your prior visits to this website or other websites. Google&apos;s use of
         advertising cookies enables it and its partners to serve ads based on visits to this site
         and/or other sites on the Internet. You can opt out of personalised advertising at{" "}
         <a href="https://adssettings.google.com" rel="noopener noreferrer" target="_blank">

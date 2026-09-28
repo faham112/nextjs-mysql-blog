@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const KEY = "gch-consent";
-type Choice = "granted" | "denied";
+/** "granted" = ads + analytics; "essential" = first-party analytics only (ads off). */
+type Choice = "granted" | "essential";
 
 declare global {
   interface Window {
@@ -22,11 +23,13 @@ function applyConsent(choice: Choice) {
         // eslint-disable-next-line prefer-rest-params
         window.dataLayer!.push(arguments);
       };
+    const ads = choice === "granted" ? "granted" : "denied";
+    // Always keep first-party measurement on. Ads stay gated behind "Accept all".
     gtag("consent", "update", {
-      ad_storage: choice,
-      ad_user_data: choice,
-      ad_personalization: choice,
-      analytics_storage: choice,
+      ad_storage: ads,
+      ad_user_data: ads,
+      ad_personalization: ads,
+      analytics_storage: "granted",
     });
   } catch {
     /* ignore */
@@ -44,7 +47,17 @@ export default function CookieConsent() {
     } catch {
       /* storage blocked */
     }
-    if (stored !== "granted" && stored !== "denied") setOpen(true);
+    // Migrate the old "denied" value (which also blocked analytics) to "essential".
+    if (stored === "denied") {
+      try {
+        localStorage.setItem(KEY, "essential");
+      } catch {
+        /* ignore */
+      }
+      applyConsent("essential");
+      stored = "essential";
+    }
+    if (stored !== "granted" && stored !== "essential") setOpen(true);
     const reopen = () => setOpen(true);
     window.addEventListener("gch-open-consent", reopen);
     return () => window.removeEventListener("gch-open-consent", reopen);
@@ -73,7 +86,7 @@ export default function CookieConsent() {
     >
       <div className="mx-auto flex max-w-[1280px] flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-4">
         <p className="text-[12px] leading-[1.45] sm:text-[13px]" style={{ color: "var(--muted)" }}>
-          We use cookies. With your OK, Google and partners also use them for personalised ads and measurement.{" "}
+          We use cookies for site measurement. With your OK, Google and partners may also use them for personalised ads.{" "}
           <Link href="/privacy" className="font-semibold underline underline-offset-2" style={{ color: "var(--fg)" }}>Privacy</Link>
           {" · "}
           <Link href="/cookies" className="font-semibold underline underline-offset-2" style={{ color: "var(--fg)" }}>Cookies</Link>
@@ -81,7 +94,7 @@ export default function CookieConsent() {
         <div className="flex shrink-0 gap-2">
           <button
             type="button"
-            onClick={() => choose("denied")}
+            onClick={() => choose("essential")}
             className="h-8 flex-1 rounded-full border px-4 sm:h-9 text-[12.5px] font-bold sm:flex-none"
             style={{ borderColor: "var(--border)", color: "var(--fg)" }}
           >

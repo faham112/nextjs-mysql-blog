@@ -9,6 +9,7 @@ import ScriptSlots from "@/components/ScriptSlots";
 import CookieConsent from "@/components/CookieConsentLazy";
 import { DEFAULT_OG_IMAGE } from "@/lib/covers";
 import { AUTHOR_NAME, organizationJsonLd, personJsonLd, websiteJsonLd } from "@/lib/schema";
+import { GA_ID } from "@/lib/analytics";
 
 // Self-hosted variable fonts (latin subset, from Google Fonts, OFL) committed in ./fonts.
 // next/font/google downloads the fonts during `next build`; on Hostinger that fetch failed
@@ -48,10 +49,12 @@ const CONSENT_REGIONS = [
   "AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL",
   "PL","PT","RO","SK","SI","ES","SE","IS","LI","NO","GB","CH",
 ];
+const gaConfig = `gtag('js',new Date());gtag('config',${JSON.stringify(GA_ID)});`;
+
 const consentDefaults = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=window.gtag||gtag;
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:${JSON.stringify(CONSENT_REGIONS)}});
 gtag('consent','default',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});
-try{var c=localStorage.getItem('gch-consent');if(c==='granted'||c==='denied'){gtag('consent','update',{ad_storage:c,ad_user_data:c,ad_personalization:c,analytics_storage:c})}}catch(e){}`;
+try{var c=localStorage.getItem('gch-consent');if(c==='denied'){try{localStorage.setItem('gch-consent','essential')}catch(e){}c='essential'}if(c==='granted'){gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'})}else if(c==='essential'){gtag('consent','update',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'})}}catch(e){}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -95,6 +98,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <script dangerouslySetInnerHTML={{ __html: consentDefaults }} />
+        {GA_ID ? (
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+            <script dangerouslySetInnerHTML={{ __html: gaConfig }} />
+          </>
+        ) : null}
         {adsenseClient ? (
           <>
             <meta name="google-adsense-account" content={adsenseClient} />

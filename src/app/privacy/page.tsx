@@ -14,7 +14,7 @@ export default function PrivacyPage() {
       <p className="text-xs font-bold uppercase tracking-widest text-brand-600">Legal</p>
       <h1 className="font-heading text-4xl font-extrabold">Privacy policy</h1>
       <p className="text-xs" style={{ color: "var(--muted)" }}>
-        Last updated: 27 September 2026
+        Last updated: 28 September 2026
       </p>
 
       <p>
@@ -72,13 +72,13 @@ export default function PrivacyPage() {
 
       <h2>Your consent</h2>
       <p>
-        When you first visit, a cookie banner asks whether you accept advertising and analytics
-        cookies. If you choose &ldquo;Essential only&rdquo;, we signal Google (through Google
-        Consent Mode) not to use advertising cookies for personalisation; ads may still appear but
-        they are not based on your browsing history. Visitors from the European Economic Area, the
-        United Kingdom and Switzerland are treated as &ldquo;not consented&rdquo; until they accept.
-        You can change your choice at any time on the <Link href="/cookies">cookie notice</Link>{" "}
-        page.
+        When you first visit, a cookie banner asks about advertising cookies. If you choose
+        &ldquo;Essential only&rdquo;, we signal Google (through Consent Mode) not to use advertising
+        cookies for personalisation, while keeping first-party site measurement on so we can see
+        which guides are useful. &ldquo;Accept all&rdquo; also allows advertising cookies. Visitors
+        from the European Economic Area, the United Kingdom and Switzerland start with advertising
+        and analytics off until they choose. You can change your choice at any time on the{" "}
+        <Link href="/cookies">cookie notice</Link> page.
       </p>
       <p>
         Essential cookies for writer login stay on this domain and are required for the admin desk
