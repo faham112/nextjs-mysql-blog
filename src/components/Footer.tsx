@@ -12,6 +12,8 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
       { label: "Skills", href: "/category/skills" },
       { label: "Applications", href: "/category/applications" },
       { label: "Technology", href: "/category/technology" },
+      { label: "Tutorials", href: "/category/tutorials" },
+      { label: "Lifestyle", href: "/category/lifestyle" },
     ],
   },
   {
@@ -58,6 +60,11 @@ export default function Footer() {
               <Link href="/about" className="font-semibold underline-offset-4 hover:underline" style={{ color: "var(--fg)" }}>
                 {AUTHOR_NAME}
               </Link>
+            </p>
+            <p className="mt-2 text-[13px]" style={{ color: "var(--muted)" }}>
+              <a href="mailto:admin@globalcareerhub.org" className="font-semibold underline-offset-4 hover:underline" style={{ color: "var(--fg)" }}>
+                admin@globalcareerhub.org
+              </a>
             </p>
           </div>
           {columns.map((col) => (

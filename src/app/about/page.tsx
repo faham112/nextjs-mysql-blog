@@ -22,7 +22,7 @@ export default function AboutPage() {
         Faham Baloch
       </h1>
       <p className="mt-3 text-sm" style={{ color: "var(--muted)" }}>
-        Writes and edits Global Career Hub. Last reviewed 27 September 2026.
+        Writes and edits Global Career Hub. Last reviewed 3 October 2026.
       </p>
 
       <div className="card mt-8 space-y-5 p-8">
@@ -58,6 +58,31 @@ export default function AboutPage() {
           <li>Sell a “processing fee” or an agent package.</li>
           <li>Publish a guide that cannot be checked against a public source.</li>
         </ul>
+        <h2 className="font-heading text-xl font-extrabold">How a guide is written</h2>
+        <p className="text-sm leading-7" style={{ color: "var(--fg)" }}>
+          A page starts from a task a reader actually has: a form, a test, a first job, or a
+          document that has to be in the right order. I read the public page that owns the rule,
+          then write the steps in the order you would do them, with the names of the portals you
+          will see. Where I am unsure, the guide says so and points at the official page instead
+          of filling the gap with a round number. I do not invent acceptance rates, salaries, or
+          traffic figures to make a page look busier.
+        </p>
+        <p className="text-sm leading-7" style={{ color: "var(--fg)" }}>
+          The date on a guide is the publication date, and the page is edited when a rule or a
+          deadline changes. An edit does not mean every sentence was rewritten that day. If you
+          need the current rule, open the official link in the same sitting. When a reader sends
+          a correction with that link, I check it and update the page. That is the whole review
+          process. There is no separate fact-checking department.
+        </p>
+        <h2 className="font-heading text-xl font-extrabold">Advertising and independence</h2>
+        <p className="text-sm leading-7" style={{ color: "var(--fg)" }}>
+          The site may show third-party ads, including Google ads, so the writing can stay free
+          to read. Ads are not commissioned by me and they are not the guide. A university, a
+          scholarship office, or an employer does not pay for a mention, and a mention is not an
+          endorsement from them. If that ever changes for a specific page, the page will say so
+          in plain text. Cookie choices are explained on the{" "}
+          <Link href="/cookies" className="font-semibold text-brand-600">cookie notice</Link>.
+        </p>
         <h2 className="font-heading text-xl font-extrabold">How to use the site</h2>
         <p className="text-sm leading-7" style={{ color: "var(--fg)" }}>
           Start with a category, open the official link in the article, then keep your own file.

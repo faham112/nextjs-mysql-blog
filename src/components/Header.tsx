@@ -17,6 +17,12 @@ const siteLinks = [
   { href: "/contact", label: "Contact" },
   { href: "/search", label: "Search" },
 ];
+/** Always in the first HTML of the topic bar, not only inside the closed menu. */
+const barLinks = [
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/privacy", label: "Privacy" },
+];
 const legalLinks = [
   { href: "/privacy", label: "Privacy" },
   { href: "/cookies", label: "Cookies" },
@@ -136,21 +142,27 @@ export default function Header({ categories }: { categories: NavCategory[] }) {
         </div>
       </header>
 
-      {categories.length > 0 ? (
-        <nav aria-label="Topics" className="border-b" style={{ borderColor: "var(--border)", background: "var(--bg)" }}>
-          <div
-            ref={rowRef}
-            className="overflow-x-auto [mask-image:linear-gradient(to_right,#000_calc(100%-28px),transparent)] [scrollbar-width:none] lg:[mask-image:none] [&::-webkit-scrollbar]:hidden"
-          >
-            <div className="mx-auto flex w-max gap-2 px-4 py-2.5 sm:px-8">
-              <Chip href="/articles" label="All guides" count={total || null} active={pathname === "/articles"} />
-              {categories.map((c) => (
-                <Chip key={c.slug} href={`/category/${c.slug}`} label={c.name} count={c.count} active={catActive(c.slug)} />
-              ))}
-            </div>
+      <nav aria-label="Topics" className="border-b" style={{ borderColor: "var(--border)", background: "var(--bg)" }}>
+        <div
+          ref={rowRef}
+          className="overflow-x-auto [mask-image:linear-gradient(to_right,#000_calc(100%-28px),transparent)] [scrollbar-width:none] lg:[mask-image:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="mx-auto flex w-max items-center gap-2 px-4 py-2.5 sm:px-8">
+            {categories.length > 0 ? (
+              <>
+                <Chip href="/articles" label="All guides" count={total || null} active={pathname === "/articles"} />
+                {categories.map((c) => (
+                  <Chip key={c.slug} href={`/category/${c.slug}`} label={c.name} count={c.count} active={catActive(c.slug)} />
+                ))}
+                <span aria-hidden="true" className="mx-1 h-5 w-px shrink-0" style={{ background: "var(--border)" }} />
+              </>
+            ) : null}
+            {barLinks.map((l) => (
+              <Chip key={l.href} href={l.href} label={l.label} count={null} active={pathname === l.href} />
+            ))}
           </div>
-        </nav>
-      ) : null}
+        </div>
+      </nav>
 
       {open ? (
         <div

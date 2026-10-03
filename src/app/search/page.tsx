@@ -25,9 +25,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     <div className="mx-auto max-w-7xl px-4 py-12">
       <p className="text-xs font-bold uppercase tracking-widest text-brand-600">Find a guide</p>
       <h1 className="mt-2 font-heading text-4xl font-extrabold">{query ? `Results for “${query}”` : "Search"}</h1>
-      <p className="mt-2 text-sm text-slate-600">{query || category ? `${posts.length} guide${posts.length === 1 ? "" : "s"} found` : "Search careers, skills, scholarships, or tech."}</p>
+      <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">{query || category ? `${posts.length} guide${posts.length === 1 ? "" : "s"} found` : "Search the guides by a scholarship name, a country, a document, or a skill. This page is a finder. The articles themselves are the reading."}</p>
       <form className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <input name="q" defaultValue={query} placeholder="Try careers, SOP, Next.js" className="input" />
+        <input name="q" defaultValue={query} placeholder="Try DAAD, SOP, IELTS" className="input" />
         <button className="btn sm:w-auto" type="submit">Search</button>
       </form>
       <div className="mt-6 flex flex-wrap gap-2">
@@ -40,7 +40,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       {(query || category) && posts.length === 0 && (
         <div className="card mt-8 p-8">
           <p className="font-heading text-xl font-bold">No matching articles</p>
-          <p className="mt-2 text-sm text-slate-600">Try careers, SOP, scholarships, or Next.js. Or browse the full library.</p>
+          <p className="mt-2 text-sm text-slate-600">Try a scholarship name, a country, or a document such as SOP or attestation. Or browse the full library.</p>
           <Link href="/articles" className="btn mt-4 inline-flex">All articles</Link>
         </div>
       )}
