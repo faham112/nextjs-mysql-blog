@@ -40,8 +40,8 @@ const heading = localFont({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://globalcareerhub.org";
 
-/** AdSense publisher ID (digits only) from env; enables the verification meta + ad script. */
-const adsensePub = (process.env.ADSENSE_PUB_ID || "").replace(/\D/g, "");
+/** AdSense publisher ID (digits only). Env wins; fallback is the public publisher ID. */
+const adsensePub = (process.env.ADSENSE_PUB_ID || "3998955628932160").replace(/\D/g, "");
 const adsenseClient = adsensePub.length >= 10 ? `ca-pub-${adsensePub}` : "";
 
 /** EEA + UK + CH: Google Consent Mode defaults to "denied" here until the reader accepts. */

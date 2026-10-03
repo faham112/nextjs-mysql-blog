@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
  * Format required by Google: google.com, pub-XXXXXXXX, DIRECT, f08c47fec0942fa0
  */
 export async function GET() {
-  const pub = (process.env.ADSENSE_PUB_ID || "").replace(/\D/g, "");
+  // Env wins when set. Fallback is the public publisher ID (ads.txt is public by design).
+  const pub = (process.env.ADSENSE_PUB_ID || "3998955628932160").replace(/\D/g, "");
   const lines: string[] = [
     "# GlobalCareerHub ads.txt — update ADSENSE_PUB_ID after AdSense approval",
   ];
