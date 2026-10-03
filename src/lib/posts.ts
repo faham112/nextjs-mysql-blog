@@ -17,6 +17,33 @@ export async function publishDuePosts(force = false) {
   lastPublishCheck = now;
   await query(`UPDATE posts SET status = 'published' WHERE status = 'draft' AND published_at IS NOT NULL AND published_at <= NOW()`).catch(() => {});
 }
+/** Published posts for sitemap.xml: slug + dates only (no body, images, or comment counts). */
+export async function listPublishedSitemapPosts(limit = 500) {
+  await publishDuePosts();
+  const safeLimit = Math.max(1, Number(limit) || 500);
+  return query<Pick<PostRow, "slug" | "status" | "published_at" | "updated_at">>(
+    `SELECT p.slug, p.status, p.published_at, p.updated_at
+     FROM posts p
+     WHERE p.status = 'published'
+     ORDER BY p.published_at DESC
+     LIMIT ${safeLimit}`
+  );
+}
+
+/** Latest published posts for the RSS feed. No post body. */
+export async function listPublishedFeedPosts(limit = 30) {
+  await publishDuePosts();
+  const safeLimit = Math.max(1, Number(limit) || 30);
+  return query<Pick<PostRow, "slug" | "title" | "excerpt" | "published_at" | "created_at" | "category_name">>(
+    `SELECT p.slug, p.title, p.excerpt, p.published_at, p.created_at, c.name AS category_name
+     FROM posts p
+     LEFT JOIN categories c ON c.id = p.category_id
+     WHERE p.status = 'published'
+     ORDER BY p.published_at DESC
+     LIMIT ${safeLimit}`
+  );
+}
+
 export async function listPublishedPosts(page = 1, perPage = 8, categorySlug?: string) {
   await publishDuePosts();
   const offset = (page - 1) * perPage;

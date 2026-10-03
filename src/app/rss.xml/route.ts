@@ -1,4 +1,4 @@
-import { listPublishedPosts } from "@/lib/posts";
+import { listPublishedFeedPosts } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
@@ -15,9 +15,9 @@ function esc(s: string) {
 
 /** RSS 2.0 feed of the latest published posts (also the target of old /feed URLs). */
 export async function GET() {
-  let posts: Awaited<ReturnType<typeof listPublishedPosts>>["posts"] = [];
+  let posts: Awaited<ReturnType<typeof listPublishedFeedPosts>> = [];
   try {
-    posts = (await listPublishedPosts(1, 30)).posts;
+    posts = await listPublishedFeedPosts(30);
   } catch (e) {
     console.error(e);
   }

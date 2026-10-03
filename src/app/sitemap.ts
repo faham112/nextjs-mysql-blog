@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { listPublishedPosts } from "@/lib/posts";
+import { listPublishedSitemapPosts } from "@/lib/posts";
 import { listCategories } from "@/lib/categories";
 
 // Rendered per request so a DB hiccup at build/revalidate time can't cache an empty sitemap.
@@ -20,7 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let categories: { slug: string }[] = [];
 
   // If the DB is down, fail (5xx, Google retries) instead of serving a sitemap without posts.
-  posts = (await listPublishedPosts(1, 500)).posts;
+  posts = await listPublishedSitemapPosts(500);
   try {
     categories = await listCategories();
   } catch {}
