@@ -565,5 +565,14 @@
   "phrase": "Commonwealth Scholarship Pakistan",
   "icon": "book",
   "alt": "Commonwealth Scholarship Pakistan: an applicant completing both the HEC and CSC Central forms before the October deadline"
+ },
+ {
+  "slug": "gks-2027-pakistani-students-university-track",
+  "category": "scholarships",
+  "categoryName": "Scholarships",
+  "title": "GKS 2027 for Pakistani Students: Embassy Track Closed, University Track Still Open",
+  "phrase": "GKS 2027 Pakistan",
+  "icon": "globe",
+  "alt": "GKS 2027 for Pakistani students: embassy track closed on 30 September, university track still open into November"
  }
 ]

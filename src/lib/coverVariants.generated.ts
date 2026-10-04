@@ -28,6 +28,7 @@ export const COVER_VERSIONS: Record<string, string> = {
   "freelancing-in-pakistan-for-students-2026": "866258cec2",
   "gemini-ai-study-tools-students-2026": "5b2e55150f",
   "germany-2026-pakistani-students-daad-aps-calendar": "a397fe7c8b",
+  "gks-2027-pakistani-students-university-track": "ce485e4e9e",
   "google-career-certificates-pakistan-2026": "a93ed7a23d",
   "hec-attestation-mofa-tutorial-foreign-file": "90d3425fa5",
   "hec-need-based-scholarship-2026": "1902f1b01d",

@@ -63,5 +63,6 @@ export const POST_COVERS: Record<string, string> = {
   "turkiye-burslari-scholarship-pakistan-2027": "Türkiye Bursları scholarship for Pakistani students: an applicant preparing a TBBS online application for study in Türkiye",
   "chinese-government-scholarship-pakistan-csc-2027": "Chinese Government Scholarship Pakistan: a student reviewing CSC Type A and Type B application steps with HEC",
   "mext-scholarship-pakistan-2027": "MEXT Japan scholarship for Pakistani students: documents prepared for the Embassy of Japan research student route",
-  "commonwealth-scholarship-pakistan-2027": "Commonwealth Scholarship Pakistan: an applicant completing both the HEC and CSC Central forms before the October deadline"
+  "commonwealth-scholarship-pakistan-2027": "Commonwealth Scholarship Pakistan: an applicant completing both the HEC and CSC Central forms before the October deadline",
+  "gks-2027-pakistani-students-university-track": "GKS 2027 for Pakistani students: embassy track closed on 30 September, university track still open into November"
 };
