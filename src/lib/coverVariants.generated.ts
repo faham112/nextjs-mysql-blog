@@ -67,5 +67,6 @@ export const COVER_VERSIONS: Record<string, string> = {
   "turkiye-burslari-scholarship-pakistan-2027": "c194faac86",
   "uk-skilled-worker-visa-sponsor-check-2026": "be07d367f8",
   "what-to-put-in-a-first-freelance-portfolio-when-you-have-no-clients": "9cba8ef360",
-  "write-a-statement-of-purpose-that-sounds-like-you": "5fc6484794"
+  "write-a-statement-of-purpose-that-sounds-like-you": "5fc6484794",
+  "sindh-talent-hunt-program-sthp-2027-sukkur-iba": "91889ba433"
 };
