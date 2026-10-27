@@ -1,3 +1,4 @@
+import Script from "next/script";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -52,24 +53,11 @@ const CONSENT_REGIONS = [
 const gaConfig = `gtag('js',new Date());gtag('config',${JSON.stringify(GA_ID)});`;
 
 /**
- * Mobile performance: gtag.js (~75 KB) and adsbygoogle.js (+ its ~120 KB "show_ads" bundle) used to
- * load from <head> and competed with the LCP cover image and hydration on slow phones (they were
- * most of the page's main-thread time and "unused JavaScript"). They now load on the reader's first
- * interaction (scroll / touch / key / mouse), or shortly after the page has loaded if there is none.
- * gtag() calls made before then (consent defaults, config) are queued in dataLayer and replayed, so
- * page views and Consent Mode still work; AdSense Auto ads run as soon as adsbygoogle.js arrives.
+ * Performance + AdSense review: adsbygoogle.js stays a plain async <script> in the server-rendered
+ * <head> (Google's crawler must see it with the publisher client id; async never blocks rendering).
+ * gtag.js (analytics only) is loaded with next/script "lazyOnload" after the page load event, so it
+ * does not compete with the first render; gtag() calls made before then are queued in dataLayer.
  */
-const GA_SRC = GA_ID ? `https://www.googletagmanager.com/gtag/js?id=${GA_ID}` : "";
-const ADS_SRC = adsenseClient
-  ? `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`
-  : "";
-const thirdPartyLoader = `(function(){var done=0,ev=['scroll','pointerdown','touchstart','keydown','mousemove','wheel'];
-function add(src,co){if(!src)return;var s=document.createElement('script');s.async=true;s.src=src;if(co)s.crossOrigin='anonymous';document.head.appendChild(s)}
-function go(){if(done)return;done=1;ev.forEach(function(e){removeEventListener(e,go,{passive:true})});add(${JSON.stringify(GA_SRC)});add(${JSON.stringify(ADS_SRC)},1)}
-ev.forEach(function(e){addEventListener(e,go,{passive:true,once:true})});
-function idle(){setTimeout(function(){(window.requestIdleCallback||function(f){f()})(go,{timeout:2000})},3500)}
-if(document.readyState==='complete')idle();else addEventListener('load',idle,{once:true})})();`;
-
 const consentDefaults = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=window.gtag||gtag;
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:${JSON.stringify(CONSENT_REGIONS)}});
 gtag('consent','default',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});
@@ -118,8 +106,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <script dangerouslySetInnerHTML={{ __html: consentDefaults }} />
         {GA_ID ? <script dangerouslySetInnerHTML={{ __html: gaConfig }} /> : null}
-        {adsenseClient ? <meta name="google-adsense-account" content={adsenseClient} /> : null}
-        {GA_ID || adsenseClient ? <script dangerouslySetInnerHTML={{ __html: thirdPartyLoader }} /> : null}
+        {adsenseClient ? (
+          <>
+            <meta name="google-adsense-account" content={adsenseClient} />
+            <script
+              async
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+              crossOrigin="anonymous"
+            />
+          </>
+        ) : null}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <ScriptSlots slot="header" />
       </head>
@@ -132,6 +128,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </ThemeProvider>
         <ScriptSlots slot="footer" />
         <CookieConsent />
+        {GA_ID ? (
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="lazyOnload" />
+        ) : null}
       </body>
     </html>
   );
