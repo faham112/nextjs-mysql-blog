@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   experimental: {
     // Tree-shake icon imports to the icons actually used (also a Next default for lucide-react).
     optimizePackageImports: ["lucide-react"],
+    // Inline the (small, ~10 KB) global CSS into the HTML <style> instead of a render-blocking
+    // <link rel="stylesheet"> (PageSpeed "Render-blocking requests").
+    inlineCss: true,
   },
   webpack(config, { isServer, dev }) {
     if (!isServer && !dev) {
