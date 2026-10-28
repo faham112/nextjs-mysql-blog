@@ -67,5 +67,8 @@ export const POST_COVERS: Record<string, string> = {
   "gks-2027-pakistani-students-university-track": "GKS 2027 for Pakistani students: embassy track closed on 30 September, university track still open into November",
   "sindh-talent-hunt-program-sthp-2027-sukkur-iba": "Official Sukkur IBA advertisement for the Sindh Talent Hunt Program (STHP) 2027 showing degree programs, scholarship benefits, last date October 29, 2026 and admission test November 8, 2026",
   "hong-kong-phd-fellowship-hkpfs-2027-pakistani-students-1-december": "Hong Kong PhD Fellowship 2027 cover: HK$344,400 a year, apply by 1 December 2026",
-  "gates-cambridge-scholarship-2027-pakistani-students": "Gates Cambridge Scholarship 2027 cover: £23,152 a year, deadlines 8 December 2026 and 6 January 2027"
+  "gates-cambridge-scholarship-2027-pakistani-students": "Gates Cambridge Scholarship 2027 cover: £23,152 a year, deadlines 8 December 2026 and 6 January 2027",
+  "honhaar-scholarship-2026-punjab-last-date-9-november": "Honhaar Scholarship 2026 Punjab cover: last date 9 November 2026",
+  "hec-irsip-batch-60-phd-research-abroad-30-october-2026": "HEC IRSIP Batch 60 cover: 6-month PhD research abroad, apply by 30 October 2026",
+  "hec-us-pakistan-knowledge-corridor-phd-scholarship-2027": "HEC US-Pakistan Knowledge Corridor PhD Scholarship 2027 cover"
 };

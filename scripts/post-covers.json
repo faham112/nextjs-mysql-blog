@@ -601,5 +601,32 @@
     "phrase": "Gates Cambridge Scholarship 2027",
     "icon": "certificate",
     "alt": "Gates Cambridge Scholarship 2027 cover: £23,152 a year, deadlines 8 December 2026 and 6 January 2027"
+  },
+  {
+    "slug": "honhaar-scholarship-2026-punjab-last-date-9-november",
+    "category": "scholarships",
+    "categoryName": "Scholarships",
+    "title": "Honhaar Scholarship 2026 Punjab: Last Date 9 November",
+    "phrase": "Honhaar Scholarship 2026",
+    "icon": "certificate",
+    "alt": "Honhaar Scholarship 2026 Punjab cover: last date 9 November 2026"
+  },
+  {
+    "slug": "hec-irsip-batch-60-phd-research-abroad-30-october-2026",
+    "category": "scholarships",
+    "categoryName": "Scholarships",
+    "title": "HEC IRSIP Batch 60: 6-Month PhD Research Abroad (Apply by 30 Oct)",
+    "phrase": "HEC IRSIP Batch 60",
+    "icon": "certificate",
+    "alt": "HEC IRSIP Batch 60 cover: 6-month PhD research abroad, apply by 30 October 2026"
+  },
+  {
+    "slug": "hec-us-pakistan-knowledge-corridor-phd-scholarship-2027",
+    "category": "scholarships",
+    "categoryName": "Scholarships",
+    "title": "HEC US-Pakistan Knowledge Corridor PhD Scholarship 2027",
+    "phrase": "US-Pakistan Knowledge Corridor 2027",
+    "icon": "certificate",
+    "alt": "HEC US-Pakistan Knowledge Corridor PhD Scholarship 2027 cover"
   }
 ]
