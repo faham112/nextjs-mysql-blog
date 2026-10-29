@@ -53,10 +53,9 @@ const CONSENT_REGIONS = [
 const gaConfig = `gtag('js',new Date());gtag('config',${JSON.stringify(GA_ID)});`;
 
 /**
- * Performance + AdSense review: adsbygoogle.js stays a plain async <script> in the server-rendered
- * <head> (Google's crawler must see it with the publisher client id; async never blocks rendering).
- * gtag.js (analytics only) is loaded with next/script "lazyOnload" after the page load event, so it
- * does not compete with the first render; gtag() calls made before then are queued in dataLayer.
+ * Performance: both AdSense and gtag.js are loaded with next/script strategy="lazyOnload"
+ * so they do not compete with LCP / first paint. The AdSense meta tag stays in <head>
+ * so Google can still discover the publisher. gtag() calls are queued in dataLayer.
  */
 const consentDefaults = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=window.gtag||gtag;
 gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:${JSON.stringify(CONSENT_REGIONS)}});
@@ -107,14 +106,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: consentDefaults }} />
         {GA_ID ? <script dangerouslySetInnerHTML={{ __html: gaConfig }} /> : null}
         {adsenseClient ? (
-          <>
-            <meta name="google-adsense-account" content={adsenseClient} />
-            <script
-              async
-              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
-              crossOrigin="anonymous"
-            />
-          </>
+          <meta name="google-adsense-account" content={adsenseClient} />
         ) : null}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <ScriptSlots slot="header" />
@@ -130,6 +122,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieConsent />
         {GA_ID ? (
           <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="lazyOnload" />
+        ) : null}
+        {adsenseClient ? (
+          <Script
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+            strategy="lazyOnload"
+            crossOrigin="anonymous"
+          />
         ) : null}
       </body>
     </html>
